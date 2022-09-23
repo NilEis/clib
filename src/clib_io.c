@@ -3,6 +3,8 @@
 #ifdef __unix__
 
 #include <sys/ioctl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <termios.h>
 #include <unistd.h>
 
@@ -77,6 +79,16 @@ size_t terminal_safe_gets(char *buffer, size_t size)
     return count;
 }
 
+int clib_mkdir(const char *name, int mode)
+{
+    struct stat st = {0};
+
+    if (stat(name, &st) == -1)
+    {
+        return mkdir(name, mode);
+    }
+}
+
 #elif defined(_WIN32) || defined(_WIN64)
 
 #include <windows.h>
@@ -124,6 +136,11 @@ size_t clib_safe_gets(char *buffer, size_t size)
     }
     buffer[count] = '\0';
     return count;
+}
+
+int clib_mkdir(const char*name, int mode)
+{
+    return CreateDirectoryA(name,NULL);
 }
 
 #endif

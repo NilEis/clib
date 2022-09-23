@@ -23,4 +23,12 @@ int clib_kbhit(void);
  */
 size_t clib_safe_gets(char *buffer, size_t size);
 
+/**
+ * @brief creates a folder
+ * @param name the path of the folder
+ * @param mode the mode of the folder (0777)
+ * @return the return value of the os for creating the folder
+ */
+int clib_mkdir(const char*name, int mode);
+
 #endif // CLIB_IO_H
