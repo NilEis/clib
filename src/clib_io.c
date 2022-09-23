@@ -140,6 +140,7 @@ size_t clib_safe_gets(char *buffer, size_t size)
 
 int clib_mkdir(const char*name, int mode)
 {
+    mode=mode;
     return CreateDirectoryA(name,NULL);
 }
 
