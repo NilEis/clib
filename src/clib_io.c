@@ -14,7 +14,7 @@ int terminal_getch(void)
     int ch;
     tcgetattr(STDIN_FILENO, &oldattr);
     newattr = oldattr;
-    newattr.c_lflag &= ~(ICANON | ECHO);
+    newattr.c_lflag &= ~((unsigned int)ICANON | (unsigned int)ECHO);
     tcsetattr(STDIN_FILENO, TCSANOW, &newattr);
     ch = getchar();
     tcsetattr(STDIN_FILENO, TCSANOW, &oldattr);
@@ -30,8 +30,8 @@ int terminal_kbhit(void)
     struct termios term, term_old;
     tcgetattr(0, &term_old);
     tcgetattr(0, &term);
-    term.c_lflag &= ~ICANON;
-    term.c_lflag &= ~ECHO;
+    term.c_lflag &= ~((unsigned int)ICANON);
+    term.c_lflag &= ~((unsigned int)ECHO);
     tcsetattr(0, TCSANOW, &term);
     setbuf(stdin, NULL);
     int bytes;
@@ -43,12 +43,12 @@ int terminal_kbhit(void)
 size_t terminal_safe_gets(char *buffer, size_t size)
 {
     size_t count = 0;
-    char ch = '\0';
+    int ch = '\0';
     struct termios term, term_old;
     tcgetattr(0, &term_old);
     tcgetattr(0, &term);
-    term.c_lflag &= ~ICANON;
-    term.c_lflag &= ~ECHO;
+    term.c_lflag &= ~((unsigned int)ICANON);
+    term.c_lflag &= ~((unsigned int)ECHO);
     tcsetattr(0, TCSANOW, &term);
     setbuf(stdin, NULL);
     while (size - 1)
@@ -66,10 +66,9 @@ size_t terminal_safe_gets(char *buffer, size_t size)
             buffer[count] = '\0';
             size++;
             count--;
-            count = count < 0 ? 0 : count;
             break;
         default:
-            buffer[count] = ch;
+            buffer[count] = (char)ch;
             count++;
             size--;
         }
@@ -85,8 +84,9 @@ int clib_mkdir(const char *name, int mode)
 
     if (stat(name, &st) == -1)
     {
-        return mkdir(name, mode);
+        return mkdir(name, (mode_t)mode);
     }
+    return 0;
 }
 
 #elif defined(_WIN32) || defined(_WIN64)
@@ -138,10 +138,10 @@ size_t clib_safe_gets(char *buffer, size_t size)
     return count;
 }
 
-int clib_mkdir(const char*name, int mode)
+int clib_mkdir(const char *name, int mode)
 {
-    mode=mode;
-    return CreateDirectoryA(name,NULL);
+    mode = mode;
+    return CreateDirectoryA(name, NULL);
 }
 
 #endif
