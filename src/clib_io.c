@@ -151,10 +151,12 @@ char *clib_read_variable_string(char **dest, size_t initial_size)
     int ch = clib_getch();
     size_t max = initial_size;
     size_t i = 0;
+#ifndef __GNUC__
     if (dest == NULL)
     {
         return NULL;
     }
+#endif // !__GNUC__
     *dest = (char *)calloc(initial_size, sizeof(char));
     if (*dest == NULL)
     {
