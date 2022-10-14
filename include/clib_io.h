@@ -35,6 +35,7 @@ int clib_mkdir(const char *name, int mode);
  * @param dest (nonnull) The address of the destination pointer (NULL)
  * @param initial_size the initial size of the string
  * @return the string
+ * @deprecated
 */
 char *clib_read_variable_string(char **dest, size_t initial_size)
 #ifdef __GNUC__
