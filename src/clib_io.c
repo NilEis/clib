@@ -165,7 +165,7 @@ char *clib_read_variable_string(char **dest, size_t initial_size)
     }
     while (ch != 13 && ch != '\n' && ch != '\0' && ch != EOF)
     {
-        *dest[i++] = ch;
+        *dest[i++] = (char)ch;
         if (i >= max)
         {
             *dest = realloc(*dest, max + initial_size);
