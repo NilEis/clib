@@ -31,4 +31,11 @@ size_t clib_safe_gets(char *buffer, size_t size);
  */
 int clib_mkdir(const char*name, int mode);
 
+/** @fn char *clib_read_variable_string(char **dest, size_t initial_size)
+ * @param dest (nonnull) The address of the destination pointer (NULL)
+ * @param initial_size the initial size of the string
+ * @return the string
+*/
+char *clib_read_variable_string(char **dest, size_t initial_size);
+
 #endif // CLIB_IO_H
