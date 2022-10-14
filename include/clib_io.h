@@ -29,13 +29,16 @@ size_t clib_safe_gets(char *buffer, size_t size);
  * @param mode the mode of the folder (0777)
  * @return the return value of the os for creating the folder
  */
-int clib_mkdir(const char*name, int mode);
+int clib_mkdir(const char *name, int mode);
 
 /** @fn char *clib_read_variable_string(char **dest, size_t initial_size)
  * @param dest (nonnull) The address of the destination pointer (NULL)
  * @param initial_size the initial size of the string
  * @return the string
 */
-char *clib_read_variable_string(char **dest, size_t initial_size);
+char *clib_read_variable_string(char **dest, size_t initial_size)
+#ifdef __GNUC__
+    __attribute__((nonnull(1)));
+#endif
 
 #endif // CLIB_IO_H

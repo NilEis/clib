@@ -146,9 +146,6 @@ int clib_mkdir(const char *name, int mode)
 
 #endif
 
-#ifdef __GNUC__
-__attribute__((nonnull(1)));
-#endif
 char *clib_read_variable_string(char **dest, size_t initial_size)
 {
     int ch = clib_getch();
