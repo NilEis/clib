@@ -154,12 +154,12 @@ char *clib_read_variable_string(char **dest, size_t initial_size)
     int ch = clib_getch();
     size_t max = initial_size;
     size_t i = 0;
-    if(dest==NULL)
+    if (dest == NULL)
     {
         return NULL;
     }
     *dest = (char *)calloc(initial_size, sizeof(char));
-    if(*dest==NULL)
+    if (*dest == NULL)
     {
         return NULL;
     }
@@ -169,12 +169,17 @@ char *clib_read_variable_string(char **dest, size_t initial_size)
         if (i >= max)
         {
             *dest = realloc(*dest, max + initial_size);
-            if(*dest==NULL)
+            if (*dest == NULL)
             {
                 return NULL;
             }
             max += initial_size;
         }
+    }
+    if (i == max - 1)
+    {
+        *dest = realloc(*dest, max + 1);
+        *dest[i + 1] = '\0';
     }
     return *dest;
 }
