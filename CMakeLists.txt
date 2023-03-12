@@ -18,11 +18,17 @@ target_compile_options(clib PRIVATE $<$<OR:$<C_COMPILER_ID:Clang>,$<C_COMPILER_I
 
 OPTION(BUILD_WITH_DOCS "Generate Docs" OFF)
 
-target_include_directories(clib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+OPTION(BUILD_TESTS "Build test exe" ON)
+
+include_directories(clib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 if(DOXYGEN_FOUND)
     if(BUILD_WITH_DOCS)
         set(DOXYGEN_USE_MATHJAX YES)
         doxygen_add_docs(clib_doc "include/" ALL COMMENT "Generate documents")
     endif()
+endif()
+
+if(BUILD_TESTS)
+    add_subdirectory(tests)
 endif()
