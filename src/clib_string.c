@@ -25,6 +25,16 @@ size_t clib_string_copy(char *restrict dest, const char *restrict src, size_t si
 
 int clib_string_replace_char(char *src, char a, char b)
 {
+    static char *last_src = NULL;
+    static char *src_p = NULL;
+    if (last_src == src)
+    {
+        src = src_p;
+    }
+    else
+    {
+        last_src = src;
+    }
     while (*src != '\0')
     {
         if (*src == a)
@@ -34,6 +44,7 @@ int clib_string_replace_char(char *src, char a, char b)
         }
         src++;
     }
+    src_p = src;
     return 0;
 }
 
