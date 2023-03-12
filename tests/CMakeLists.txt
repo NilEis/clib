@@ -1,13 +1,24 @@
 cmake_minimum_required(VERSION 3.12.0)
+include(FetchContent)
+
+FetchContent_Declare(
+  cheat
+  GIT_REPOSITORY https://github.com/Tuplanolla/cheat.git
+)
+
+if(NOT cheat_POPULATED)
+    FetchContent_MakeAvailable(cheat)
+endif()
+
 project(
     clib_tests
     VERSION 1.0.0
     HOMEPAGE_URL "https://github.com/NilEis/clib"
     LANGUAGES C
-    )
+)
 
-add_executable(clib_tests main.c test_clib_string.c)
+link_libraries(clib)
 
-target_link_libraries(clib_tests clib)
+include_directories(include/ ${cheat_SOURCE_DIR}/)
 
-target_include_directories(clib_tests PRIVATE include)
+add_executable(test_clib_string test_clib_string.c)
