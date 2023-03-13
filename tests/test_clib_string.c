@@ -93,3 +93,11 @@ CHEAT_TEST(test_clib_string_dist_lev,
            printf("- Testing %s\n", __func__);
            cheat_assert(dist == 3);
 )
+
+CHEAT_TEST(clib_string_dist_damerau_lev,
+           const char *const a = "CA";
+           const char *const b = "ABC";
+           const int dist = clib_string_dist_damerau_lev(a, b);
+           printf("- Testing %s\n", __func__);
+           cheat_assert(dist == 2);
+)
