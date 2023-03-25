@@ -4,6 +4,8 @@
 #ifndef CLIB_STRING_H
 #define CLIB_STRING_H
 
+#include <stddef.h>
+
 /**
  * @fn size_t clib_string_length(const char *str)
  * @brief computes the size of str
@@ -49,15 +51,5 @@ size_t clib_string_replace_char_all(char *src, char a, char b);
  * @returns returns the edit distance between a and b
  */
 int clib_string_dist_lev(const char *a, const char *b);
-
-/**
- * @fn int clib_string_dist_damerau_lev(const char*a, const char*b)
- * @brief Computes the Damerau–Levenshtein distance of a and b
- *
- * @param a string a
- * @param b string b
- * @returns returns the edit distance between a and b
- */
-int clib_string_dist_damerau_lev(const char *a, const char *b);
 
 #endif // CLIB_STRING_H

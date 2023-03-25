@@ -1,4 +1,5 @@
 #include "clib.h"
+#include <limits.h>
 
 static int __clib_string_dist_lev_rec(const char *a, const char *b, size_t as, size_t bs);
 
@@ -89,56 +90,4 @@ static int __clib_string_dist_lev_rec(const char *a, const char *b, size_t as, s
         int tatb = __clib_string_dist_lev_rec(a + 1, b + 1, as - 1, bs - 1);
         return 1 + (tab < atb ? (tab < tatb ? tab : tatb) : (atb < tatb ? atb : tatb));
     }
-}
-
-int clib_string_dist_damerau_lev(const char *a, const char *b)
-{
-    const size_t a_s = clib_string_length(a);
-    const size_t b_s = clib_string_length(b);
-    const size_t y_w = a_s + 2;
-    const size_t x_w = b_s + 2;
-#define XY_TO_I(x, y) (((int)(x) + 1) + ((int)(y) + 1) * (int)x_w)
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
-    int da[CHAR_MAX] = {0};
-    int *d = (int *)calloc(y_w * x_w, sizeof(int));
-    int max_d = (int)a_s + (int)b_s;
-    d[XY_TO_I(-1, -1)] = max_d;
-    for (int i = 0; i <= (int)a_s; i++)
-    {
-        d[XY_TO_I(i, -1)] = max_d;
-        d[XY_TO_I(i, 0)] = i;
-    }
-    for (int i = 0; i <= (int)b_s; i++)
-    {
-        d[XY_TO_I(-1, i)] = max_d;
-        d[XY_TO_I(0, i)] = i;
-    }
-    for (int i = 1; i <= (int)a_s; i++)
-    {
-        int db = 0;
-        for (int j = 1; j <= (int)b_s; j++)
-        {
-            int k = da[(int)b[j - 1]];
-            int l = db;
-            int cost;
-            if (a[i - 1] == b[j - 1])
-            {
-                cost = 0;
-                db = j;
-            }
-            else
-            {
-                cost = 1;
-            }
-            int p1 = d[XY_TO_I(i - 1, j - 1)] + cost;
-            int p2 = d[XY_TO_I(i, j - 1)] + 1;
-            int p3 = d[XY_TO_I(i - 1, j)] + 1;
-            int p4 = d[XY_TO_I(k - 1, l - 1)] + (i - k - 1) + 1 + (j - l - 1);
-            d[XY_TO_I(i, j)] = MIN(p1, MIN(p2, MIN(p3, p4)));
-        }
-        da[(int)a[i - 1]] = i;
-    }
-    return d[XY_TO_I(a_s, b_s)];
-#undef MIN
-#undef XY_TO_I
 }

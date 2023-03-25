@@ -11,16 +11,15 @@
 #include <windows.h>
 
 CHEAT_DECLARE(
-    
-    void init_console()
-    {
+
+    void init_console() {
         static int set = 0;
-        if(set == 1)
+        if (set == 1)
         {
             return;
         }
         set = 1;
-        HANDLE hOut = CreateFile("CONOUT$", GENERIC_READ|GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+        HANDLE hOut = CreateFile("CONOUT$", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
         if (hOut == INVALID_HANDLE_VALUE)
         {
             char buf[256];
@@ -54,50 +53,49 @@ CHEAT_DECLARE(
         }
     })
 
-CHEAT_SET_UP(init_console();)
+#else
+
+CHEAT_DECLARE(
+
+    void init_console() {
+        return;
+    })
+
 #endif
 
 CHEAT_TEST(test_clib_string_length,
+           init_console();
            const char *const str = "hello world";
            const size_t len = clib_string_length(str);
            printf("- Testing %s\n", __func__);
-           cheat_assert(len == strlen(str));
-)
+           cheat_assert(len == strlen(str));)
 
 CHEAT_TEST(test_clib_string_copy,
+           init_console();
            const char *const src = "hello world";
            char dest[20] = {0};
            const size_t size = clib_string_copy(dest, src, 5);
            printf("- Testing %s\n", __func__);
-           cheat_assert(strcmp(dest, "hello") == 0 && size == 5);
-)
+           cheat_assert(strcmp(dest, "hello") == 0 && size == 5);)
 
 CHEAT_TEST(test_clib_string_replace_char,
+           init_console();
            char str[] = "hello world";
            const int replaced = clib_string_replace_char(str, 'l', 'x');
            printf("- Testing %s\n", __func__);
-           cheat_assert(strcmp(str, "hexlo world") == 0 && replaced == 1);
-)
+           cheat_assert(strcmp(str, "hexlo world") == 0 && replaced == 1);)
 
 CHEAT_TEST(test_clib_string_replace_char_all,
+           init_console();
            char str[] = "hello world";
            const size_t replaced = clib_string_replace_char_all(str, 'l', 'x');
            printf("- Testing %s\n", __func__);
-           cheat_assert(strcmp(str, "hexxo worxd") == 0 && replaced == 3);
-)
+           cheat_assert(strcmp(str, "hexxo worxd") == 0 && replaced == 3);)
 
 CHEAT_TEST(test_clib_string_dist_lev,
+           init_console();
            const char *const a = "kitten";
            const char *const b = "sitting";
            const int dist = clib_string_dist_lev(a, b);
            printf("- Testing %s\n", __func__);
-           cheat_assert(dist == 3);
-)
-
-CHEAT_TEST(clib_string_dist_damerau_lev,
-           const char *const a = "CA";
-           const char *const b = "ABC";
-           const int dist = clib_string_dist_damerau_lev(a, b);
-           printf("- Testing %s\n", __func__);
-           cheat_assert(dist == 2);
-)
+           cheat_assert(dist == 3);)
