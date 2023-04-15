@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
+#include "clib_constructor.h"
 #include "clib_io.h"
 #include "clib_string.h"
 
