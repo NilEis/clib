@@ -92,15 +92,15 @@ CHEAT_DECLARE(
 
         return ret;
 #else
-        pid_t p = = fork();
+        pid_t pid = fork();
         if (pid == -1)
         {
             return 0xDEAD;
         }
         else if (pid == 0)
         {
-            execv(name, {NULL});
-            _exit(0xDEAD;
+            execv(name, (char**){name,NULL});
+            _exit(0xDEAD);
         }
         else
         {
@@ -111,7 +111,7 @@ CHEAT_DECLARE(
             }
             else
             {
-                return status;
+                return !WEXITSTATUS(status);
             }
         }
 #endif
@@ -120,5 +120,6 @@ CHEAT_DECLARE(
 
 CHEAT_TEST(test_string_functions,
            init_console();
-           int ret = run_test("./test_clib_string -m");
-           cheat_assert(ret == 0);)
+           int p = run_test("./test_clib_string -m");
+           printf("%d\n", p);
+           cheat_assert(p == 0);)
