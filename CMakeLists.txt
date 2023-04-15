@@ -7,10 +7,30 @@ project(
     )
 find_package(Doxygen)
 
-set(SOURCE_FILES_LIST ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_io.c ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_string.c)
-option(BUILD_SHARED_LIBS "Build a shared libary" FALSE)
+set(SOURCE_FILES_LIST 
+ ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_io.c
+ ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_string.c
+)
+
+set(LIBRARY_LIST)
+
+option(INCLUDE_TERMINAL "Include support for terminal functions" TRUE)
+
+if(INCLUDE_TERMINAL)
+    include(FetchContent)
+    set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
+    FetchContent_Declare(
+        c_terminal_repo
+        GIT_REPOSITORY https://github.com/NilEis/C-Terminal.git
+    )
+    FetchContent_MakeAvailable(c_terminal_repo)
+    add_subdirectory(${c_terminal_repo_SOURCE_DIR})
+    list(APPEND LIBRARY_LIST c_terminal)
+endif()
 
 add_library(clib ${SOURCE_FILES_LIST})
+
+target_link_libraries(clib ${LIBRARY_LIST})
 
 set_target_properties(clib PROPERTIES C_STANDARD 11 C_STANDARD_REQUIRED True C_EXTENSIONS Off)
 
