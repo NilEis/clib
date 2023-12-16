@@ -11,4 +11,4 @@
 #include "clib_io.h"
 #include "clib_string.h"
 
-#endif // CLIB_H
+#endif /* CLIB_H */

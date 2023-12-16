@@ -4,16 +4,13 @@
  * @brief Provides a constructor wrapper for GCC/Clang and MSVC
  * @date 2023-04-15
  * 
- * @copyright Copyright (c) 2023
- */
-#ifndef CLIB_CONSTRUCTOR_H
-#define CLIB_CONSTRUCTOR_H
-
-/**
  * @copyright Initializer/finalizer sample for MSVC and GCC/Clang.
  * 2010-2016 Joe Lowe. Released into the public domain.
  * @see https://stackoverflow.com/a/2390626
  */
+#ifndef CLIB_CONSTRUCTOR_H
+#define CLIB_CONSTRUCTOR_H
+#include "clib_c90_support.h"
 
 #ifdef __cplusplus
 #define INITIALIZER(f)   \
@@ -44,4 +41,4 @@
     static void f(void)
 #endif
 
-#endif // CLIB_CONSTRUCTOR_H
+#endif /* CLIB_CONSTRUCTOR_H */

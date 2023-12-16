@@ -3,7 +3,7 @@
  */
 #ifndef CLIB_STRING_H
 #define CLIB_STRING_H
-
+#include "clib_c90_support.h"
 #include <stddef.h>
 
 /**
@@ -52,4 +52,4 @@ size_t clib_string_replace_char_all(char *src, char a, char b);
  */
 int clib_string_dist_lev(const char *a, const char *b);
 
-#endif // CLIB_STRING_H
+#endif /* CLIB_STRING_H */

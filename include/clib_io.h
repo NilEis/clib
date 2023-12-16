@@ -3,6 +3,7 @@
  */
 #ifndef CLIB_IO_H
 #define CLIB_IO_H
+#include "clib_c90_support.h"
 
 /**
  * @brief Reads a char from stdin without waiting for '\n'
@@ -42,4 +43,4 @@ char *clib_read_variable_string(char **dest, size_t initial_size)
     __attribute__((nonnull(1)));
 #endif
 
-#endif // CLIB_IO_H
+#endif /* CLIB_IO_H */

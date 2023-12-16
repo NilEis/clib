@@ -156,7 +156,7 @@ char *clib_read_variable_string(char **dest, size_t initial_size)
     {
         return NULL;
     }
-#endif // !__GNUC__
+#endif /* !__GNUC__ */
     *dest = (char *)calloc(initial_size, sizeof(char));
     if (*dest == NULL)
     {
