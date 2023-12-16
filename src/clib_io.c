@@ -28,13 +28,13 @@ int terminal_getch(void)
 int terminal_kbhit(void)
 {
     struct termios term, term_old;
+    int bytes;
     tcgetattr(0, &term_old);
     tcgetattr(0, &term);
     term.c_lflag &= ~((unsigned int)ICANON);
     term.c_lflag &= ~((unsigned int)ECHO);
     tcsetattr(0, TCSANOW, &term);
     setbuf(stdin, NULL);
-    int bytes;
     ioctl(0, FIONREAD, &bytes);
     tcsetattr(0, TCSANOW, &term_old);
     return bytes > 0;
