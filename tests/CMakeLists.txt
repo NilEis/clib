@@ -26,3 +26,5 @@ add_executable(test_clib_string test_clib_string.c)
 add_executable(test_clib_all main.c)
 
 add_dependencies(test_clib_all test_clib_string)
+
+add_test(NAME "string-test" COMMAND test_clib_string)

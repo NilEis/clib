@@ -58,5 +58,6 @@ if(BUILD_WITH_DOCS)
 endif()
 
 if(BUILD_TESTS)
+    include(CTest)
     add_subdirectory(tests)
 endif()
