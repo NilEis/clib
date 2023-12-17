@@ -5,7 +5,7 @@
 #include "clib.h"
 #include <assert.h>
 #include <stdio.h>
-#include <string.h>
+#include <stdint.h>
 #if defined(_WIN32) || defined(WIN32)
 #include <windows.h>
 
@@ -62,39 +62,14 @@ CHEAT_DECLARE(
 
 #endif
 
-CHEAT_TEST(test_clib_string_length,
+CHEAT_TEST(clib_memory_copy,
            init_console();
-           const char *const str = "hello world";
-           const size_t len = clib_string_length(str);
+           const uint64_t in = 0xDEADCFFE;
+           uint64_t out = 0;
+           const uint8_t in_b = 0xA;
+           uint8_t out_b = 0;
+           clib_memory_copy(&in, &out, sizeof(in));
+           clib_memory_copy(&in_b, &out_b, sizeof(in_b));
            printf("- Testing %s\n", __func__);
-           cheat_assert(len == strlen(str));)
-
-CHEAT_TEST(test_clib_string_copy,
-           init_console();
-           const char *const src = "hello world";
-           char dest[20] = {0};
-           const size_t size = clib_string_copy(dest, src, 5);
-           printf("- Testing %s\n", __func__);
-           cheat_assert(strcmp(dest, "hello") == 0 && size == 5);)
-
-CHEAT_TEST(test_clib_string_replace_char,
-           init_console();
-           char str[] = "hello world";
-           const int replaced = clib_string_replace_char(str, 'l', 'x');
-           printf("- Testing %s\n", __func__);
-           cheat_assert(strcmp(str, "hexlo world") == 0 && replaced == 1);)
-
-CHEAT_TEST(test_clib_string_replace_char_all,
-           init_console();
-           char str[] = "hello world";
-           const size_t replaced = clib_string_replace_char_all(str, 'l', 'x');
-           printf("- Testing %s\n", __func__);
-           cheat_assert(strcmp(str, "hexxo worxd") == 0 && replaced == 3);)
-
-CHEAT_TEST(test_clib_string_dist_lev,
-           init_console();
-           const char *const a = "kitten";
-           const char *const b = "sitting";
-           const int dist = clib_string_dist_lev(a, b);
-           printf("- Testing %s\n", __func__);
-           cheat_assert(dist == 3);)
+           cheat_assert(out == in);
+           cheat_assert(out_b == in_b);)

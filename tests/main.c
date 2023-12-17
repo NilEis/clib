@@ -123,3 +123,9 @@ CHEAT_TEST(test_string_functions,
            int p = run_test("./test_clib_string -m");
            printf("%d\n", p);
            cheat_assert(p == 0);)
+
+CHEAT_TEST(test_memory_functions,
+           init_console();
+           int p = run_test("./test_clib_memory -m");
+           printf("%d\n", p);
+           cheat_assert(p == 0);)

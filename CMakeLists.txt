@@ -8,6 +8,7 @@ project(
 
 set(SOURCE_FILES_LIST
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_io.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_memory.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_string.c
     ${CMAKE_CURRENT_SOURCE_DIR}/include/clib_constructor.h
 )
