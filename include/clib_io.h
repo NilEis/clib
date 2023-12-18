@@ -37,10 +37,12 @@ int clib_mkdir(const char *name, int mode);
  * @param initial_size the initial size of the string
  * @return the string
  * @deprecated
-*/
+ */
 char *clib_read_variable_string(char **dest, size_t initial_size)
 #ifdef __GNUC__
     __attribute__((nonnull(1)));
+#else
+    ;
 #endif
 
 #endif /* CLIB_IO_H */
