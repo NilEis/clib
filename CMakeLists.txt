@@ -10,7 +10,6 @@ set(SOURCE_FILES_LIST
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_io.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_memory.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_string.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/clib_constructor.h
 )
 
 set(LIBRARY_LIST)
@@ -18,6 +17,8 @@ set(LIBRARY_LIST)
 set(gnu_comp_options -Werror -Wall -Wextra -Wconversion -Wsign-conversion -pedantic)
 
 option(INCLUDE_TERMINAL "Include support for terminal functions" FALSE)
+
+option(TCC "Generate tcc makefile in build" ON)
 
 if(INCLUDE_TERMINAL)
     include(FetchContent)
@@ -61,4 +62,28 @@ endif()
 if(BUILD_TESTS)
     include(CTest)
     add_subdirectory(tests)
+endif()
+
+if(TCC)
+    set(TCC_OBJECTS)
+    set(TCC_OBJECTS_PATH ${CMAKE_CURRENT_BINARY_DIR}/tcc)
+    string(REPLACE ";" " " SOURCE_FILES_LIST_STR "${SOURCE_FILES_LIST}")
+    set(TCC_SOURCES)
+    set(TCC_SOURCES_PATH_ABSOLUTE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+    cmake_path(RELATIVE_PATH TCC_SOURCES_PATH_ABSOLUTE BASE_DIRECTORY ${TCC_OBJECTS_PATH} OUTPUT_VARIABLE SRCS_PATH_RELATIVE)
+    set(TCC_SOURCES_PATH ${SRCS_PATH_RELATIVE})
+    set(TCC_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include)
+    set(TCC_BUILD_RULES)
+    foreach(file ${SOURCE_FILES_LIST})
+        cmake_path(GET file STEM filename)
+        set(TCC_OBJECT ./${filename}.o)
+        set(TCC_SOURCE ${TCC_SOURCES_PATH}/${filename}.c)
+        list(APPEND TCC_OBJECTS ${TCC_OBJECT})
+        list(APPEND TCC_SOURCES ${TCC_SOURCE})
+        message(NOTICE "${TCC_OBJECT}: ${TCC_SOURCE}")
+        string(APPEND TCC_BUILD_RULES "${TCC_OBJETC}:")
+    endforeach()
+    string(REPLACE ";" " " TCC_OBJECTS "${TCC_OBJECTS}")
+    string(REPLACE ";" " " TCC_SOURCES "${TCC_SOURCES}")
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/tcc/makefile.in ${CMAKE_CURRENT_BINARY_DIR}/tcc/Makefile)
 endif()
