@@ -3,6 +3,7 @@
  */
 #ifndef CLIB_IO_H
 #define CLIB_IO_H
+#include <stddef.h>
 #include "clib_c90_support.h"
 
 /**
