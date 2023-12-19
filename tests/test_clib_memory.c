@@ -63,13 +63,26 @@ CHEAT_DECLARE(
 #endif
 
 CHEAT_TEST(clib_memory_copy,
-           init_console();
            const uint64_t in = 0xDEADCFFE;
-           uint64_t out = 0;
            const uint8_t in_b = 0xA;
+           uint64_t out = 0;
            uint8_t out_b = 0;
+           init_console();
            clib_memory_copy(&in, &out, sizeof(in));
            clib_memory_copy(&in_b, &out_b, sizeof(in_b));
            printf("- Testing %s\n", __func__);
            cheat_assert(out == in);
            cheat_assert(out_b == in_b);)
+
+CHEAT_TEST(
+    clib_memory_set,
+    int i = 0;
+    uint64_t out[16] = {0};
+    const uint64_t in = 0xDEADCFFE;
+    const uint8_t in_b = 0xF;
+    init_console();
+    clib_memory_set_u64(out, in, 16);
+    printf("- Testing %s\n", __func__);
+    for (i = 0; i < 16; i++) {
+        cheat_assert(out[i] == in);
+    })
