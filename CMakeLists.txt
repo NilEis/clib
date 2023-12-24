@@ -7,6 +7,8 @@ project(
 )
 
 set(SOURCE_FILES_LIST
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_error.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_data_structures.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_io.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_memory.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_string.c
@@ -80,7 +82,6 @@ if(TCC)
         set(TCC_SOURCE ${TCC_SOURCES_PATH}/${filename}.c)
         list(APPEND TCC_OBJECTS ${TCC_OBJECT})
         list(APPEND TCC_SOURCES ${TCC_SOURCE})
-        message(NOTICE "${TCC_OBJECT}: ${TCC_SOURCE}")
         string(APPEND TCC_BUILD_RULES "${TCC_OBJETC}:")
     endforeach()
     string(REPLACE ";" " " TCC_OBJECTS "${TCC_OBJECTS}")
