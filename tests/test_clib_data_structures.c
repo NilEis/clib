@@ -109,4 +109,5 @@ CHEAT_TEST(
     }
     res = clib_binary_heap_get_as_string(heap);
     cheat_assert_string(res, "[ 1, 2, 32, 15, 8 ]");
+    free(res);
     clib_binary_heap_free(heap);)
