@@ -1,4 +1,5 @@
 #include "clib_data_structures.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "clib_error.h"
@@ -152,16 +153,16 @@ char *clib_binary_heap_get_as_string(clib_binary_heap_t *heap)
     ret = calloc(size_of_string, sizeof(char));
     ret[0] = '[';
     ret[1] = ' ';
-    itoa(heap->heap[0].key, tmp, 10);
+    sprintf(tmp, "%d", heap->heap[0].key);
     strcat(ret, tmp);
     strcat(ret, ", ");
     for (i = 1; i < heap->size - 1; i++)
     {
-        itoa(heap->heap[i].key, tmp, 10);
+        sprintf(tmp, "%d", heap->heap[i].key);
         strcat(ret, tmp);
         strcat(ret, ", ");
     }
-    itoa(heap->heap[heap->size - 1].key, tmp, 10);
+    sprintf(tmp, "%d", heap->heap[heap->size - 1].key);
     strcat(ret, tmp);
     strcat(ret, " ]");
     return ret;
