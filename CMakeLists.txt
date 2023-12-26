@@ -10,6 +10,7 @@ set(SOURCE_FILES_LIST
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_error.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_data_structures.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_io.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_math.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_memory.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_string.c
 )

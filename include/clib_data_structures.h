@@ -11,22 +11,65 @@ typedef enum
     CLIB_MAX_HEAP
 } clib_binary_heap_type_t;
 
-typedef struct clib_binary_heap *clib_binary_heap_handle_t;
+typedef struct clib_binary_heap clib_binary_heap_t;
 
 /**
  * @brief creates a binary heap of the given type and size
- * 
+ *
  * @param type CLIB_MIN_HEAP|CLIB_MAX_HEAP
  * @param initial_length the initial size of the internal array
- * @return clib_binary_heap_handle_t a pointer to the allocated heap
+ * @return clib_binary_heap_t* a pointer to the allocated heap
  */
-clib_binary_heap_handle_t clib_create_binary_heap(clib_binary_heap_type_t type, size_t initial_length);
+clib_binary_heap_t *clib_binary_heap_create(clib_binary_heap_type_t type, size_t initial_length);
+
+/**
+ * @brief returns true if empty
+ *
+ * @param heap the heap
+ * @return int zero if false, otherwise not zero
+ */
+int clib_binary_heap_is_empty(clib_binary_heap_t *heap);
+
+/**
+ * @brief inserts the given data into the heap, using the key for sorting
+ *
+ * @param heap the heap
+ * @param key key
+ * @param data a pointer to the data
+ * @return clib_binary_heap_t* a pointer to the heap
+ */
+clib_binary_heap_t *clib_binary_heap_insert(clib_binary_heap_t *heap, int32_t key, void *data);
+
+/**
+ * @brief Returns the data in the first element
+ *
+ * @param heap the heap
+ * @param key if not NULL, a pointer to a variable that will be updated with the key value
+ * @return void* the pointer stored in the node
+ */
+void *clib_binary_heap_get_first(clib_binary_heap_t *heap, int32_t *key);
+
+/**
+ * @brief Returns the data in the first element and removes it from the heap
+ *
+ * @param heap the heap
+ * @return void* the pointer stored in the node
+ */
+void *clib_binary_heap_drop_first(clib_binary_heap_t *heap);
+
+/**
+ * @brief returns a stringified version of the heap in the format [ KEY1, KEY2, ..., KEYN ]
+ *
+ * @param heap the heap
+ * @return char* a pointer to the string (has to be free'd by the caller)
+ */
+char *clib_binary_heap_get_as_string(clib_binary_heap_t *heap);
 
 /**
  * @brief frees the given heap
- * 
- * @param heap 
+ *
+ * @param heap the heap
  */
-void clib_free_binary_heap(clib_binary_heap_handle_t heap);
+void clib_binary_heap_free(clib_binary_heap_t *heap);
 
 #endif /* CLIB_DATA_STRUCTURES_H */

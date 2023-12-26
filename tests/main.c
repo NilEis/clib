@@ -118,14 +118,20 @@ CHEAT_DECLARE(
         return 0;
     })
 
-CHEAT_TEST(test_string_functions,
+CHEAT_TEST(test_data_structures,
            init_console();
-           int p = run_test("./test_clib_string -m");
+           int p = run_test("./test_clib_data_structures -m");
            printf("%d\n", p);
            cheat_assert(p == 0);)
 
 CHEAT_TEST(test_memory_functions,
            init_console();
            int p = run_test("./test_clib_memory -m");
+           printf("%d\n", p);
+           cheat_assert(p == 0);)
+
+CHEAT_TEST(test_string_functions,
+           init_console();
+           int p = run_test("./test_clib_string -m");
            printf("%d\n", p);
            cheat_assert(p == 0);)

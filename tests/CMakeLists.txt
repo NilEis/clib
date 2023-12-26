@@ -21,14 +21,19 @@ link_libraries(clib)
 
 include_directories(${cheat_SOURCE_DIR}/)
 
-add_executable(test_clib_string test_clib_string.c)
+add_executable(test_clib_data_structures test_clib_data_structures.c)
 
 add_executable(test_clib_memory test_clib_memory.c)
+
+add_executable(test_clib_string test_clib_string.c)
 
 add_executable(test_clib_all main.c)
 
 add_dependencies(test_clib_all test_clib_string test_clib_memory)
 
-add_test(NAME "string-test" COMMAND test_clib_string)
+add_test(NAME "data_structures-test" COMMAND test_clib_data_structures)
 
 add_test(NAME "memory-test" COMMAND test_clib_memory)
+
+add_test(NAME "string-test" COMMAND test_clib_string)
+
