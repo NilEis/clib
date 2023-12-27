@@ -141,14 +141,14 @@ char *clib_binary_heap_get_as_string(clib_binary_heap_t *heap)
     size_t size_of_string = 5; /* "[  ]\0" */
     char *ret = NULL;
     char tmp[12] = {0};
-    size_of_string += clib_math_int_width(heap->heap[0].key, 10); /* "num" */
+    size_of_string += clib_math_int_width(heap->heap[0].key, CLIB_RADIX_DEC); /* "num" */
     for (i = 1; i < heap->size - 1; i++)
     {
-        size_of_string += clib_math_int_width(heap->heap[i].key, 10) + 2; /* "num, " */
+        size_of_string += clib_math_int_width(heap->heap[i].key, CLIB_RADIX_DEC) + 2; /* "num, " */
     }
     if (heap->size >= 3)
     {
-        size_of_string += clib_math_int_width(heap->heap[heap->size - 1].key, 10); /* "num" */
+        size_of_string += clib_math_int_width(heap->heap[heap->size - 1].key, CLIB_RADIX_DEC); /* "num" */
     }
     ret = calloc(size_of_string, sizeof(char));
     ret[0] = '[';
