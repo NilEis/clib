@@ -4,6 +4,7 @@
 #include <string.h>
 #include "clib_error.h"
 #include "clib_math.h"
+#include "clib_string.h"
 
 typedef struct
 {
@@ -153,16 +154,16 @@ char *clib_binary_heap_get_as_string(clib_binary_heap_t *heap)
     ret = calloc(size_of_string, sizeof(char));
     ret[0] = '[';
     ret[1] = ' ';
-    sprintf(tmp, "%d", heap->heap[0].key);
+    clib_string_from_int(tmp, heap->heap[0].key, CLIB_RADIX_DEC);
     strcat(ret, tmp);
     strcat(ret, ", ");
     for (i = 1; i < heap->size - 1; i++)
     {
-        sprintf(tmp, "%d", heap->heap[i].key);
+        clib_string_from_int(tmp, heap->heap[i].key, CLIB_RADIX_DEC);
         strcat(ret, tmp);
         strcat(ret, ", ");
     }
-    sprintf(tmp, "%d", heap->heap[heap->size - 1].key);
+    clib_string_from_int(tmp, heap->heap[heap->size - 1].key, CLIB_RADIX_DEC);
     strcat(ret, tmp);
     strcat(ret, " ]");
     return ret;
