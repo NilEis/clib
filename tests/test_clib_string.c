@@ -2,9 +2,11 @@
 #define __BASE_FILE__ __FILE__
 #endif
 #include "cheat.h"
+#include "cheats.h"
 #include "clib.h"
 #include <assert.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <string.h>
 #if defined(_WIN32) || defined(WIN32)
 #include <windows.h>
@@ -98,3 +100,34 @@ CHEAT_TEST(test_clib_string_dist_lev,
            const int dist = clib_string_dist_lev(a, b);
            printf("- Testing %s\n", __func__);
            cheat_assert(dist == 3);)
+
+CHEAT_TEST(test_clib_string_from_int,
+           init_console();
+           const int64_t a = 1243;
+           const int64_t b = 0xDEADCAFE;
+           const char *const expected_a = "1243";
+           const char *const expected_b = "DEADCAFE";
+           char res_a[5] = {0};
+           char res_b[9] = {0};
+           printf("- Testing %s\n", __func__);
+           clib_string_from_int(res_a, a, CLIB_RADIX_DEC);
+           clib_string_from_int(res_b, b, CLIB_RADIX_HEX);
+           cheat_assert_string(res_a, expected_a);
+           cheat_assert_string(res_b, expected_b);)
+
+CHEAT_TEST(test_clib_string_reverse,
+           init_console();
+           const char *const a = "AACHEN";
+           char res_a[7] = {0};
+           const char *const expected_a = "NEHCAA";
+           printf("- Testing %s\n", __func__);
+           clib_string_reverse(a, res_a, clib_string_length(a));
+           cheat_assert_string(res_a, expected_a);)
+
+CHEAT_TEST(test_clib_string_reverse_in_place,
+           init_console();
+           char a[] = "AACHEN";
+           const char *const expected_a = "NEHCAA";
+           printf("- Testing %s\n", __func__);
+           clib_string_reverse_in_place(a, clib_string_length(a));
+           cheat_assert_string(a, expected_a);)

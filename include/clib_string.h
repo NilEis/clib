@@ -4,12 +4,14 @@
 #ifndef CLIB_STRING_H
 #define CLIB_STRING_H
 #include "clib_c90_support.h"
+#include "clib_math.h"
 #include <stddef.h>
+#include <stdint.h>
 
 /**
  * @fn size_t clib_string_length(const char *str)
  * @brief computes the size of str
- * 
+ *
  * @param str the string
  * @return length as size_t
  */
@@ -51,5 +53,36 @@ size_t clib_string_replace_char_all(char *src, char a, char b);
  * @returns returns the edit distance between a and b
  */
 int clib_string_dist_lev(const char *a, const char *b);
+
+/**
+ * @brief converts a number of the given base to a string (without sign)
+ *
+ * @param dest the destination buffer
+ * @param i the number to be converted
+ * @param radix the base of the number
+ * @return char* dest or NULL on error
+ */
+char *clib_string_from_int(char *dest, intmax_t i, clib_radix_t radix);
+
+/**
+ * @fn char *clib_string_reverse(const char *restrict src, char *restrict dest, size_t length)
+ * @brief reverses a string
+ * 
+ * @param src the source pointer
+ * @param dest the destination for the reversed string
+ * @param length the length of src
+ * @return char* dest
+ */
+char *clib_string_reverse(const char *restrict src, char *restrict dest, size_t length);
+
+/**
+ * @fn char *clib_string_reverse_in_place(char *src, size_t length)
+ * @brief reverses a string
+ * 
+ * @param src the source pointer
+ * @param length the length of src
+ * @return char* dest
+ */
+char *clib_string_reverse_in_place(char *src, size_t length);
 
 #endif /* CLIB_STRING_H */

@@ -1,4 +1,5 @@
-#include "clib.h"
+#include "clib_string.h"
+#include "clib_error.h"
 #include <limits.h>
 
 static int __clib_string_dist_lev_rec(const char *a, const char *b, size_t as, size_t bs);
@@ -91,4 +92,46 @@ static int __clib_string_dist_lev_rec(const char *a, const char *b, size_t as, s
         int tatb = __clib_string_dist_lev_rec(a + 1, b + 1, as - 1, bs - 1);
         return 1 + (tab < atb ? (tab < tatb ? tab : tatb) : (atb < tatb ? atb : tatb));
     }
+}
+
+char *clib_string_from_int(char *dest, intmax_t i, clib_radix_t radix)
+{
+    static const char *const num_to_char = "0123456789ABCDEF";
+    int c = 0;
+    if (radix > CLIB_RADIX_HEX)
+    {
+        clib_errno = CLIB_ERRNO_STRING_INVALID_BASE;
+        return NULL;
+    }
+    do
+    {
+        intmax_t res = i % radix;
+        dest[c] = num_to_char[res];
+        i /= radix;
+        c++;
+    } while (i != 0);
+    clib_string_reverse_in_place(dest, (size_t)c);
+    return dest;
+}
+
+char *clib_string_reverse(const char *restrict src, char *restrict dest, size_t length)
+{
+    size_t i = 0;
+    for (i = 0; i < length; i++)
+    {
+        dest[i] = src[length - 1 - i];
+    }
+    return dest;
+}
+
+char *clib_string_reverse_in_place(char *src, size_t length)
+{
+    size_t i = 0;
+    for (i = 0; i < length / 2; i++)
+    {
+        char t = src[i];
+        src[i] = src[length - 1 - i];
+        src[length - 1 - i] = t;
+    }
+    return src;
 }
