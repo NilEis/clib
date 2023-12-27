@@ -67,6 +67,10 @@ if(BUILD_TESTS)
     add_subdirectory(tests)
 endif()
 
+# add_executable(test_exe src/main.c)
+# target_link_libraries(test_exe clib)
+# target_include_directories(test_exe PRIVATE include/)
+
 if(TCC)
     set(TCC_OBJECTS)
     set(TCC_OBJECTS_PATH ${CMAKE_CURRENT_BINARY_DIR}/tcc)
