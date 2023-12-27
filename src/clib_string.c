@@ -109,6 +109,7 @@ char *clib_string_from_int(char *dest, intmax_t i, clib_radix_t radix)
         dest[c] = num_to_char[res];
         i /= radix;
         c++;
+        dest[c] = '\0';
     } while (i != 0);
     clib_string_reverse_in_place(dest, (size_t)c);
     return dest;
