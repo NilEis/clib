@@ -3,7 +3,6 @@
 #endif
 #include "cheat.h"
 #include "cheats.h"
-#define CLIB_MATH_INLINE
 #include "clib.h"
 #include <assert.h>
 #include <stdio.h>
