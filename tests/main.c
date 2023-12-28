@@ -11,8 +11,7 @@
 #endif
 
 CHEAT_DECLARE(
-    void init_console()
-    {
+    void init_console() {
 #if defined(_WIN32) || defined(WIN32)
         static int set = 0;
         if (set == 1)
@@ -57,8 +56,7 @@ CHEAT_DECLARE(
     })
 
 CHEAT_DECLARE(
-    int run_test(char *name)
-    {
+    int run_test(char *name) {
 #if defined(_WIN32) || defined(WIN32)
         STARTUPINFO startup_info;
         PROCESS_INFORMATION process_info;
@@ -99,7 +97,8 @@ CHEAT_DECLARE(
         }
         else if (pid == 0)
         {
-            execv(name, (char**){name,NULL});
+            char *execv_args = {name, NULL};
+            execv(name, execv_args);
             _exit(0xDEAD);
         }
         else
