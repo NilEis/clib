@@ -97,7 +97,7 @@ CHEAT_DECLARE(
         }
         else if (pid == 0)
         {
-            char *execv_args = {name, NULL};
+            char *const execv_args[2] = {name, NULL};
             execv(name, execv_args);
             _exit(0xDEAD);
         }
@@ -120,6 +120,12 @@ CHEAT_DECLARE(
 CHEAT_TEST(test_data_structures,
            init_console();
            int p = run_test("./test_clib_data_structures -m");
+           printf("%d\n", p);
+           cheat_assert(p == 0);)
+
+CHEAT_TEST(test_math_functions,
+           init_console();
+           int p = run_test("./test_clib_math -m");
            printf("%d\n", p);
            cheat_assert(p == 0);)
 

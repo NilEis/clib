@@ -33,6 +33,8 @@ add_executable(test_clib_all main.c)
 
 add_dependencies(test_clib_all test_clib_data_structures test_clib_math test_clib_memory test_clib_string)
 
+add_test(NAME "main-test" COMMAND test_clib_all)
+
 add_test(NAME "data_structures-test" COMMAND test_clib_data_structures)
 
 add_test(NAME "math-test" COMMAND test_clib_math)
