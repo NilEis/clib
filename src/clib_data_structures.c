@@ -1,5 +1,4 @@
 #include "clib_data_structures.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "clib_error.h"
@@ -53,23 +52,26 @@ static int __min_heap_cmp(int32_t a, int32_t b)
     return a < b;
 }
 
-inline int __node_is_valid(clib_binary_heap_node_t *node)
+inline int __node_is_valid(clib_binary_heap_t *heap, size_t i)
 {
-    return node == node->self;
+    return (i < heap->size) && (&(heap->heap[i]) == heap->heap[i].self);
 }
 
-inline void __swap(clib_binary_heap_t *heap, size_t a, size_t b)
+inline void __swap(clib_binary_heap_t *heap, size_t a, size_t b, int a_valid, int b_valid)
 {
     clib_binary_heap_node_t tmp;
+
     tmp.data = heap->heap[a].data;
     tmp.key = heap->heap[a].key;
     tmp.self = heap->heap[a].self;
+
     heap->heap[a].data = heap->heap[b].data;
     heap->heap[a].key = heap->heap[b].key;
-    heap->heap[a].self = &(heap->heap[a].self);
+    heap->heap[a].self = a_valid ? &(heap->heap[a]) : NULL;
+
     heap->heap[b].data = tmp.data;
     heap->heap[b].key = tmp.key;
-    heap->heap[b].self = &(heap->heap[b].self);
+    heap->heap[b].self = b_valid ? &(heap->heap[b]) : NULL;
 }
 
 clib_binary_heap_t *clib_binary_heap_create(clib_binary_heap_type_t type, size_t initial_length)
@@ -105,12 +107,42 @@ clib_binary_heap_t *clib_binary_heap_insert(clib_binary_heap_t *heap, int32_t ke
     heap->heap[i].data = data;
     heap->heap[i].key = key;
     heap->heap[i].self = &(heap->heap[i]);
-    while (i != 0 && !heap->cmp(heap->heap[i].key, heap->heap[__get_parent(i)].key))
+    while (i != 0 && !heap->cmp(heap->heap[__get_parent(i)].key, heap->heap[i].key))
     {
-        __swap(heap, i, __get_parent(i));
+        __swap(heap, i, __get_parent(i), 1, 1);
         i = __get_parent(i);
     }
     return heap;
+}
+
+void clib_binary_heap_heapify(clib_binary_heap_t *heap, size_t index)
+{
+    size_t left = __get_left(index);
+    size_t right = __get_right(index);
+    int left_valid = __node_is_valid(heap, left);
+    int right_valid = __node_is_valid(heap, right);
+    size_t min_or_max = 0;
+    if (!left_valid && !right_valid)
+    {
+        return;
+    }
+    if (right_valid)
+    {
+        min_or_max = right;
+        if (left_valid && heap->cmp(heap->heap[left].key, heap->heap[right].key))
+        {
+            min_or_max = left;
+        }
+    }
+    else
+    {
+        min_or_max = left;
+    }
+    if (!heap->cmp(heap->heap[index].key, heap->heap[min_or_max].key))
+    {
+        __swap(heap, index, min_or_max, 1, 1);
+        clib_binary_heap_heapify(heap, min_or_max);
+    }
 }
 
 void *clib_binary_heap_get_first(clib_binary_heap_t *heap, int32_t *key)
@@ -127,12 +159,39 @@ void *clib_binary_heap_get_first(clib_binary_heap_t *heap, int32_t *key)
     return heap->heap[0].data;
 }
 
-void *clib_binary_heap_drop_first(clib_binary_heap_t *heap)
+void *clib_binary_heap_drop_first(clib_binary_heap_t *heap, int32_t *key)
 {
-    (void)__get_left(0);
-    (void)__get_right(0);
-    (void)__node_is_valid(NULL);
-    return heap;
+    if (heap->size == 0)
+    {
+        clib_errno = CLIB_ERRNO_TREE_EMPTY;
+        return NULL;
+    }
+    if (key != NULL)
+    {
+        *key = heap->heap[0].key;
+    }
+    heap->heap[0].key = 0;
+    heap->heap[0].self = NULL;
+    if (heap->size > 1)
+    {
+        __swap(heap, 0, heap->size - 1, 1, 0);
+        clib_binary_heap_heapify(heap, 0);
+    }
+    heap->size -= 1;
+    return heap->heap[0].data;
+}
+
+void *clib_binary_heap_drop_and_insert(clib_binary_heap_t *heap, int32_t *old_key, int32_t key, void *data)
+{
+    void *ret = heap->heap[0].data;
+    *old_key = heap->heap[0].key;
+    heap->heap[0].data = data;
+    heap->heap[0].key = key;
+    if (heap->cmp(key, *old_key))
+    {
+        clib_binary_heap_heapify(heap, 0);
+    }
+    return ret;
 }
 
 /* todo: there has to be a better/cleaner solution */
