@@ -184,10 +184,14 @@ void *clib_binary_heap_drop_first(clib_binary_heap_t *heap, int32_t *key)
 void *clib_binary_heap_drop_and_insert(clib_binary_heap_t *heap, int32_t *old_key, int32_t key, void *data)
 {
     void *ret = heap->heap[0].data;
-    *old_key = heap->heap[0].key;
+    int32_t o_key = heap->heap[0].key;
+    if (old_key != NULL)
+    {
+        *old_key = o_key;
+    }
     heap->heap[0].data = data;
     heap->heap[0].key = key;
-    if (heap->cmp(key, *old_key))
+    if (!heap->cmp(key, o_key))
     {
         clib_binary_heap_heapify(heap, 0);
     }
