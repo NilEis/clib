@@ -70,21 +70,21 @@ CHEAT_TEST(
     clib_data_structures_binary_heap_insert,
     clib_binary_heap_t *heap = NULL;
     int i = 0;
-    int test_key_data[NUM_TEST_VALUES * 3] = {
-        15, 6, 15, /* [15, 6] */
-        8, 4, 8,   /* [8, 4] */
-        32, 2, 8,  /* [32, 2] */
-        1, 3, 1,   /* [1, 3] */
-        2, 9, 1 /* [1, 9] */};
+    int test_key_res[NUM_TEST_VALUES * 2] = {
+        15, 15, /* [15, 15] */
+        8, 8,   /* [8, 8] */
+        32, 8,  /* [32, 8] */
+        1, 1,   /* [1, 1] */
+        2, 1 /* [2, 1] */};
     {
         init_console();
         printf("- Testing %s\n", __func__);
         heap = clib_binary_heap_create(CLIB_MIN_HEAP, 5);
         for (i = 0; i < NUM_TEST_VALUES; i++)
         {
-            int32_t res = test_key_data[i * 3 + 2];
+            int32_t res = test_key_res[i * 2 + 1];
             int32_t key = 0;
-            clib_binary_heap_insert(heap, test_key_data[i * 3], (void *)test_key_data[i * 3 + 1]);
+            clib_binary_heap_insert(heap, test_key_res[i * 2], NULL);
             (void)clib_binary_heap_get_first(heap, &key);
             cheat_assert(key == res);
         }
@@ -97,17 +97,15 @@ CHEAT_TEST(
     int32_t key = 0;
     int i = 0;
     int32_t res_data[] = {2, 8, 15, 32};
-    int test_key_data[NUM_TEST_VALUES * 2] = {15, 6, /* [15, 6] */
-                                              8, 4,  /* [8, 4] */
-                                              32, 2, /* [32, 2] */
-                                              1, 3,  /* [1, 3] */
-                                              2, 9 /* [1, 9] */};
+    int test_key_data[NUM_TEST_VALUES] = {15, 8, 32, 1, 2};
     init_console();
     printf("- Testing %s\n", __func__);
     heap = clib_binary_heap_create(CLIB_MIN_HEAP, 5);
     for (i = 0; i < NUM_TEST_VALUES; i++) {
-        clib_binary_heap_insert(heap, test_key_data[i * 2], (void *)test_key_data[i * 2 + 1]);
-    } for (i = 0; i < NUM_TEST_VALUES - 1; i++) {
+        clib_binary_heap_insert(heap, test_key_data[i], NULL);
+    }
+
+    for (i = 0; i < NUM_TEST_VALUES - 1; i++) {
         clib_binary_heap_drop_first(heap, NULL);
         clib_binary_heap_get_first(heap, &key);
         cheat_assert(key == res_data[i]);
@@ -124,24 +122,19 @@ CHEAT_TEST(
                           5, 3,
                           15, 5,
                           32, 8};
-    int test_key_data[NUM_TEST_VALUES * 2] = {15, 6, /* [15, 6] */
-                                              8, 4,  /* [8, 4] */
-                                              32, 2, /* [32, 2] */
-                                              1, 3,  /* [1, 3] */
-                                              2, 9 /* [1, 9] */};
+    int test_key_data[NUM_TEST_VALUES] = {15, 8, 32, 1, 2};
     {
         init_console();
         printf("- Testing %s\n", __func__);
         heap = clib_binary_heap_create(CLIB_MIN_HEAP, 5);
         for (i = 0; i < NUM_TEST_VALUES; i++)
         {
-            clib_binary_heap_insert(heap, test_key_data[i * 2], (void *)test_key_data[i * 2 + 1]);
+            clib_binary_heap_insert(heap, test_key_data[i], NULL);
         }
         for (i = 0; i < NUM_TEST_VALUES - 1; i++)
         {
             clib_binary_heap_drop_and_insert(heap, NULL, res_data[i * 2], NULL);
             clib_binary_heap_get_first(heap, &key);
-            printf("%d == %d\n", (int)key, (int)res_data[i * 2 + 1]);
             cheat_assert(key == res_data[i * 2 + 1]);
         }
 
@@ -153,20 +146,14 @@ CHEAT_TEST(
     clib_binary_heap_t *heap = NULL;
     int i = 0;
     char *res = NULL;
-    int test_key_data[NUM_TEST_VALUES * 3] = {
-        15, 6, /* [15, 6] */
-        8, 4,  /* [8, 4] */
-        32, 2, /* [32, 2] */
-        1, 3,  /* [1, 3] */
-        2, 9,
-        /* [1, 9] */};
+    int test_key_data[NUM_TEST_VALUES] = {15, 8, 32, 1, 2};
     {
         init_console();
         printf("- Testing %s\n", __func__);
         heap = clib_binary_heap_create(CLIB_MIN_HEAP, 5);
         for (i = 0; i < NUM_TEST_VALUES; i++)
         {
-            clib_binary_heap_insert(heap, test_key_data[i * 2], (void *)test_key_data[(i * 2) + 1]);
+            clib_binary_heap_insert(heap, test_key_data[i], NULL);
         }
         res = clib_binary_heap_get_as_string(heap);
         cheat_assert_string(res, "[ 1, 2, 32, 15, 8 ]");
