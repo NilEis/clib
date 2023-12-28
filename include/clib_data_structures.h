@@ -11,6 +11,8 @@ typedef enum
     CLIB_MAX_HEAP
 } clib_binary_heap_type_t;
 
+typedef struct clib_tree clib_tree_t;
+
 typedef struct clib_binary_heap clib_binary_heap_t;
 
 /**
