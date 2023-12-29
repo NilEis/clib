@@ -7,10 +7,12 @@
 
 typedef struct
 {
-    void *data;
+    clib_any_data_t data;
     int32_t key;
     void *self;
 } clib_tree_node_t;
+
+static const clib_any_data_t INVALID_DATA = {{0}, false};
 
 typedef int (*clib_compare_function_t)(int32_t a, int32_t b);
 
@@ -100,7 +102,7 @@ int clib_binary_heap_is_empty(clib_binary_heap_t *heap)
     return heap->tree.size > 0;
 }
 
-clib_binary_heap_t *clib_binary_heap_insert(clib_binary_heap_t *heap, int32_t key, void *data)
+clib_binary_heap_t *clib_binary_heap_insert(clib_binary_heap_t *heap, int32_t key, clib_any_data_t data)
 {
     size_t i = 0;
     if (heap->tree.length == heap->tree.size)
@@ -150,12 +152,12 @@ void clib_binary_heap_heapify(clib_binary_heap_t *heap, size_t index)
     }
 }
 
-void *clib_binary_heap_get_first(clib_binary_heap_t *heap, int32_t *key)
+clib_any_data_t clib_binary_heap_get_first(clib_binary_heap_t *heap, int32_t *key)
 {
     if (heap->tree.size == 0)
     {
         clib_errno = CLIB_ERRNO_TREE_EMPTY;
-        return NULL;
+        return INVALID_DATA;
     }
     if (key != NULL)
     {
@@ -164,12 +166,12 @@ void *clib_binary_heap_get_first(clib_binary_heap_t *heap, int32_t *key)
     return heap->tree.array[0].data;
 }
 
-void *clib_binary_heap_drop_first(clib_binary_heap_t *heap, int32_t *key)
+clib_any_data_t clib_binary_heap_drop_first(clib_binary_heap_t *heap, int32_t *key)
 {
     if (heap->tree.size == 0)
     {
         clib_errno = CLIB_ERRNO_TREE_EMPTY;
-        return NULL;
+        return INVALID_DATA;
     }
     if (key != NULL)
     {
@@ -186,9 +188,9 @@ void *clib_binary_heap_drop_first(clib_binary_heap_t *heap, int32_t *key)
     return heap->tree.array[0].data;
 }
 
-void *clib_binary_heap_drop_and_insert(clib_binary_heap_t *heap, int32_t *old_key, int32_t key, void *data)
+clib_any_data_t clib_binary_heap_drop_and_insert(clib_binary_heap_t *heap, int32_t *old_key, int32_t key, clib_any_data_t data)
 {
-    void *ret = heap->tree.array[0].data;
+    clib_any_data_t ret = heap->tree.array[0].data;
     int32_t o_key = heap->tree.array[0].key;
     if (old_key != NULL)
     {

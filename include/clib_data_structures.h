@@ -2,6 +2,7 @@
 #define CLIB_DATA_STRUCTURES_H
 
 #include "clib_c90_support.h"
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -10,6 +11,27 @@ typedef enum
     CLIB_MIN_HEAP,
     CLIB_MAX_HEAP
 } clib_binary_heap_type_t;
+
+typedef struct
+{
+    union
+    {
+        /* unsigned */
+        uint8_t u8;
+        uint16_t u16;
+        uint32_t u32;
+        uint64_t u64;
+        /* signed */
+        int8_t i8;
+        int16_t i16;
+        int32_t i32;
+        int64_t i64;
+        float f;
+        double d;
+        void *ptr;
+    } as;
+    bool valid;
+} clib_any_data_t;
 
 typedef struct clib_tree clib_tree_t;
 
@@ -37,10 +59,10 @@ int clib_binary_heap_is_empty(clib_binary_heap_t *heap);
  *
  * @param heap the heap
  * @param key key
- * @param data a pointer to the data
+ * @param data the data to be stored in the node
  * @return clib_binary_heap_t* a pointer to the heap
  */
-clib_binary_heap_t *clib_binary_heap_insert(clib_binary_heap_t *heap, int32_t key, void *data);
+clib_binary_heap_t *clib_binary_heap_insert(clib_binary_heap_t *heap, int32_t key, clib_any_data_t data);
 
 /**
  * @brief Heapifys the heap
@@ -55,29 +77,29 @@ void clib_binary_heap_heapify(clib_binary_heap_t *heap, size_t index);
  *
  * @param heap the heap
  * @param key if not NULL, a pointer to a variable that will be updated with the key value
- * @return void* the pointer stored in the node
+ * @return clib_any_data_t the data stored in the node
  */
-void *clib_binary_heap_get_first(clib_binary_heap_t *heap, int32_t *key);
+clib_any_data_t clib_binary_heap_get_first(clib_binary_heap_t *heap, int32_t *key);
 
 /**
  * @brief Returns the data in the first element and removes it from the heap
  *
  * @param heap the heap
  * @param key if not NULL, a pointer to a variable that will be updated with the key value
- * @return void* the pointer stored in the node
+ * @return void* the data stored in the node
  */
-void *clib_binary_heap_drop_first(clib_binary_heap_t *heap, int32_t *key);
+clib_any_data_t clib_binary_heap_drop_first(clib_binary_heap_t *heap, int32_t *key);
 
 /**
  * @brief Returns the first element and inserts a new element
- * 
+ *
  * @param heap the heap
  * @param old_key if not NULL, a pointer to a variable that will be updated with the key value
  * @param key the key of the new element to be inserted
- * @param data the data of the new element
- * @return void* the pointer stored in the node
+ * @param data the data to be stored in the new element
+ * @return void* the data stored in the node
  */
-void *clib_binary_heap_drop_and_insert(clib_binary_heap_t *heap, int32_t *old_key, int32_t key, void *data);
+clib_any_data_t clib_binary_heap_drop_and_insert(clib_binary_heap_t *heap, int32_t *old_key, int32_t key, clib_any_data_t data);
 
 /**
  * @brief returns a stringified version of the heap in the format [ KEY1, KEY2, ..., KEYN ]

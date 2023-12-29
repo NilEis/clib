@@ -12,7 +12,6 @@
 #include <windows.h>
 
 CHEAT_DECLARE(
-
     void init_console() {
         static int set = 0;
         if (set == 1)
@@ -64,6 +63,12 @@ CHEAT_DECLARE(
 
 #endif
 
+CHEAT_DECLARE(
+    extern const clib_any_data_t INVALID_DATA;)
+
+CHEAT_DECLARE(
+    const clib_any_data_t INVALID_DATA = {{0}, false};;)
+
 #define NUM_TEST_VALUES 5
 
 CHEAT_TEST(
@@ -84,7 +89,7 @@ CHEAT_TEST(
         {
             int32_t res = test_key_res[i * 2 + 1];
             int32_t key = 0;
-            clib_binary_heap_insert(heap, test_key_res[i * 2], NULL);
+            clib_binary_heap_insert(heap, test_key_res[i * 2], INVALID_DATA);
             (void)clib_binary_heap_get_first(heap, &key);
             cheat_assert(key == res);
         }
@@ -102,7 +107,7 @@ CHEAT_TEST(
     printf("- Testing %s\n", __func__);
     heap = clib_binary_heap_create(CLIB_MIN_HEAP, 5);
     for (i = 0; i < NUM_TEST_VALUES; i++) {
-        clib_binary_heap_insert(heap, test_key_data[i], NULL);
+        clib_binary_heap_insert(heap, test_key_data[i], INVALID_DATA);
     }
 
     for (i = 0; i < NUM_TEST_VALUES - 1; i++) {
@@ -129,11 +134,11 @@ CHEAT_TEST(
         heap = clib_binary_heap_create(CLIB_MIN_HEAP, 5);
         for (i = 0; i < NUM_TEST_VALUES; i++)
         {
-            clib_binary_heap_insert(heap, test_key_data[i], NULL);
+            clib_binary_heap_insert(heap, test_key_data[i], INVALID_DATA);
         }
         for (i = 0; i < NUM_TEST_VALUES - 1; i++)
         {
-            clib_binary_heap_drop_and_insert(heap, NULL, res_data[i * 2], NULL);
+            clib_binary_heap_drop_and_insert(heap, NULL, res_data[i * 2], INVALID_DATA);
             clib_binary_heap_get_first(heap, &key);
             cheat_assert(key == res_data[i * 2 + 1]);
         }
@@ -153,7 +158,7 @@ CHEAT_TEST(
         heap = clib_binary_heap_create(CLIB_MIN_HEAP, 5);
         for (i = 0; i < NUM_TEST_VALUES; i++)
         {
-            clib_binary_heap_insert(heap, test_key_data[i], NULL);
+            clib_binary_heap_insert(heap, test_key_data[i], INVALID_DATA);
         }
         res = clib_binary_heap_get_as_string(heap);
         cheat_assert_string(res, "[ 1, 2, 32, 15, 8 ]");
