@@ -71,6 +71,7 @@ CHEAT_DECLARE(
 
 #define NUM_TEST_VALUES 5
 
+
 CHEAT_TEST(
     clib_data_structures_binary_heap_insert,
     clib_binary_heap_t *heap = NULL;
