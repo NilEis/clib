@@ -1,3 +1,6 @@
+/** @file
+ * @brief redefines keywords if they are not in C90
+ */
 #ifndef CLIB_C90_SUPPORT_H
 #define CLIB_C90_SUPPORT_H
 

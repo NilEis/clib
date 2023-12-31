@@ -1,3 +1,6 @@
+/** @file
+ * @brief functions for working with numbers and math in general
+ */
 #ifndef CLIB_MATH_H
 #define CLIB_MATH_H
 

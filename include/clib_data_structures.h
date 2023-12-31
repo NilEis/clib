@@ -1,3 +1,6 @@
+/** @file
+ * @brief provides types and functions for data-structures
+ */
 #ifndef CLIB_DATA_STRUCTURES_H
 #define CLIB_DATA_STRUCTURES_H
 
