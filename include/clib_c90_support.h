@@ -8,7 +8,13 @@
 /* "inline" is a keyword */
 /* "restrict" is a keyword */
 #else
+/**
+ * @brief redefine inline as static
+ */
 #define inline static
+/**
+ * @brief remove restrict
+ */
 #define restrict
 #endif
 

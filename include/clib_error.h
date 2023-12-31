@@ -6,6 +6,9 @@
 
 #include "clib_c90_support.h"
 
+/**
+ * @brief an enum containing all possible error codes
+ */
 typedef enum
 {
     CLIB_ERRNO_NO_ERROR = 0,
