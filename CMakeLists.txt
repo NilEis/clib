@@ -42,14 +42,17 @@ add_library(clib ${SOURCE_FILES_LIST})
 
 target_link_libraries(clib ${LIBRARY_LIST})
 
-set_target_properties(clib PROPERTIES C_STANDARD 90 C_STANDARD_REQUIRED True C_EXTENSIONS Off)
+if(PROJECT_IS_TOP_LEVEL)
+    set_target_properties(clib PROPERTIES C_STANDARD 90 C_STANDARD_REQUIRED True C_EXTENSIONS Off)
 
-get_target_property(clib_std clib C_STANDARD)
+    get_target_property(clib_std clib C_STANDARD)
 
-if(clib_std EQUAL 90)
-    list(APPEND gnu_comp_options -ansi)
+    if(clib_std EQUAL 90)
+        list(APPEND gnu_comp_options -ansi)
+    endif()
+    
+    target_compile_options(clib PRIVATE $<$<OR:$<C_COMPILER_ID:Clang>,$<C_COMPILER_ID:AppleClang>,$<C_COMPILER_ID:GNU>>:${gnu_comp_options}>$<$<C_COMPILER_ID:MSVC>:/W4 /WX /permissive->)
 endif()
-target_compile_options(clib PRIVATE $<$<OR:$<C_COMPILER_ID:Clang>,$<C_COMPILER_ID:AppleClang>,$<C_COMPILER_ID:GNU>>:${gnu_comp_options}>$<$<C_COMPILER_ID:MSVC>:/W4 /WX /permissive->)
 
 option(BUILD_WITH_DOCS "Generate Docs" OFF)
 
