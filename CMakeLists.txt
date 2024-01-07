@@ -15,6 +15,9 @@ set(SOURCE_FILES_LIST
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_string.c
 )
 
+set(CLIB_HEADER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+file(GLOB_RECURSE CLIB_HEADERS ${CLIB_HEADER_DIR}/*.h)
+
 set(LIBRARY_LIST)
 
 set(gnu_comp_options -Werror -Wall -Wextra -Wconversion -Wsign-conversion -pedantic)
@@ -52,13 +55,13 @@ option(BUILD_WITH_DOCS "Generate Docs" OFF)
 
 option(BUILD_TESTS "Build test exe" ON)
 
-include_directories(clib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(clib PUBLIC ${CLIB_HEADER_DIR})
 
 if(BUILD_WITH_DOCS)
     find_package(Doxygen)
     if(DOXYGEN_FOUND)
-        set(DOXYGEN_USE_MATHJAX YES)
-        doxygen_add_docs(clib_doc "include/" ALL COMMENT "Generate documents")
+        configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doxygen/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
+        doxygen_add_docs(clib_doc ${CLIB_HEADERS} ALL WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR} CONFIG_FILE ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile USE_STAMP_FILE COMMENT "Generate documents")
     endif()
 endif()
 
