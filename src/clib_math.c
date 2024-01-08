@@ -30,6 +30,9 @@ uint32_t clib_math_ctz(uint32_t v)
     return ctz_lut[((uint32_t)((v & -v) * CLIB_MAGIC_DEBRUIJN_NUMBER)) >> 27];
 }
 
+/**
+ * @todo fix clz
+ */
 uint32_t clib_math_clz(uint32_t v)
 {
     v |= v >> 1;
@@ -37,7 +40,7 @@ uint32_t clib_math_clz(uint32_t v)
     v |= v >> 4;
     v |= v >> 8;
     v |= v >> 16;
-    return clz_lut[(uint32_t)(v * 0x07C4ACDDU) >> 27];
+    return 31 - clz_lut[(uint32_t)(v * 0x07C4ACDDU) >> 27];
 }
 
 unsigned int clib_math_int_width(intmax_t value, clib_radix_t radix)
