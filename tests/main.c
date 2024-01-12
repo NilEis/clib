@@ -129,6 +129,12 @@ CHEAT_TEST(test_math_functions,
            printf("%d\n", p);
            cheat_assert(p == 0);)
 
+CHEAT_TEST(test_math_functions_builtins,
+           init_console();
+           int p = run_test("./test_clib_math_builtins -m");
+           printf("%d\n", p);
+           cheat_assert(p == 0);)
+
 CHEAT_TEST(test_math_functions_inlined,
            init_console();
            int p = run_test("./test_clib_math_inline -m");

@@ -44,7 +44,7 @@ target_link_libraries(clib ${LIBRARY_LIST})
 
 if(PROJECT_IS_TOP_LEVEL)
     set_target_properties(clib PROPERTIES C_STANDARD 90 C_STANDARD_REQUIRED True C_EXTENSIONS Off)
-
+    target_compile_definitions(clib PRIVATE USE_BUILTINS=0)
     get_target_property(clib_std clib C_STANDARD)
 
     if(clib_std EQUAL 90)
