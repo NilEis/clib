@@ -39,6 +39,9 @@ uint32_t clib_math_ctz(uint32_t v)
 #endif
 }
 
+/**
+ * @todo fix clz
+ */
 uint32_t clib_math_clz(uint32_t v)
 {
 #if defined(__GNUC__) && USE_BUILTINS
