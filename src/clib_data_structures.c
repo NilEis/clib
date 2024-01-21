@@ -99,7 +99,7 @@ inline void __swap(clib_tree_t *tree, size_t a, size_t b, int a_valid, int b_val
 	tree->array[b].self = b_valid ? &(tree->array[b]) : NULL;
 }
 
-#pragma region binary_heap
+/* #pragma region binary_heap */
 
 static int __max_heap_cmp(int32_t a, int32_t b)
 {
@@ -261,5 +261,5 @@ void clib_binary_heap_free(clib_binary_heap_t *heap)
 	free(heap);
 }
 
-#pragma endregion binary_heap
+/* #pragma endregion binary_heap */
 
