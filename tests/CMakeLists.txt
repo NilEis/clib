@@ -35,11 +35,19 @@ add_executable(test_clib_math_builtins test_clib_math.c)
 
 add_executable(test_clib_memory test_clib_memory.c)
 
+if(INCLUDE_SOCKETS)
+add_executable(test_clib_sockets test_clib_sockets.c)
+endif()
+
 add_executable(test_clib_string test_clib_string.c)
 
 add_executable(test_clib_all main.c)
 
-add_dependencies(test_clib_all test_clib_data_structures test_clib_math test_clib_math_builtins test_clib_math_inline test_clib_memory test_clib_string)
+if(INCLUDE_SOCKETS)
+  add_dependencies(test_clib_all test_clib_sockets)
+endif()
+
+add_dependencies(test_clib_all clib test_clib_data_structures test_clib_math test_clib_math_builtins test_clib_math_inline test_clib_memory test_clib_string)
 
 add_test(NAME "main-test" COMMAND test_clib_all)
 
