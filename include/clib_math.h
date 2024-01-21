@@ -1,3 +1,6 @@
+/** @file
+ * @brief functions for working with numbers and math in general
+ */
 #ifndef CLIB_MATH_H
 #define CLIB_MATH_H
 
@@ -16,6 +19,16 @@ typedef enum
     CLIB_RADIX_HEX = 16
 } clib_radix_t;
 
+#ifdef CLIB_MATH_INLINE
+#define CLIB_MATH_INLINED 1
+#define __CLIB_MATH_DEF_FUNCTION(dec, def) \
+    inline dec                             \
+        def
+#else
+#define CLIB_MATH_INLINED 0
+#define __CLIB_MATH_DEF_FUNCTION(dec, def) dec;
+#endif
+
 /**
  * @brief returns the point x between a and b (lerp(0.5, 1, 3) = 2)
  *
@@ -24,14 +37,37 @@ typedef enum
  * @param b the end point
  * @return double
  */
-#ifdef CLIB_MATH_INLINE
-inline double clib_math_lerp(double x, double a, double b)
-{
-    return a + x * (b - a);
-}
-#else
-double clib_math_lerp(double x, double a, double b);
-#endif
+__CLIB_MATH_DEF_FUNCTION(double clib_math_lerp(double x, double a, double b),
+                         {
+                             return a + x * (b - a);
+                         })
+
+/**
+ * @brief returns the absolute value of x
+ *
+ * @param x x
+ * @return int32_t
+ */
+__CLIB_MATH_DEF_FUNCTION(int32_t clib_math_abs(int32_t x),
+                         {
+                             return x < 0 ? -x : x;
+                         })
+
+/**
+ * @brief returns the number of trailing zeros of an unsigned int
+ * 
+ * @param v 
+ * @return uint32_t 
+ */
+uint32_t clib_math_ctz(uint32_t v);
+
+/**
+ * @brief returns the number of leading zeros of an unsigned int
+ * 
+ * @param v 
+ * @return uint32_t 
+ */
+uint32_t clib_math_clz(uint32_t v);
 
 /**
  * @brief returns the width of the integer as a string

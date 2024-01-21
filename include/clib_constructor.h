@@ -11,7 +11,9 @@
 #ifndef CLIB_CONSTRUCTOR_H
 #define CLIB_CONSTRUCTOR_H
 #include "clib_c90_support.h"
-
+/**
+ * @brief a function specified in the macro will be run before main
+ */
 #ifdef __cplusplus
 #define INITIALIZER(f)   \
     static void f(void); \

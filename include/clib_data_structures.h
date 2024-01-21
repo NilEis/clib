@@ -1,3 +1,6 @@
+/** @file
+ * @brief provides types and functions for data-structures
+ */
 #ifndef CLIB_DATA_STRUCTURES_H
 #define CLIB_DATA_STRUCTURES_H
 
@@ -5,14 +8,26 @@
 #include <stddef.h>
 #include <stdint.h>
 
+/**
+ * @brief set type of binary heap
+ * 
+ */
 typedef enum
 {
     CLIB_MIN_HEAP,
     CLIB_MAX_HEAP
 } clib_binary_heap_type_t;
 
+/**
+ * @brief typedef for a clib_tree type
+ * 
+ */
 typedef struct clib_tree clib_tree_t;
 
+/**
+ * @brief typedef for binary heap
+ * 
+ */
 typedef struct clib_binary_heap clib_binary_heap_t;
 
 /**

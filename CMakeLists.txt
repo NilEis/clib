@@ -15,13 +15,22 @@ set(SOURCE_FILES_LIST
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_string.c
 )
 
+set(CLIB_HEADER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+file(GLOB_RECURSE CLIB_HEADERS ${CLIB_HEADER_DIR}/*.h)
+
 set(LIBRARY_LIST)
 
 set(gnu_comp_options -Werror -Wall -Wextra -Wconversion -Wsign-conversion -pedantic)
 
 option(INCLUDE_TERMINAL "Include support for terminal functions" FALSE)
 
+option(INCLUDE_SOCKETS "Include functionality for sockets" ON)
+
 option(TCC "Generate tcc makefile in build" ON)
+
+option(BUILD_WITH_DOCS "Generate Docs" OFF)
+
+option(BUILD_TESTS "Build test exe" OFF)
 
 if(INCLUDE_TERMINAL)
     include(FetchContent)
@@ -35,36 +44,55 @@ if(INCLUDE_TERMINAL)
     list(APPEND LIBRARY_LIST c_terminal)
 endif()
 
-add_library(clib ${SOURCE_FILES_LIST})
-
-target_link_libraries(clib ${LIBRARY_LIST})
-
-set_target_properties(clib PROPERTIES C_STANDARD 90 C_STANDARD_REQUIRED True C_EXTENSIONS Off)
-
-get_target_property(clib_std clib C_STANDARD)
-
-if(clib_std EQUAL 90)
-    list(APPEND gnu_comp_options -ansi)
+if(INCLUDE_SOCKETS)
+    list(APPEND SOURCE_FILES_LIST ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_sockets.c)
+    if(WIN32)
+        list(APPEND LIBRARY_LIST Ws2_32)
+    else()
+    endif()
 endif()
-target_compile_options(clib PRIVATE $<$<OR:$<C_COMPILER_ID:Clang>,$<C_COMPILER_ID:AppleClang>,$<C_COMPILER_ID:GNU>>:${gnu_comp_options}>$<$<C_COMPILER_ID:MSVC>:/W4 /WX /permissive->)
 
-option(BUILD_WITH_DOCS "Generate Docs" OFF)
+if(NOT TARGET clib)
+add_library(clib ${SOURCE_FILES_LIST})
+target_link_libraries(clib ${LIBRARY_LIST})
+endif()
 
-option(BUILD_TESTS "Build test exe" ON)
+if(INCLUDE_SOCKETS)
+    list(APPEND SOURCE_FILES_LIST ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_sockets.c)
+    if(WIN32)
+        target_compile_definitions(clib PRIVATE CLIB_SOCKETS_WIN)
+    else()
+        target_compile_definitions(clib PRIVATE CLIB_SOCKETS_UNIX)
+    endif()
+    target_compile_definitions(clib PUBLIC CLIB_SOCKETS)
+endif()
 
-include_directories(clib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+if(PROJECT_IS_TOP_LEVEL)
+    set_target_properties(clib PROPERTIES C_STANDARD 90 C_STANDARD_REQUIRED True C_EXTENSIONS Off)
+    target_compile_definitions(clib PRIVATE USE_BUILTINS=0)
+    get_target_property(clib_std clib C_STANDARD)
+
+    if(clib_std EQUAL 90)
+        list(APPEND gnu_comp_options -ansi)
+    endif()
+    
+    target_compile_options(clib PRIVATE $<$<OR:$<C_COMPILER_ID:Clang>,$<C_COMPILER_ID:AppleClang>,$<C_COMPILER_ID:GNU>>:${gnu_comp_options}>$<$<C_COMPILER_ID:MSVC>:/W4 /WX /permissive->)
+endif()
+
+include_directories(clib PUBLIC ${CLIB_HEADER_DIR})
 
 if(BUILD_WITH_DOCS)
     find_package(Doxygen)
     if(DOXYGEN_FOUND)
-        set(DOXYGEN_USE_MATHJAX YES)
-        doxygen_add_docs(clib_doc "include/" ALL COMMENT "Generate documents")
+        configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doxygen/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
+        doxygen_add_docs(clib_doc ${CLIB_HEADERS} ALL WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR} CONFIG_FILE ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile USE_STAMP_FILE COMMENT "Generate documents")
     endif()
 endif()
 
-if(BUILD_TESTS)
+if(BUILD_TESTS AND PROJECT_IS_TOP_LEVEL)
     include(CTest)
-    add_subdirectory(tests)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests)
 endif()
 
 # add_executable(test_exe src/main.c)

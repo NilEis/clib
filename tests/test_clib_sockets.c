@@ -2,16 +2,10 @@
 #define __BASE_FILE__ __FILE__
 #endif
 #include "cheat.h"
-#include "cheats.h"
 #include "clib.h"
 #include <assert.h>
 #include <stdio.h>
 #include <stdint.h>
-#include <math.h>
-#ifndef CLIB_MATH_INLINED_EXPECTED
-#define CLIB_MATH_INLINED_EXPECTED 0
-#endif
-
 #if defined(_WIN32) || defined(WIN32)
 #include <windows.h>
 
@@ -69,45 +63,12 @@ CHEAT_DECLARE(
 
 #endif
 
-#define TEST_EPSILON 0.0000001
-
-CHEAT_TEST(clib_math_inlined,
-           init_console();
-           printf("- Testing %s\n", __func__);
-           cheat_assert(CLIB_MATH_INLINED == CLIB_MATH_INLINED_EXPECTED);)
-
-CHEAT_TEST(clib_math_int_width,
-           init_console();
-           printf("- Testing %s\n", __func__);
-           cheat_assert(5 == clib_math_int_width(16, CLIB_RADIX_BIN));
-           cheat_assert(2 == clib_math_int_width(9, CLIB_RADIX_OCT));
-           cheat_assert(5 == clib_math_int_width(54321, CLIB_RADIX_DEC));
-           cheat_assert(6 == clib_math_int_width(0xabcdef, CLIB_RADIX_HEX));)
-
-CHEAT_TEST(clib_math_lerp,
-           init_console();
-           printf("- Testing %s\n", __func__);
-           cheat_assert_double(clib_math_lerp(0.5, 1.5, 2.0), 1.75, TEST_EPSILON);
-           cheat_assert_double(clib_math_lerp(0.5, -10, 30), 10, TEST_EPSILON);
-           cheat_assert_double(clib_math_lerp(0.5, -10, 10), 0, TEST_EPSILON);)
-
 CHEAT_TEST(
-    clib_math_ctz,
-    init_console();
+    clib_sockets_init,
     printf("- Testing %s\n", __func__);
-    cheat_assert(clib_math_ctz(0) == 0);
-    for (int i = 0; i < 32; i++)
+    clib_error_code_t ret = clib_sockets_init();
+    if (ret != CLIB_ERRNO_NO_ERROR)
     {
-        cheat_assert(clib_math_ctz(pow(2, i)) == i);
-    })
-
-CHEAT_TEST(
-    clib_math_clz,
-    init_console();
-    printf("- Testing %s\n", __func__);
-    cheat_assert(clib_math_clz(0) == 31);
-    for (int i = 0; i < 32; i++)
-    {
-        printf("clib_math_clz(%X): %u == %u\n", (int)pow(2, i), clib_math_clz(pow(2, i)), 31 - i);
-        cheat_assert(clib_math_clz(pow(2, i)) == (31 - i));
-    })
+        printf("Error: %s\n", clib_error_get_string(ret));
+    };
+    cheat_assert(ret == CLIB_ERRNO_NO_ERROR);)

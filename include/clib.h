@@ -12,6 +12,9 @@
 #include "clib_io.h"
 #include "clib_math.h"
 #include "clib_memory.h"
+#ifdef CLIB_SOCKETS
+#include "clib_sockets.h"
+#endif
 #include "clib_string.h"
 
 #endif /* CLIB_H */

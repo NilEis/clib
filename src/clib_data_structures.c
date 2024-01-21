@@ -7,9 +7,9 @@
 
 typedef struct
 {
-	void* data;
+	void *data;
 	int32_t key;
-	void* self;
+	void *self;
 } clib_tree_node_t;
 
 typedef int (*clib_compare_function_t)(int32_t a, int32_t b);
@@ -17,28 +17,19 @@ typedef int (*clib_compare_function_t)(int32_t a, int32_t b);
 struct clib_tree
 {
 	/* pointer to internal array */
-	clib_tree_node_t* array;
+	clib_tree_node_t *array;
 	/* number of elements in heap */
 	size_t size;
 	/* size of internal array */
 	size_t length;
 };
 
-struct clib_binary_heap
-{
-	clib_tree_t tree;
-	/* min or max heap */
-	clib_binary_heap_type_t type;
-	/* pointer to the compare function */
-	clib_compare_function_t cmp;
-};
-
-static char* clib_tree_get_string(clib_tree_t* tree)
+static char *clib_tree_get_string(clib_tree_t *tree)
 {
 	size_t i = 0;
 	size_t size_of_string = 5; /* "[  ]\0" */
-	char* ret = NULL;
-	char tmp[12] = { 0 };
+	char *ret = NULL;
+	char tmp[12] = {0};
 	size_of_string += clib_math_int_width(tree->array[0].key, CLIB_RADIX_DEC); /* "num" */
 	for (i = 1; i < tree->size - 1; i++)
 	{
@@ -86,21 +77,12 @@ inline size_t __get_right(size_t i)
 	return 2 * i + 2;
 }
 
-static int __max_heap_cmp(int32_t a, int32_t b)
-{
-	return a > b;
-}
-static int __min_heap_cmp(int32_t a, int32_t b)
-{
-	return a < b;
-}
-
-inline int __node_is_valid(clib_tree_t* tree, size_t i)
+inline int __node_is_valid(clib_tree_t *tree, size_t i)
 {
 	return (i < tree->size) && (&(tree->array[i]) == tree->array[i].self);
 }
 
-inline void __swap(clib_tree_t* tree, size_t a, size_t b, int a_valid, int b_valid)
+inline void __swap(clib_tree_t *tree, size_t a, size_t b, int a_valid, int b_valid)
 {
 	clib_tree_node_t tmp;
 
@@ -119,9 +101,27 @@ inline void __swap(clib_tree_t* tree, size_t a, size_t b, int a_valid, int b_val
 
 /* #pragma region binary_heap */
 
-clib_binary_heap_t* clib_binary_heap_create(clib_binary_heap_type_t type, size_t initial_length)
+static int __max_heap_cmp(int32_t a, int32_t b)
 {
-	clib_binary_heap_t* ret = calloc(1, sizeof(clib_binary_heap_t));
+	return a > b;
+}
+static int __min_heap_cmp(int32_t a, int32_t b)
+{
+	return a < b;
+}
+
+struct clib_binary_heap
+{
+	clib_tree_t tree;
+	/* min or max heap */
+	clib_binary_heap_type_t type;
+	/* pointer to the compare function */
+	clib_compare_function_t cmp;
+};
+
+clib_binary_heap_t *clib_binary_heap_create(clib_binary_heap_type_t type, size_t initial_length)
+{
+	clib_binary_heap_t *ret = calloc(1, sizeof(clib_binary_heap_t));
 	if (ret == NULL)
 	{
 		clib_errno = CLIB_ERRNO_ALLOCATION_ZEROED_ERROR;
@@ -140,12 +140,12 @@ clib_binary_heap_t* clib_binary_heap_create(clib_binary_heap_type_t type, size_t
 	return ret;
 }
 
-int clib_binary_heap_is_empty(clib_binary_heap_t* heap)
+int clib_binary_heap_is_empty(clib_binary_heap_t *heap)
 {
 	return heap->tree.size > 0;
 }
 
-clib_binary_heap_t* clib_binary_heap_insert(clib_binary_heap_t* heap, int32_t key, void* data)
+clib_binary_heap_t *clib_binary_heap_insert(clib_binary_heap_t *heap, int32_t key, void *data)
 {
 	size_t i = 0;
 	if (heap->tree.length == heap->tree.size)
@@ -165,7 +165,7 @@ clib_binary_heap_t* clib_binary_heap_insert(clib_binary_heap_t* heap, int32_t ke
 	return heap;
 }
 
-void clib_binary_heap_heapify(clib_binary_heap_t* heap, size_t index)
+void clib_binary_heap_heapify(clib_binary_heap_t *heap, size_t index)
 {
 	size_t left = __get_left(index);
 	size_t right = __get_right(index);
@@ -195,7 +195,7 @@ void clib_binary_heap_heapify(clib_binary_heap_t* heap, size_t index)
 	}
 }
 
-void* clib_binary_heap_get_first(clib_binary_heap_t* heap, int32_t* key)
+void *clib_binary_heap_get_first(clib_binary_heap_t *heap, int32_t *key)
 {
 	if (heap->tree.size == 0)
 	{
@@ -209,7 +209,7 @@ void* clib_binary_heap_get_first(clib_binary_heap_t* heap, int32_t* key)
 	return heap->tree.array[0].data;
 }
 
-void* clib_binary_heap_drop_first(clib_binary_heap_t* heap, int32_t* key)
+void *clib_binary_heap_drop_first(clib_binary_heap_t *heap, int32_t *key)
 {
 	if (heap->tree.size == 0)
 	{
@@ -231,9 +231,9 @@ void* clib_binary_heap_drop_first(clib_binary_heap_t* heap, int32_t* key)
 	return heap->tree.array[0].data;
 }
 
-void* clib_binary_heap_drop_and_insert(clib_binary_heap_t* heap, int32_t* old_key, int32_t key, void* data)
+void *clib_binary_heap_drop_and_insert(clib_binary_heap_t *heap, int32_t *old_key, int32_t key, void *data)
 {
-	void* ret = heap->tree.array[0].data;
+	void *ret = heap->tree.array[0].data;
 	int32_t o_key = heap->tree.array[0].key;
 	if (old_key != NULL)
 	{
@@ -249,14 +249,17 @@ void* clib_binary_heap_drop_and_insert(clib_binary_heap_t* heap, int32_t* old_ke
 }
 
 /* todo: there has to be a better/cleaner solution */
-char* clib_binary_heap_get_as_string(clib_binary_heap_t* heap)
+char *clib_binary_heap_get_as_string(clib_binary_heap_t *heap)
 {
-	clib_tree_t* tree = &(heap->tree);
+	clib_tree_t *tree = &(heap->tree);
 	return clib_tree_get_string(tree);
 }
 
-void clib_binary_heap_free(clib_binary_heap_t* heap)
+void clib_binary_heap_free(clib_binary_heap_t *heap)
 {
 	free(heap->tree.array);
 	free(heap);
 }
+
+/* #pragma endregion binary_heap */
+
