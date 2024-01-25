@@ -70,6 +70,22 @@ uint32_t clib_math_ctz(uint32_t v);
 uint32_t clib_math_clz(uint32_t v);
 
 /**
+ * @brief returns the index of the first bit set in an unsigned int
+ * @param v
+ * @return uint32_t the index of the first bit set
+ * 
+*/
+uint32_t clib_math_ffs(uint32_t v);
+
+/**
+ * @brief returns the greatest common divisor of a and b
+ * @param a
+ * @param b
+ * @return int32_t the greatest common divisor
+*/
+int32_t math_clib_gcd(int32_t a, int32_t b);
+
+/**
  * @brief returns the width of the integer as a string
  *
  * @param value the value
