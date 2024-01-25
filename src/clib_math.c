@@ -39,9 +39,6 @@ uint32_t clib_math_ctz(uint32_t v)
 #endif
 }
 
-/**
- * @todo fix clz
- */
 uint32_t clib_math_clz(uint32_t v)
 {
 #if defined(__GNUC__) && USE_BUILTINS
@@ -54,6 +51,53 @@ uint32_t clib_math_clz(uint32_t v)
     v |= v >> 16;
     return clz_lut[(uint32_t)(v * 0x07C4ACDDU) >> 27];
 #endif
+}
+
+uint32_t clib_math_ffs(uint32_t v)
+{
+    if (v == 0)
+    {
+        return 0;
+    }
+    else
+    {
+#if defined(__GNUC__) && USE_BUILTINS
+        return (uint32_t)__builtin_ffsg(v);
+#else
+        return clib_math_ctz(v) + 1;
+#endif
+    }
+}
+
+int32_t math_clib_gcd(int32_t a, int32_t b)
+{
+    uint32_t c;
+    uint32_t a_u;
+    uint32_t b_u;
+    if (a == 0 || b == 0)
+    {
+        return a | b;
+    }
+
+    a_u = (uint32_t)clib_math_abs(a);
+    b_u = (uint32_t)clib_math_abs(b);
+
+    c = clib_math_ctz(a_u | b_u);
+
+    a_u >>= clib_math_ctz(a_u);
+
+    do
+    {
+        b_u >>= clib_math_ffs(b_u);
+        if (a_u > b_u)
+        {
+            uint32_t t = a_u;
+            a_u = b_u;
+            b_u = t;
+        }
+        b_u = b_u - a_u;
+    } while (b_u != 0);
+    return (int32_t)(a_u << c);
 }
 
 unsigned int clib_math_int_width(intmax_t value, clib_radix_t radix)

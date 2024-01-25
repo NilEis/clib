@@ -17,8 +17,7 @@
 
 CHEAT_DECLARE(
 
-    void init_console()
-    {
+    void init_console() {
         static int set = 0;
         if (set == 1)
         {
@@ -96,8 +95,7 @@ CHEAT_TEST(
     init_console();
     printf("- Testing %s\n", __func__);
     cheat_assert(clib_math_ctz(0) == 0);
-    for (int i = 0; i < 32; i++)
-    {
+    for (int i = 0; i < 32; i++) {
         cheat_assert(clib_math_ctz(pow(2, i)) == i);
     })
 
@@ -106,8 +104,17 @@ CHEAT_TEST(
     init_console();
     printf("- Testing %s\n", __func__);
     cheat_assert(clib_math_clz(0) == 31);
-    for (int i = 0; i < 32; i++)
-    {
-        printf("clib_math_clz(%X): %u == %u\n", (int)pow(2, i), clib_math_clz(pow(2, i)), 31 - i);
+    for (int i = 0; i < 32; i++) {
         cheat_assert(clib_math_clz(pow(2, i)) == (31 - i));
     })
+
+CHEAT_TEST(
+    clib_math_ffs,
+    init_console();
+    printf("- Testing %s\n", __func__);
+    cheat_assert(clib_math_ffs(0) == 0);
+    for (int i = 0; i < 32; i++) {
+        cheat_assert(clib_math_ffs(pow(2, i)) == i+1);
+    })
+
+// todo: add tests for clib_math_gcd
