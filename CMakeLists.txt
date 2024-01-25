@@ -18,7 +18,7 @@ set(SOURCE_FILES_LIST
 set(CLIB_HEADER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 file(GLOB_RECURSE CLIB_HEADERS ${CLIB_HEADER_DIR}/*.h)
 
-set(LIBRARY_LIST)
+set(LIBRARY_LIST m)
 
 set(gnu_comp_options -Werror -Wall -Wextra -Wconversion -Wsign-conversion -pedantic -Werror=maybe-uninitialized -Werror=sign-conversion)
 
