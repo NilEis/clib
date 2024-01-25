@@ -71,31 +71,33 @@ uint32_t clib_math_ffs(uint32_t v)
 
 int32_t math_clib_gcd(int32_t a, int32_t b)
 {
-    int32_t c = 0;
+    uint32_t c;
+    uint32_t a_u;
+    uint32_t b_u;
     if (a == 0 || b == 0)
     {
         return a | b;
     }
 
-    a = clib_math_abs(a);
-    b = clib_math_abs(b);
+    a_u = (uint32_t)clib_math_abs(a);
+    b_u = (uint32_t)clib_math_abs(b);
 
-    c = clib_math_ctz(a | b);
+    c = clib_math_ctz(a_u | b_u);
 
-    a >>= clib_math_ctz(a);
+    a_u >>= clib_math_ctz(a_u);
 
     do
     {
-        b >>= clib_math_ffs(b);
-        if (a > b)
+        b_u >>= clib_math_ffs(b_u);
+        if (a_u > b_u)
         {
-            int32_t t = a;
-            a = b;
-            b = t;
+            uint32_t t = a_u;
+            a_u = b_u;
+            b_u = t;
         }
-        b = b - a;
-    } while (b != 0);
-    return a << c;
+        b_u = b_u - a_u;
+    } while (b_u != 0);
+    return (int32_t)(a_u << c);
 }
 
 unsigned int clib_math_int_width(intmax_t value, clib_radix_t radix)
