@@ -114,7 +114,15 @@ CHEAT_TEST(
     printf("- Testing %s\n", __func__);
     cheat_assert(clib_math_ffs(0) == 0);
     for (int i = 0; i < 32; i++) {
-        cheat_assert(clib_math_ffs(pow(2, i)) == i+1);
+        cheat_assert(clib_math_ffs(pow(2, i)) == i + 1);
     })
 
-// todo: add tests for clib_math_gcd
+CHEAT_TEST(
+    clib_math_gcd,
+    init_console();
+    printf("- Testing %s\n", __func__);
+    cheat_assert(clib_math_gcd(0, 1) == 1);
+    cheat_assert(clib_math_gcd(15, 5) == 5);
+    cheat_assert(clib_math_gcd(9, 15) == 3);
+    cheat_assert(clib_math_gcd(10, 20) == 10);
+    cheat_assert(clib_math_gcd(33, 22) == 11);)

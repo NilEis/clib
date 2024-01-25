@@ -69,7 +69,7 @@ uint32_t clib_math_ffs(uint32_t v)
     }
 }
 
-int32_t math_clib_gcd(int32_t a, int32_t b)
+int32_t clib_math_gcd(int32_t a, int32_t b)
 {
     uint32_t c;
     uint32_t a_u;
@@ -88,7 +88,7 @@ int32_t math_clib_gcd(int32_t a, int32_t b)
 
     do
     {
-        b_u >>= clib_math_ffs(b_u);
+        b_u >>= clib_math_ctz(b_u);
         if (a_u > b_u)
         {
             uint32_t t = a_u;
