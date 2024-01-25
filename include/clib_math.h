@@ -83,7 +83,7 @@ uint32_t clib_math_ffs(uint32_t v);
  * @param b
  * @return int32_t the greatest common divisor
 */
-int32_t math_clib_gcd(int32_t a, int32_t b);
+int32_t clib_math_gcd(int32_t a, int32_t b);
 
 /**
  * @brief returns the width of the integer as a string
