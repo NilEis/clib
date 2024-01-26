@@ -22,7 +22,7 @@ set(LIBRARY_LIST)
 
 set(gnu_comp_options -Werror -Wall -Wextra -Werror=conversion -pedantic -Werror=maybe-uninitialized -Werror=sign-conversion)
 
-option(INCLUDE_TERMINAL "Include support for terminal functions" FALSE)
+option(INCLUDE_TERMINAL "Include support for terminal functions" TRUE)
 
 option(INCLUDE_SOCKETS "Include functionality for sockets" ON)
 
