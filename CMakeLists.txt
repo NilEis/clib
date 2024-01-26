@@ -20,9 +20,9 @@ file(GLOB_RECURSE CLIB_HEADERS ${CLIB_HEADER_DIR}/*.h)
 
 set(LIBRARY_LIST m)
 
-set(gnu_comp_options -Werror -Wall -Wextra -Wconversion -Wsign-conversion -pedantic -Werror=maybe-uninitialized -Werror=sign-conversion)
+set(gnu_comp_options -Werror -Wall -Wextra -Werror=conversion -Wpedantic -pedantic -Werror=maybe-uninitialized -Werror=sign-conversion)
 
-option(INCLUDE_TERMINAL "Include support for terminal functions" FALSE)
+option(INCLUDE_TERMINAL "Include support for terminal functions" TRUE)
 
 option(INCLUDE_SOCKETS "Include functionality for sockets" ON)
 
