@@ -122,6 +122,8 @@ CHEAT_TEST(
     init_console();
     printf("- Testing %s\n", __func__);
     cheat_assert(clib_math_gcd(0, 1) == 1);
+    cheat_assert(clib_math_gcd(-15, 5) == 5);
+    cheat_assert(clib_math_gcd(-15, -5) == 5);
     cheat_assert(clib_math_gcd(15, 5) == 5);
     cheat_assert(clib_math_gcd(9, 15) == 3);
     cheat_assert(clib_math_gcd(10, 20) == 10);
