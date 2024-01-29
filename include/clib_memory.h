@@ -4,6 +4,11 @@
  */
 #ifndef CLIB_MEMORY_H
 #define CLIB_MEMORY_H
+
+#ifdef __cplusplus 
+extern "C" {
+#endif
+
 #include "clib_c90_support.h"
 #include <stddef.h>
 #include <stdint.h>
@@ -57,5 +62,9 @@ void *clib_memory_set_u32(void *dest, uint32_t value, size_t size);
  * @return void* the dest pointer
  */
 void *clib_memory_set_u64(void *dest, uint64_t value, size_t size);
+
+#ifdef __cplusplus 
+}
+#endif
 
 #endif /* CLIB_MEMORY_H */

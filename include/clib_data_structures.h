@@ -4,6 +4,10 @@
 #ifndef CLIB_DATA_STRUCTURES_H
 #define CLIB_DATA_STRUCTURES_H
 
+#ifdef __cplusplus 
+extern "C" {
+#endif
+
 #include "clib_c90_support.h"
 #include <stddef.h>
 #include <stdint.h>
@@ -108,5 +112,9 @@ char *clib_binary_heap_get_as_string(clib_binary_heap_t *heap);
  * @param heap the heap
  */
 void clib_binary_heap_free(clib_binary_heap_t *heap);
+
+#ifdef __cplusplus 
+}
+#endif
 
 #endif /* CLIB_DATA_STRUCTURES_H */

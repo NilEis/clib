@@ -3,6 +3,11 @@
  */
 #ifndef CLIB_STRING_H
 #define CLIB_STRING_H
+
+#ifdef __cplusplus 
+extern "C" {
+#endif
+
 #include "clib_c90_support.h"
 #include "clib_math.h"
 #include <stddef.h>
@@ -84,5 +89,9 @@ char *clib_string_reverse(const char *restrict src, char *restrict dest, size_t 
  * @return char* dest
  */
 char *clib_string_reverse_in_place(char *src, size_t length);
+
+#ifdef __cplusplus 
+}
+#endif
 
 #endif /* CLIB_STRING_H */
