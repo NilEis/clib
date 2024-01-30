@@ -10,6 +10,11 @@
  */
 #ifndef CLIB_CONSTRUCTOR_H
 #define CLIB_CONSTRUCTOR_H
+
+#ifdef __cplusplus 
+extern "C" {
+#endif
+
 #include "clib_c90_support.h"
 /**
  * @brief a function specified in the macro will be run before main
@@ -41,6 +46,10 @@
 #define INITIALIZER(f)                                \
     static void f(void) __attribute__((constructor)); \
     static void f(void)
+#endif
+
+#ifdef __cplusplus 
+}
 #endif
 
 #endif /* CLIB_CONSTRUCTOR_H */

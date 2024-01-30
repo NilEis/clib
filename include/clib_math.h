@@ -4,6 +4,10 @@
 #ifndef CLIB_MATH_H
 #define CLIB_MATH_H
 
+#ifdef __cplusplus 
+extern "C" {
+#endif
+
 #include "clib_c90_support.h"
 #include <stdint.h>
 
@@ -93,5 +97,9 @@ int32_t clib_math_gcd(int32_t a, int32_t b);
  * @return unsigned int example: base10 -1 = 1, base10 15 = 2, hex 15 = 1
  */
 unsigned int clib_math_int_width(intmax_t value, clib_radix_t radix);
+
+#ifdef __cplusplus 
+}
+#endif
 
 #endif /* CLIB_MATH_H */

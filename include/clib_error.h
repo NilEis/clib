@@ -4,6 +4,10 @@
 #ifndef CLIB_ERROR_H
 #define CLIB_ERROR_H
 
+#ifdef __cplusplus 
+extern "C" {
+#endif
+
 #include "clib_c90_support.h"
 
 /**
@@ -39,5 +43,9 @@ extern clib_error_code_t clib_errno;
  * @return const char* a pointer to the error string
  */
 const char *clib_error_get_string(clib_error_code_t error_number);
+
+#ifdef __cplusplus 
+}
+#endif
 
 #endif /* CLIB_ERROR_H */

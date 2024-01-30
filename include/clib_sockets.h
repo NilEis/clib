@@ -4,6 +4,10 @@
 #ifndef CLIB_SOCKETS_H
 #define CLIB_SOCKETS_H
 
+#ifdef __cplusplus 
+extern "C" {
+#endif
+
 #include "clib_c90_support.h"
 #include "clib_error.h"
 #include <stdbool.h>
@@ -18,5 +22,9 @@ typedef struct _clib_socket clib_socket_t;
  * @return the clib_error_code_t that occured
  */
 clib_error_code_t clib_sockets_init(void);
+
+#ifdef __cplusplus 
+}
+#endif
 
 #endif /* CLIB_SOCKETS_H */

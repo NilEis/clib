@@ -4,6 +4,10 @@
 #ifndef CLIB_C90_SUPPORT_H
 #define CLIB_C90_SUPPORT_H
 
+#ifdef __cplusplus 
+extern "C" {
+#endif
+
 #if __STDC_VERSION__ >= 199901L
 /* "inline" is a keyword */
 /* "restrict" is a keyword */
@@ -16,6 +20,10 @@
  * @brief remove restrict
  */
 #define restrict
+#endif
+
+#ifdef __cplusplus 
+}
 #endif
 
 #endif /* CLIB_C90_SUPPORT_H */

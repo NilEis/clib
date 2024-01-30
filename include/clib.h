@@ -4,6 +4,10 @@
 #ifndef CLIB_H
 #define CLIB_H
 
+#ifdef __cplusplus 
+extern "C" {
+#endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -16,5 +20,9 @@
 #include "clib_sockets.h"
 #endif
 #include "clib_string.h"
+
+#ifdef __cplusplus 
+}
+#endif
 
 #endif /* CLIB_H */
