@@ -30,7 +30,7 @@ option(TCC "Generate tcc makefile in build" ON)
 
 option(BUILD_WITH_DOCS "Generate Docs" OFF)
 
-option(BUILD_TESTS "Build test exe" OFF)
+option(BUILD_TESTS "Build test exe" ON)
 
 if(INCLUDE_TERMINAL)
     include(FetchContent)
