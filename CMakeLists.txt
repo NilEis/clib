@@ -18,19 +18,20 @@ set(SOURCE_FILES_LIST
 set(CLIB_HEADER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 file(GLOB_RECURSE CLIB_HEADERS ${CLIB_HEADER_DIR}/*.h)
 
-set(LIBRARY_LIST m)
+set(LIBRARY_LIST)
 
 set(comp_options)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
     list(APPEND comp_options  -Werror -Wall -Wextra -Werror=conversion -Wpedantic -pedantic -Werror=sign-conversion)
+    list(APPEND LIBRARY_LIST  m)
     if (CMAKE_C_COMPILER_ID STREQUAL "Clang")
         list(APPEND comp_options  -Werror=uninitialized)
     else()
         list(APPEND comp_options  -Werror=maybe-uninitialize)
     endif()
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")    
-    list(APPEND comp_options  -w3)
+    list(APPEND comp_options -w3)
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     list(APPEND comp_options  /W4 /WX /permissive-)
 endif()
@@ -66,8 +67,8 @@ if(INCLUDE_SOCKETS)
 endif()
 
 if(NOT TARGET clib)
-add_library(clib ${SOURCE_FILES_LIST})
-target_link_libraries(clib ${LIBRARY_LIST})
+    add_library(clib ${SOURCE_FILES_LIST})
+    target_link_libraries(clib ${LIBRARY_LIST})
 endif()
 
 if(INCLUDE_SOCKETS)
