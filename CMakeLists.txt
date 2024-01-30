@@ -18,9 +18,22 @@ set(SOURCE_FILES_LIST
 set(CLIB_HEADER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 file(GLOB_RECURSE CLIB_HEADERS ${CLIB_HEADER_DIR}/*.h)
 
-set(LIBRARY_LIST)
+set(LIBRARY_LIST m)
 
-set(gnu_comp_options -Werror -Wall -Wextra -Werror=conversion -Wpedantic -pedantic -Werror=maybe-uninitialized -Werror=sign-conversion)
+set(comp_options)
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+    list(APPEND comp_options  -Werror -Wall -Wextra -Werror=conversion -Wpedantic -pedantic -Werror=sign-conversion)
+    if (CMAKE_C_COMPILER_ID STREQUAL "Clang")
+        list(APPEND comp_options  -Werror=uninitialized)
+    else()
+        list(APPEND comp_options  -Werror=maybe-uninitialize)
+    endif()
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")    
+    list(APPEND comp_options  -w3)
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    list(APPEND comp_options  /W4 /WX /permissive-)
+endif()
 
 option(INCLUDE_TERMINAL "Include support for terminal functions" TRUE)
 
@@ -77,7 +90,7 @@ if(PROJECT_IS_TOP_LEVEL)
         list(APPEND gnu_comp_options -ansi)
     endif()
     
-    target_compile_options(clib PRIVATE $<$<OR:$<C_COMPILER_ID:Clang>,$<C_COMPILER_ID:AppleClang>,$<C_COMPILER_ID:GNU>>:${gnu_comp_options}>$<$<C_COMPILER_ID:MSVC>:/W4 /WX /permissive->)
+    target_compile_options(clib PRIVATE ${comp_options})
 endif()
 
 include_directories(clib PUBLIC ${CLIB_HEADER_DIR})
