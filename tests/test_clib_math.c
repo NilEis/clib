@@ -1,8 +1,19 @@
 #ifndef __BASE_FILE__
 #define __BASE_FILE__ __FILE__
 #endif
+#ifndef CATCH_CONFIG_MAIN
+#define CATCH_CONFIG_MAIN
+#endif
+
+#ifndef __cplusplus
 #include "cheat.h"
 #include "cheats.h"
+#define test(name, name2, func) CHEAT_TEST(name, func)
+#else
+#include "catch.hpp"
+#define test(name, name2, func) TEST_CASE(name2, "["##name"]") { func }
+#endif
+
 #include "clib.h"
 #include <assert.h>
 #include <stdio.h>
@@ -11,6 +22,8 @@
 #ifndef CLIB_MATH_INLINED_EXPECTED
 #define CLIB_MATH_INLINED_EXPECTED 0
 #endif
+
+#ifndef __cplusplus
 
 #if defined(_WIN32) || defined(WIN32)
 #include <windows.h>
@@ -67,15 +80,16 @@ CHEAT_DECLARE(
     })
 
 #endif
+#endif
 
 #define TEST_EPSILON 0.0000001
 
-CHEAT_TEST(clib_math_inlined,
+test(clib_math_inlined,"[is_inlined]",
            init_console();
            printf("- Testing %s\n", __func__);
            cheat_assert(CLIB_MATH_INLINED == CLIB_MATH_INLINED_EXPECTED);)
 
-CHEAT_TEST(clib_math_int_width,
+test(clib_math_int_width,"[clib_math_int_width]",
            init_console();
            printf("- Testing %s\n", __func__);
            cheat_assert(5 == clib_math_int_width(16, CLIB_RADIX_BIN));
@@ -83,15 +97,15 @@ CHEAT_TEST(clib_math_int_width,
            cheat_assert(5 == clib_math_int_width(54321, CLIB_RADIX_DEC));
            cheat_assert(6 == clib_math_int_width(0xabcdef, CLIB_RADIX_HEX));)
 
-CHEAT_TEST(clib_math_lerp,
+test(clib_math_lerp,"[clib_math_lerp]",
            init_console();
            printf("- Testing %s\n", __func__);
            cheat_assert_double(clib_math_lerp(0.5, 1.5, 2.0), 1.75, TEST_EPSILON);
            cheat_assert_double(clib_math_lerp(0.5, -10, 30), 10, TEST_EPSILON);
            cheat_assert_double(clib_math_lerp(0.5, -10, 10), 0, TEST_EPSILON);)
 
-CHEAT_TEST(
-    clib_math_ctz,
+test(
+    clib_math_ctz,"[clib_math_ctz]",
     init_console();
     printf("- Testing %s\n", __func__);
     cheat_assert(clib_math_ctz(0) == 0);
@@ -99,8 +113,8 @@ CHEAT_TEST(
         cheat_assert(clib_math_ctz((uint32_t)pow(2, i)) == i);
     })
 
-CHEAT_TEST(
-    clib_math_clz,
+test(
+    clib_math_clz,"[clib_math_clz]",
     init_console();
     printf("- Testing %s\n", __func__);
     cheat_assert(clib_math_clz(0) == 31);
@@ -108,8 +122,8 @@ CHEAT_TEST(
         cheat_assert(clib_math_clz((uint32_t)pow(2, i)) == (31 - i));
     })
 
-CHEAT_TEST(
-    clib_math_ffs,
+test(
+    clib_math_ffs,"[clib_math_ffs]",
     init_console();
     printf("- Testing %s\n", __func__);
     cheat_assert(clib_math_ffs(0) == 0);
@@ -117,8 +131,8 @@ CHEAT_TEST(
         cheat_assert(clib_math_ffs((uint32_t)pow(2, i)) == i + 1);
     })
 
-CHEAT_TEST(
-    clib_math_gcd,
+test(
+    clib_math_gcd,"[clib_math_gcd]",
     init_console();
     printf("- Testing %s\n", __func__);
     cheat_assert(clib_math_gcd(0, 1) == 1);
