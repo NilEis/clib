@@ -51,6 +51,7 @@ if(INCLUDE_TERMINAL)
     set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
     FetchContent_Declare(
         c_terminal_repo
+        GIT_TAG master
         GIT_REPOSITORY https://github.com/NilEis/C-Terminal.git
     )
     FetchContent_MakeAvailable(c_terminal_repo)
