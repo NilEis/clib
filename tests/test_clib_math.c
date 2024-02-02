@@ -1,21 +1,27 @@
+#ifndef __cplusplus
+
 #ifndef __BASE_FILE__
 #define __BASE_FILE__ __FILE__
 #endif
+
+#include "cheat.h"
+#include "cheats.h"
+#define test(name, name2, func) CHEAT_TEST(name, func)
+
+#else
+
 #ifndef CATCH_CONFIG_MAIN
 #define CATCH_CONFIG_MAIN
 #endif
 
-#ifndef __cplusplus
-#include "cheat.h"
-#include "cheats.h"
-#define test(name, name2, func) CHEAT_TEST(name, func)
-#else
 #include "catch.hpp"
 #define test(name, name2, func) \
     TEST_CASE(name2, "[" #name "]") { func }
-#define cheat_assert REQUIRE
+#define cheat_assert(v) REQUIRE((v))
 #define cheat_assert_double(res, exp, eps) REQUIRE(((res <= (exp + eps)) && (res >= (exp - eps))))
+#define cheat_assert_string(res, exp) REQUIRE(strcmp(res, exp) == 0)
 #define init_console() ;
+
 #endif
 
 #include "clib.h"

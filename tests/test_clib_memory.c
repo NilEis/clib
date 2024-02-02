@@ -1,11 +1,36 @@
+#ifndef __cplusplus
+
 #ifndef __BASE_FILE__
 #define __BASE_FILE__ __FILE__
 #endif
+
 #include "cheat.h"
+#include "cheats.h"
+#define test(name, name2, func) CHEAT_TEST(name, func)
+
+#else
+
+#ifndef CATCH_CONFIG_MAIN
+#define CATCH_CONFIG_MAIN
+#endif
+
+#include "catch.hpp"
+#define test(name, name2, func) \
+    TEST_CASE(name2, "[" #name "]") { func }
+#define cheat_assert(v) REQUIRE((v))
+#define cheat_assert_double(res, exp, eps) REQUIRE(((res <= (exp + eps)) && (res >= (exp - eps))))
+#define cheat_assert_string(res, exp) REQUIRE(strcmp(res, exp) == 0)
+#define init_console() ;
+
+#endif
+
 #include "clib.h"
 #include <assert.h>
 #include <stdio.h>
 #include <stdint.h>
+
+#ifndef __cplusplus
+
 #if defined(_WIN32) || defined(WIN32)
 #include <windows.h>
 
@@ -61,8 +86,10 @@ CHEAT_DECLARE(
     })
 
 #endif
+#endif
 
-CHEAT_TEST(clib_memory_copy,
+test(clib_memory_copy,
+"clib_memory_copy copies memory from src to dest",
            const uint64_t in = 0xDEADCFFE;
            const uint8_t in_b = 0xA;
            uint64_t out = 0;
@@ -74,8 +101,9 @@ CHEAT_TEST(clib_memory_copy,
            cheat_assert(out == in);
            cheat_assert(out_b == in_b);)
 
-CHEAT_TEST(
+test(
     clib_memory_set,
+    "clib_memory_set sets a memory region to a value",
     int i = 0;
     uint64_t out[16] = {0};
     const uint64_t in = 0xDEADCFFE;
