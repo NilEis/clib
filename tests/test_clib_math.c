@@ -14,13 +14,7 @@
 #define test(name, name2, func) \
     TEST_CASE(name2, "[" #name "]") { func }
 #define cheat_assert REQUIRE
-#define cheat_assert_double(res, exp, eps)                             \
-    do                                                                 \
-    {                                                                  \
-        auto tmp = res;                                                \
-        auto tmp_exp = exp;                                            \
-        REQUIRE((tmp <= (tmp_exp + eps)) && (tmp >= (tmp_exp - eps))); \
-    } while (0)
+#define cheat_assert_double(res, exp, eps) REQUIRE(((res <= (exp + eps)) && (res >= (exp - eps))))
 #define init_console() ;
 #endif
 
