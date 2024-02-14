@@ -110,9 +110,9 @@ if(BUILD_TESTS AND PROJECT_IS_TOP_LEVEL)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests)
 endif()
 
-# add_executable(test_exe src/main.c)
-# target_link_libraries(test_exe clib)
-# target_include_directories(test_exe PRIVATE include/)
+add_executable(test_exe src/main.c)
+target_link_libraries(test_exe clib)
+target_include_directories(test_exe PRIVATE include/)
 
 if(TCC)
     set(TCC_OBJECTS)

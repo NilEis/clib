@@ -14,7 +14,7 @@ typedef struct
 
 typedef int (*clib_compare_function_t)(int32_t a, int32_t b);
 
-struct clib_tree
+struct __clib_tree
 {
 	/* pointer to internal array */
 	clib_tree_node_t *array;
@@ -110,7 +110,7 @@ static int __min_heap_cmp(int32_t a, int32_t b)
 	return a < b;
 }
 
-struct clib_binary_heap
+struct __clib_binary_heap
 {
 	clib_tree_t tree;
 	/* min or max heap */
