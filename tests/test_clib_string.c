@@ -95,11 +95,11 @@ test(test_clib_string_builder, "the string builder builds a string",
      printf("- Testing %s\n", __func__);
      clib_string_builder_append(builder, "Hallo");
      res = clib_string_builder_get_string(builder);
-     cheat_assert_string(res, "Hello");
+     cheat_assert_string(res, "Hallo");
      free(res);
      clib_string_builder_append(builder, ", Welt");
      res = clib_string_builder_get_string(builder);
-     cheat_assert_string(res, "Hello, Welt");
+     cheat_assert_string(res, "Hallo, Welt");
      free(res);
      clib_string_builder_free(builder);)
 

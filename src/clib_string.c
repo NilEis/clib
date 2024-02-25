@@ -16,6 +16,7 @@ static int __clib_string_dist_lev_rec(const char *a, const char *b, size_t as, s
 
 clib_string_builder_t *clib_string_builder_create(size_t initial_size)
 {
+    void *memset(void *str, int c, size_t n);
     clib_string_builder_t *ret = NULL;
     initial_size = initial_size != 0 ? initial_size : 8;
     ret = calloc(1, sizeof(clib_string_builder_t));
@@ -25,6 +26,7 @@ clib_string_builder_t *clib_string_builder_create(size_t initial_size)
         return NULL;
     }
     ret->buf = calloc(initial_size, sizeof(char));
+    memset(ret->buf, '\0', initial_size * sizeof(char));
     if (ret->buf == NULL)
     {
         free(ret);
@@ -41,7 +43,7 @@ clib_string_builder_t *clib_string_builder_append(clib_string_builder_t *builder
     size_t i = 0;
     for (i = 0; str[i] != '\0'; i++)
     {
-        size_t builder_index = builder->length  + i;
+        size_t builder_index = builder->length;
         if (builder->buf_size <= builder_index + 1)
         {
             size_t new_size = builder->buf_size <= 1 ? 4 : builder->buf_size * 2;
