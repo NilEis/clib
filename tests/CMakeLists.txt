@@ -4,25 +4,23 @@ project(
   clib_tests
   VERSION 1.0.0
   HOMEPAGE_URL "https://github.com/NilEis/clib"
-  LANGUAGES C
-)
+  LANGUAGES C)
 
 link_libraries(clib)
 
 include(FetchContent)
 
-FetchContent_Declare(
-  cheat
-  GIT_REPOSITORY https://github.com/Tuplanolla/cheat.git
-)
+FetchContent_Declare(cheat
+                     GIT_REPOSITORY https://github.com/Tuplanolla/cheat.git)
 
 macro(add_cpp_test test_name test_string_name test_file)
   if(TEST_CPP)
-    configure_file(${test_file}.c ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.cpp COPYONLY)
-    add_executable(${test_name}_cpp ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.cpp)
+    configure_file(${test_file}.c ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.cpp
+                   COPYONLY)
+    add_executable(${test_name}_cpp
+                   ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.cpp)
     target_compile_definitions(${test_name}_cpp PRIVATE ${ARGN})
     add_test(NAME "${test_string_name}-cpp" COMMAND test_clib_math_cpp)
-    add_dependencies(test_clib_all ${test_name}_cpp)
     message(STATUS "Adding CPP test ${test_name}_cpp with options: ${ARGN}")
   endif()
 endmacro()
@@ -31,7 +29,6 @@ macro(add_c_and_cpp_test test_name test_string_name test_file)
   add_executable(${test_name} ${test_file}.c)
   target_compile_definitions(${test_name} PRIVATE ${ARGN})
   add_test(NAME ${test_string_name} COMMAND ${test_name})
-  add_dependencies(test_clib_all ${test_name})
   message(STATUS "Adding C test ${test_name}_cpp with options: ${ARGN}")
   add_cpp_test(${test_name} ${test_string_name} ${test_file} ${ARGN})
 endmacro()
@@ -49,8 +46,7 @@ if(TEST_CPP)
   FetchContent_Declare(
     catch2
     GIT_TAG Catch1.x
-    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-  )
+    GIT_REPOSITORY https://github.com/catchorg/Catch2.git)
 
   FetchContent_GetProperties(catch2)
   if(NOT catch2_POPULATED)
@@ -61,22 +57,29 @@ if(TEST_CPP)
 
 endif()
 
-add_executable(test_clib_all main.c)
+if(CLIB_INCLUDE_DATA_STRUCTURES)
+  add_c_and_cpp_test(test_clib_data_structures "data_structures-test"
+                     test_clib_data_structures)
+endif(CLIB_INCLUDE_DATA_STRUCTURES)
 
-add_c_and_cpp_test(test_clib_data_structures "data_structures-test" test_clib_data_structures)
+if(CLIB_INCLUDE_MATH)
+  add_c_and_cpp_test(test_clib_math "math-test" test_clib_math USE_BUILTINS=0)
 
-add_c_and_cpp_test(test_clib_math "math-test" test_clib_math USE_BUILTINS=0)
+  add_c_and_cpp_test(test_clib_math_inline "math-test-inline" test_clib_math
+                     CLIB_MATH_INLINE CLIB_MATH_INLINED_EXPECTED=1)
 
-add_c_and_cpp_test(test_clib_math_inline "math-test-inline" test_clib_math CLIB_MATH_INLINE CLIB_MATH_INLINED_EXPECTED=1)
+  add_c_and_cpp_test(test_clib_math_builtins "math-test-builtins"
+                     test_clib_math)
+endif(CLIB_INCLUDE_MATH)
 
-add_c_and_cpp_test(test_clib_math_builtins "math-test-builtins" test_clib_math)
+if(CLIB_INCLUDE_MEMORY)
+  add_c_and_cpp_test(test_clib_memory "memory-test" test_clib_memory)
+endif(CLIB_INCLUDE_MEMORY)
 
-add_c_and_cpp_test(test_clib_memory "memory-test" test_clib_memory)
-
-if(INCLUDE_SOCKETS)
+if(CLIB_INCLUDE_SOCKETS)
   add_c_and_cpp_test(test_clib_sockets "socket-test" test_clib_sockets)
-endif()
+endif(CLIB_INCLUDE_SOCKETS)
 
-add_c_and_cpp_test(test_clib_string "string-test" test_clib_string)
-
-add_test(NAME "main-test" COMMAND test_clib_all)
+if(CLIB_INCLUDE_STRING)
+  add_c_and_cpp_test(test_clib_string "string-test" test_clib_string)
+endif(CLIB_INCLUDE_STRING)

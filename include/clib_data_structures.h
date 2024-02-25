@@ -1,7 +1,7 @@
 /** @file
  * @brief provides types and functions for data-structures
  */
-#ifndef CLIB_DATA_STRUCTURES_H
+#if !defined( CLIB_DATA_STRUCTURES_H) && defined(CLIB_INCLUDE_DATA_STRUCTURES)
 #define CLIB_DATA_STRUCTURES_H
 
 #ifdef __cplusplus 

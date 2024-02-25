@@ -5,6 +5,8 @@
 #include "clib_math.h"
 #include "clib_string.h"
 
+#ifdef CLIB_INCLUDE_DATA_STRUCTURES
+
 typedef struct
 {
 	void *data;
@@ -26,6 +28,7 @@ struct __clib_tree
 
 static char *clib_tree_get_string(clib_tree_t *tree)
 {
+#if defined(CLIB_INCLUDE_MATH) && defined(CLIB_INCLUDE_STRING)
 	size_t i = 0;
 	size_t size_of_string = 5; /* "[  ]\0" */
 	char *ret = NULL;
@@ -60,6 +63,9 @@ static char *clib_tree_get_string(clib_tree_t *tree)
 	strcat(ret, tmp);
 	strcat(ret, " ]");
 	return ret;
+#else
+	return "[CLIB_MATH AND CLIB_STRING REQUIRED]";
+#endif
 }
 
 inline size_t __get_parent(size_t i)
@@ -262,4 +268,4 @@ void clib_binary_heap_free(clib_binary_heap_t *heap)
 }
 
 /* #pragma endregion binary_heap */
-
+#endif /* CLIB_INCLUDE_DATA_STRUCTURES */

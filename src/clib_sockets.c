@@ -1,9 +1,10 @@
 #include "clib_sockets.h"
 #include <stdlib.h>
 
+#ifdef CLIB_INCLUDE_SOCKETS
 /**
  * No modifications were made
- * @see https://stackoverflow.com/a/28031039 
+ * @see https://stackoverflow.com/a/28031039
  */
 #ifdef _WIN32
 /* See http://stackoverflow.com/questions/12765743/getaddrinfo-on-win32 */
@@ -57,3 +58,4 @@ clib_error_code_t clib_sockets_init(void)
     return CLIB_ERRNO_NO_ERROR;
 #endif
 }
+#endif

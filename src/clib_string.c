@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <limits.h>
 
+#ifdef CLIB_INCLUDE_STRING
+
 struct __clib_string_builder
 {
     size_t length; /* length without '\0' */
@@ -204,3 +206,4 @@ char *clib_string_reverse_in_place(char *src, size_t length)
     }
     return src;
 }
+#endif /* CLIB_INCLUDE_STRING */

@@ -2,7 +2,7 @@
  * @file clib_memory.h
  * @brief functions for working with memory
  */
-#ifndef CLIB_MEMORY_H
+#if !defined( CLIB_MEMORY_H) && defined(CLIB_INCLUDE_MEMORY)
 #define CLIB_MEMORY_H
 
 #ifdef __cplusplus 

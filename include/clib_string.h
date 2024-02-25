@@ -1,7 +1,7 @@
 /** @file
  * @brief Functions for interacting with strings
  */
-#ifndef CLIB_STRING_H
+#if !defined( CLIB_STRING_H) && defined(CLIB_INCLUDE_STRING)
 #define CLIB_STRING_H
 
 #ifdef __cplusplus

@@ -1,5 +1,7 @@
 #include "clib_math.h"
 
+#ifdef CLIB_INCLUDE_MATH
+
 #define CLIB_MAGIC_DEBRUIJN_NUMBER UINT32_C(0x077CB531)
 #ifndef USE_BUILTINS
 #define USE_BUILTINS 1
@@ -110,3 +112,5 @@ unsigned int clib_math_int_width(intmax_t value, clib_radix_t radix)
     }
     return l;
 }
+
+#endif /* CLIB_INCLUDE_MATH */
