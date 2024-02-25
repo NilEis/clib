@@ -20,6 +20,7 @@
 #define cheat_assert(v) REQUIRE((v))
 #define cheat_assert_double(res, exp, eps) REQUIRE(((res <= (exp + eps)) && (res >= (exp - eps))))
 #define cheat_assert_string(res, exp) REQUIRE(strcmp(res, exp) == 0)
+#define cheat_assert_not_string(res, exp) REQUIRE(strcmp(res, exp) != 0)
 #define init_console() ;
 
 #endif
@@ -100,6 +101,7 @@ test(test_clib_string_builder, "the string builder builds a string",
      clib_string_builder_append(builder, ", Welt");
      res = clib_string_builder_get_string(builder);
      cheat_assert_string(res, "Hallo, Welt");
+     cheat_assert_not_string(res, "Hello, Welt!");
      free(res);
      clib_string_builder_free(builder);)
 
