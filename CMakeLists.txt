@@ -76,7 +76,7 @@ if(BUILD_WITH_DOCS)
     endif()
 endif()
 
-if(BUILD_TESTS OR PROJECT_IS_TOP_LEVEL)
+if(BUILD_TESTS AND PROJECT_IS_TOP_LEVEL)
     include(CTest)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests)
 endif()

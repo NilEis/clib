@@ -1,5 +1,6 @@
 #include "clib_io.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 #ifdef CLIB_INCLUDE_IO
 
