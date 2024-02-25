@@ -17,12 +17,13 @@ if(CLIB_INCLUDE_FILE)
   string(APPEND CLIB_SELECTED_MODULES " file")
   option(CLIB_FILE_SELECTOR " file selector" ON)
   if(CLIB_FILE_SELECTOR AND NOT EMSCRIPTEN)
-    include(FetchContent)
-    FetchContent_Declare(
+  include(FetchContent)
+  FetchContent_Declare(
       nfd
       GIT_REPOSITORY https://github.com/btzy/nativefiledialog-extended.git
       GIT_TAG origin/master)
-    FetchContent_MakeAvailable(nfd)
+      FetchContent_MakeAvailable(nfd)
+      string(APPEND CLIB_SELECTED_MODULES " file_selector")
     list(APPEND CLIB_LIBRARY_LIST nfd)
     list(APPEND CLIB_COMPILE_DEFINITIONS_PUB CLIB_FILE_SELECTOR)
   endif()
