@@ -29,20 +29,20 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/module_selector.cmake)
 set(CLIB_HEADER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 file(GLOB_RECURSE CLIB_HEADERS ${CLIB_HEADER_DIR}/*.h)
 
-set(comp_options)
+set(CLIB_COMPILE_OPTIONS)
 
 if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
-    list(APPEND comp_options -Werror -Wall -Wextra -Werror=conversion -Wpedantic -pedantic -Werror=sign-conversion)
+    list(APPEND CLIB_COMPILE_OPTIONS -Werror -Wall -Wextra -Werror=conversion -Wpedantic -pedantic -Werror=sign-conversion)
     list(APPEND CLIB_LIBRARY_LIST m)
     if(CMAKE_C_COMPILER_ID STREQUAL "Clang")
-        list(APPEND comp_options -Werror=uninitialized)
+        list(APPEND CLIB_COMPILE_OPTIONS -Werror=uninitialized)
     else()
-        list(APPEND comp_options -Werror=maybe-uninitialized)
+        list(APPEND CLIB_COMPILE_OPTIONS -Werror=maybe-uninitialized)
     endif()
 elseif(CMAKE_C_COMPILER_ID STREQUAL "Intel")
-    list(APPEND comp_options -w3)
+    list(APPEND CLIB_COMPILE_OPTIONS -w3)
 elseif(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-    list(APPEND comp_options /W4 /WX /permissive-)
+    list(APPEND CLIB_COMPILE_OPTIONS /W4 /WX /permissive-)
 endif()
 
 if(NOT TARGET clib)
@@ -58,12 +58,13 @@ if(PROJECT_IS_TOP_LEVEL)
     target_compile_definitions(clib PRIVATE USE_BUILTINS=0)
     get_target_property(clib_std clib C_STANDARD)
 
-    if(clib_std EQUAL 90)
-        list(APPEND gnu_comp_options -ansi)
+    if(clib_std EQUAL 90 AND CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
+        list(APPEND CLIB_COMPILE_OPTIONS -ansi)
     endif()
 
-    target_compile_options(clib PRIVATE ${comp_options})
 endif()
+
+target_compile_options(clib PRIVATE ${CLIB_COMPILE_OPTIONS})
 
 target_include_directories(clib PUBLIC ${CLIB_HEADER_DIR})
 
