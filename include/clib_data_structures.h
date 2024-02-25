@@ -1,7 +1,7 @@
 /** @file
  * @brief provides types and functions for data-structures
  */
-#ifndef CLIB_DATA_STRUCTURES_H
+#if !defined( CLIB_DATA_STRUCTURES_H) && defined(CLIB_INCLUDE_DATA_STRUCTURES)
 #define CLIB_DATA_STRUCTURES_H
 
 #ifdef __cplusplus 
@@ -26,13 +26,13 @@ typedef enum
  * @brief typedef for a clib_tree type
  * 
  */
-typedef struct clib_tree clib_tree_t;
+typedef struct __clib_tree clib_tree_t;
 
 /**
  * @brief typedef for binary heap
  * 
  */
-typedef struct clib_binary_heap clib_binary_heap_t;
+typedef struct __clib_binary_heap clib_binary_heap_t;
 
 /**
  * @brief creates a binary heap of the given type and size

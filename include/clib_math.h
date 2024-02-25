@@ -1,7 +1,7 @@
 /** @file
  * @brief functions for working with numbers and math in general
  */
-#ifndef CLIB_MATH_H
+#if !defined( CLIB_MATH_H) && defined(CLIB_INCLUDE_MATH)
 #define CLIB_MATH_H
 
 #ifdef __cplusplus 

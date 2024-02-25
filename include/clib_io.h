@@ -1,7 +1,7 @@
 /** @file
  * @brief functions for getting user input or output
  */
-#ifndef CLIB_IO_H
+#if !defined( CLIB_IO_H) && defined(CLIB_INCLUDE_IO)
 #define CLIB_IO_H
 
 #ifdef __cplusplus 

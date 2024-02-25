@@ -1,4 +1,8 @@
-#include "clib.h"
+#include "clib_io.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+#ifdef CLIB_INCLUDE_IO
 
 #ifdef __unix__
 
@@ -182,3 +186,5 @@ char *clib_read_variable_string(char **dest, size_t initial_size)
     }
     return *dest;
 }
+
+#endif /* CLIB_INCLUDE_IO */

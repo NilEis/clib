@@ -1,8 +1,80 @@
 #include "clib_string.h"
 #include "clib_error.h"
+#include <stdlib.h>
 #include <limits.h>
 
+#ifdef CLIB_INCLUDE_STRING
+
+struct __clib_string_builder
+{
+    size_t length; /* length without '\0' */
+    size_t buf_size;
+    char *buf;
+};
+
 static int __clib_string_dist_lev_rec(const char *a, const char *b, size_t as, size_t bs);
+
+clib_string_builder_t *clib_string_builder_create(size_t initial_size)
+{
+    void *memset(void *str, int c, size_t n);
+    clib_string_builder_t *ret = NULL;
+    initial_size = initial_size != 0 ? initial_size : 8;
+    ret = calloc(1, sizeof(clib_string_builder_t));
+    if (ret == NULL)
+    {
+        clib_errno = CLIB_ERRNO_ALLOCATION_ZEROED_ERROR;
+        return NULL;
+    }
+    ret->buf = calloc(initial_size, sizeof(char));
+    memset(ret->buf, '\0', initial_size * sizeof(char));
+    if (ret->buf == NULL)
+    {
+        free(ret);
+        clib_errno = CLIB_ERRNO_ALLOCATION_ZEROED_ERROR;
+        return NULL;
+    }
+    ret->buf_size = initial_size;
+    ret->length = 0;
+    return ret;
+}
+
+clib_string_builder_t *clib_string_builder_append(clib_string_builder_t *builder, const char *str)
+{
+    size_t i = 0;
+    for (i = 0; str[i] != '\0'; i++)
+    {
+        size_t builder_index = builder->length;
+        if (builder->buf_size <= builder_index + 1)
+        {
+            size_t new_size = builder->buf_size <= 1 ? 4 : builder->buf_size * 2;
+            char *new_buf = realloc(builder->buf, new_size);
+            if (new_buf == NULL)
+            {
+                clib_errno = CLIB_ERRNO_REALLOCATION_ERROR;
+                return NULL;
+            }
+            builder->buf = new_buf;
+            builder->buf_size = new_size;
+        }
+        builder->buf[builder_index] = str[i];
+        builder->buf[builder_index + 1] = '\0';
+        builder->length++;
+    }
+    return builder;
+}
+
+char *clib_string_builder_get_string(clib_string_builder_t *builder)
+{
+    char *ret = calloc(builder->length + 1, sizeof(char));
+    clib_string_copy(ret, builder->buf, builder->length + 1);
+    return ret;
+}
+
+void clib_string_builder_free(clib_string_builder_t *builder)
+{
+    free(builder->buf);
+    free(builder);
+}
 
 size_t clib_string_length(const char *str)
 {
@@ -136,3 +208,4 @@ char *clib_string_reverse_in_place(char *src, size_t length)
     }
     return src;
 }
+#endif /* CLIB_INCLUDE_STRING */

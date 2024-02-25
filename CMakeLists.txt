@@ -12,90 +12,61 @@ set(SOURCE_FILES_LIST
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_io.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_math.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_memory.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_sockets.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_string.c
 )
+
+set(CLIB_LIBRARY_LIST)
+set(CLIB_COMPILE_DEFINITIONS)
+set(CLIB_COMPILE_DEFINITIONS_PUB)
+
+set(CLIB_SELECTED_MODULES "")
+
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/options.cmake)
+
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/module_selector.cmake)
 
 set(CLIB_HEADER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 file(GLOB_RECURSE CLIB_HEADERS ${CLIB_HEADER_DIR}/*.h)
 
-set(LIBRARY_LIST)
-
-set(comp_options)
+set(CLIB_COMPILE_OPTIONS)
 
 if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
-    list(APPEND comp_options -Werror -Wall -Wextra -Werror=conversion -Wpedantic -pedantic -Werror=sign-conversion)
-    list(APPEND LIBRARY_LIST m)
+    list(APPEND CLIB_COMPILE_OPTIONS -Werror -Wall -Wextra -Werror=conversion -Wpedantic -pedantic -Werror=sign-conversion)
+    list(APPEND CLIB_LIBRARY_LIST m)
     if(CMAKE_C_COMPILER_ID STREQUAL "Clang")
-        list(APPEND comp_options -Werror=uninitialized)
+        list(APPEND CLIB_COMPILE_OPTIONS -Werror=uninitialized)
     else()
-        list(APPEND comp_options -Werror=maybe-uninitialized)
+        list(APPEND CLIB_COMPILE_OPTIONS -Werror=maybe-uninitialized)
     endif()
 elseif(CMAKE_C_COMPILER_ID STREQUAL "Intel")
-    list(APPEND comp_options -w3)
+    list(APPEND CLIB_COMPILE_OPTIONS -w3)
 elseif(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-    list(APPEND comp_options /W4 /WX /permissive-)
-endif()
-
-option(INCLUDE_TERMINAL "Include support for terminal functions" TRUE)
-
-option(INCLUDE_SOCKETS "Include functionality for sockets" ON)
-
-option(TCC "Generate tcc makefile in build" ON)
-
-option(BUILD_WITH_DOCS "Generate Docs" OFF)
-
-option(BUILD_TESTS "Build test exe" ON)
-
-if(INCLUDE_TERMINAL)
-    include(FetchContent)
-    set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
-    FetchContent_Declare(
-        c_terminal_repo
-        GIT_TAG master
-        GIT_REPOSITORY https://github.com/NilEis/C-Terminal.git
-    )
-    FetchContent_MakeAvailable(c_terminal_repo)
-    add_subdirectory(${c_terminal_repo_SOURCE_DIR})
-    list(APPEND LIBRARY_LIST c_terminal)
-endif()
-
-if(INCLUDE_SOCKETS)
-    list(APPEND SOURCE_FILES_LIST ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_sockets.c)
-    if(WIN32)
-        list(APPEND LIBRARY_LIST Ws2_32)
-    else()
-    endif()
+    list(APPEND CLIB_COMPILE_OPTIONS /W4 /WX /permissive-)
 endif()
 
 if(NOT TARGET clib)
     add_library(clib ${SOURCE_FILES_LIST})
-    target_link_libraries(clib ${LIBRARY_LIST})
+    target_link_libraries(clib ${CLIB_LIBRARY_LIST})
+    target_compile_definitions(clib PRIVATE ${CLIB_COMPILE_DEFINITIONS})
+    target_compile_definitions(clib PUBLIC ${CLIB_COMPILE_DEFINITIONS_PUB})
+    message(STATUS "clib library created with:${CLIB_SELECTED_MODULES}")
 endif()
-
-if(INCLUDE_SOCKETS)
-    list(APPEND SOURCE_FILES_LIST ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_sockets.c)
-    if(WIN32)
-        target_compile_definitions(clib PRIVATE CLIB_SOCKETS_WIN)
-    else()
-        target_compile_definitions(clib PRIVATE CLIB_SOCKETS_UNIX)
-    endif()
-    target_compile_definitions(clib PUBLIC CLIB_SOCKETS)
-endif()
-
 
 if(PROJECT_IS_TOP_LEVEL)
     set_target_properties(clib PROPERTIES C_STANDARD 90 C_STANDARD_REQUIRED True C_EXTENSIONS Off)
     target_compile_definitions(clib PRIVATE USE_BUILTINS=0)
     get_target_property(clib_std clib C_STANDARD)
 
-    if(clib_std EQUAL 90)
-        list(APPEND gnu_comp_options -ansi)
+    if(clib_std EQUAL 90 AND CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
+        list(APPEND CLIB_COMPILE_OPTIONS -ansi)
     endif()
 
-    target_compile_options(clib PRIVATE ${comp_options})
 endif()
 
-include_directories(clib PUBLIC ${CLIB_HEADER_DIR})
+target_compile_options(clib PRIVATE ${CLIB_COMPILE_OPTIONS})
+
+target_include_directories(clib PUBLIC ${CLIB_HEADER_DIR})
 
 if(BUILD_WITH_DOCS)
     find_package(Doxygen)
@@ -110,9 +81,9 @@ if(BUILD_TESTS AND PROJECT_IS_TOP_LEVEL)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests)
 endif()
 
-# add_executable(test_exe src/main.c)
-# target_link_libraries(test_exe clib)
-# target_include_directories(test_exe PRIVATE include/)
+add_executable(test_exe src/main.c)
+target_link_libraries(test_exe clib)
+target_include_directories(test_exe PRIVATE include/)
 
 if(TCC)
     set(TCC_OBJECTS)

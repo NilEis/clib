@@ -1,6 +1,8 @@
 #include "clib_memory.h"
 #include <stdint.h>
 
+#ifdef CLIB_INCLUDE_MEMORY
+
 void *clib_memory_copy(const void *restrict src, void *restrict dest, size_t size)
 {
     size_t i = 0;
@@ -56,3 +58,5 @@ void *clib_memory_set_u64(void *dest, uint64_t value, size_t size)
     }
     return dest;
 }
+
+#endif /* CLIB_INCLUDE_MEMORY */
