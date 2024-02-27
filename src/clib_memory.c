@@ -1,6 +1,11 @@
 #include "clib_memory.h"
 #include <stdint.h>
 
+const char *clib_memory_module_name(void)
+{
+    return "clib_memory";
+}
+
 #ifdef CLIB_INCLUDE_MEMORY
 
 void *clib_memory_copy(const void *restrict src, void *restrict dest, size_t size)

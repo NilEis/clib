@@ -1,6 +1,11 @@
 #include "clib_sockets.h"
 #include <stdlib.h>
 
+const char *clib_sockets_module_name(void)
+{
+    return "clib_sockets";
+}
+
 #ifdef CLIB_INCLUDE_SOCKETS
 /**
  * No modifications were made

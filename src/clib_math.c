@@ -1,5 +1,10 @@
 #include "clib_math.h"
 
+const char *clib_math_module_name(void)
+{
+    return "clib_math";
+}
+
 #ifdef CLIB_INCLUDE_MATH
 
 #define CLIB_MAGIC_DEBRUIJN_NUMBER UINT32_C(0x077CB531)

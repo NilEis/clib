@@ -2,6 +2,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+const char *clib_io_module_name(void)
+{
+    return "clib_io";
+}
+
 #ifdef CLIB_INCLUDE_IO
 
 #ifdef __unix__
