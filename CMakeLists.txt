@@ -56,7 +56,7 @@ endif()
 
 if(PROJECT_IS_TOP_LEVEL)
     set_target_properties(clib PROPERTIES C_STANDARD 90 C_STANDARD_REQUIRED True C_EXTENSIONS Off)
-    target_compile_definitions(clib PRIVATE USE_BUILTINS=0)
+    target_compile_definitions(clib PRIVATE USE_BUILTINS=0 CLIB_ANSI=1)
     get_target_property(clib_std clib C_STANDARD)
 
     if(clib_std EQUAL 90 AND CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
