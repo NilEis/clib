@@ -5,6 +5,11 @@
 #include "clib_math.h"
 #include "clib_string.h"
 
+const char *clib_data_structures_module_name(void)
+{
+    return "clib_data_structures";
+}
+
 #ifdef CLIB_INCLUDE_DATA_STRUCTURES
 
 typedef struct

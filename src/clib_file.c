@@ -1,5 +1,11 @@
 #include "clib_file.h"
 #include <stdlib.h>
+
+const char *clib_file_module_name(void)
+{
+    return "clib_file";
+}
+
 #ifdef CLIB_INCLUDE_FILE
 #if defined(CLIB_FILE_SELECTOR) && !CLIB_ANSI
 #include "nfd.h"

@@ -3,6 +3,11 @@
 #include <stdlib.h>
 #include <limits.h>
 
+const char *clib_string_module_name(void)
+{
+    return "clib_string";
+}
+
 #ifdef CLIB_INCLUDE_STRING
 
 struct __clib_string_builder
