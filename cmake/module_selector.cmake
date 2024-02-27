@@ -1,7 +1,7 @@
 option(CLIB_INCLUDE_TERMINAL "Include support for terminal functions" ON)
 if(CLIB_INCLUDE_TERMINAL)
   include(FetchContent)
-  set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
+  set(EXTERNAL_INSTALL_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/external)
   FetchContent_Declare(
     c_terminal_repo
     GIT_TAG master
