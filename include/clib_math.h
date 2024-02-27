@@ -1,7 +1,7 @@
 /** @file
  * @brief functions for working with numbers and math in general
  */
-#if !defined( CLIB_MATH_H) && defined(CLIB_INCLUDE_MATH)
+#ifndef CLIB_MATH_H
 #define CLIB_MATH_H
 
 #ifdef __cplusplus 
@@ -22,6 +22,7 @@ typedef enum
     CLIB_RADIX_DEC = 10,
     CLIB_RADIX_HEX = 16
 } clib_radix_t;
+#ifdef CLIB_INCLUDE_MATH
 
 #ifdef CLIB_MATH_INLINE
 #define CLIB_MATH_INLINED 1
@@ -97,6 +98,8 @@ int32_t clib_math_gcd(int32_t a, int32_t b);
  * @return unsigned int example: base10 -1 = 1, base10 15 = 2, hex 15 = 1
  */
 unsigned int clib_math_int_width(intmax_t value, clib_radix_t radix);
+
+#endif /* CLIB_INCLUDE_MATH */
 
 #ifdef __cplusplus 
 }
