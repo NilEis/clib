@@ -9,6 +9,7 @@ project(
 set(SOURCE_FILES_LIST
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_error.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_data_structures.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_file.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_io.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_math.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_memory.c
@@ -62,6 +63,9 @@ if(PROJECT_IS_TOP_LEVEL)
         list(APPEND CLIB_COMPILE_OPTIONS -ansi)
     endif()
 
+    add_executable(test_exe src/main.c)
+    target_link_libraries(test_exe clib)
+    target_include_directories(test_exe PRIVATE include/)
 endif()
 
 target_compile_options(clib PRIVATE ${CLIB_COMPILE_OPTIONS})
@@ -80,10 +84,6 @@ if(BUILD_TESTS AND PROJECT_IS_TOP_LEVEL)
     include(CTest)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests)
 endif()
-
-add_executable(test_exe src/main.c)
-target_link_libraries(test_exe clib)
-target_include_directories(test_exe PRIVATE include/)
 
 if(TCC)
     set(TCC_OBJECTS)
