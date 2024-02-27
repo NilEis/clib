@@ -20,7 +20,11 @@ const char *clib_file_load(const char *path)
     FILE *f = fopen(path, "r");
     size_t size = clib_file_get_size(f);
     char *res = calloc(size + 1, sizeof(char));
-    (void)fread(res, sizeof(char), (unsigned)size, f);
+    if (fread(res, sizeof(char), (unsigned)size, f) == 0)
+    {
+        free(res);
+        res = NULL;
+    }
     fclose(f);
     return (const char *)res;
 }
