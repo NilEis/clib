@@ -19,6 +19,10 @@ const char *clib_error_get_string(clib_error_code_t error_number)
         return "Could not allocate memory: calloc returned NULL";
     case CLIB_ERRNO_FILE_OPEN_ERROR:
         return "Could not open the file";
+    case CLIB_ERRNO_FILE_SELECTOR_CANCEL:
+        return "User canceled file selection";
+    case CLIB_ERRNO_FILE_SELECTOR_ERROR:
+        return "\"Programmatic error\"";
     case CLIB_ERRNO_FILE_READ_ERROR:
         return "Could not read the file";
     case CLIB_ERRNO_REALLOCATION_ERROR:

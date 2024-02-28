@@ -54,6 +54,18 @@ uint8_t *clib_file_get_content(FILE*file);
  */
 char *clib_file_get_content_str(FILE *file);
 
+
+#ifdef CLIB_FILE_SELECTOR
+
+/**
+ * @brief Opens a file selector dialog and returns the selected file
+ * 
+ * @return char* path to the selected file (has to be freed by the caller)
+ */
+char *clib_file_selector_open_file(void);
+
+#endif /* CLIB_FILE_SELECTOR */
+
 #ifdef __cplusplus
 }
 #endif
