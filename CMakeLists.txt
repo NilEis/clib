@@ -6,6 +6,7 @@ project(
   LANGUAGES C)
 
 set(SOURCE_FILES_LIST
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_array.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_error.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_data_structures.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_file.c

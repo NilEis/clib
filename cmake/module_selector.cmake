@@ -1,3 +1,9 @@
+option(CLIB_INCLUDE_ARRAY "Include dynamic arrays" ON)
+if(CLIB_INCLUDE_ARRAY)
+  string(APPEND CLIB_SELECTED_MODULES " array")
+  list(APPEND CLIB_COMPILE_DEFINITIONS_PUB CLIB_INCLUDE_ARRAY)
+endif()
+
 option(CLIB_INCLUDE_TERMINAL "Include support for terminal functions" ON)
 if(CLIB_INCLUDE_TERMINAL)
   include(FetchContent)
