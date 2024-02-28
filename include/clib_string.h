@@ -15,10 +15,10 @@ extern "C"
 #include <stdint.h>
 
     /**
-     * @brief Type for strings
+     * @brief Type for strings builders
      *
      */
-    typedef struct __clib_string_builder clib_string_builder_t;
+    typedef struct __clib_array clib_string_builder_t;
 
     /**
      * @brief creates a string_builder
@@ -36,6 +36,15 @@ extern "C"
      * @return clib_string_builder_t*
      */
     clib_string_builder_t *clib_string_builder_append(clib_string_builder_t *builder, const char *str);
+
+    /**
+     * @brief Appends the given char to the string builder
+     *
+     * @param builder
+     * @param ch the char to append
+     * @return clib_string_builder_t*
+     */
+    clib_string_builder_t *clib_string_builder_append_char(clib_string_builder_t *builder, char ch);
 
     /**
      * @brief returns the string that was build by the builder (the string has to be freed separate of the builder)
