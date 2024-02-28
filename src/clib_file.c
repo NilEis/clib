@@ -1,4 +1,5 @@
 #include "clib_file.h"
+#include "clib_error.h"
 #include <stdlib.h>
 
 const char *clib_file_module_name(void)
@@ -23,7 +24,13 @@ size_t clib_file_get_size(FILE *file)
 uint8_t *clib_file_load(const char *path)
 {
     FILE *f = fopen(path, "rb");
-    uint8_t *res = clib_file_get_content(f);
+    uint8_t *res;
+    if (f == NULL)
+    {
+        clib_errno = CLIB_ERRNO_FILE_OPEN_ERROR;
+        return NULL;
+    }
+    res = clib_file_get_content(f);
     fclose(f);
     return res;
 }
@@ -31,8 +38,14 @@ uint8_t *clib_file_load(const char *path)
 static void *clib_file_load_from_file(FILE *file, size_t size, size_t type_size)
 {
     void *res = calloc(size + 1, type_size);
+    if (res == NULL)
+    {
+        clib_errno = CLIB_ERRNO_ALLOCATION_ZEROED_ERROR;
+        return NULL;
+    }
     if (fread(res, type_size, (unsigned)size, file) == 0)
     {
+        clib_errno = CLIB_ERRNO_FILE_READ_ERROR;
         free(res);
         return NULL;
     }
@@ -56,8 +69,15 @@ char *clib_file_get_content_str(FILE *file)
 char *clib_file_load_str(const char *path)
 {
     FILE *f = fopen(path, "r");
-    size_t size = clib_file_get_size(f);
-    char *res = clib_file_load_from_file(f, size, sizeof(char));
+    size_t size;
+    char *res;
+    if (f == NULL)
+    {
+        clib_errno = CLIB_ERRNO_FILE_OPEN_ERROR;
+        return NULL;
+    }
+    size = clib_file_get_size(f);
+    res = clib_file_load_from_file(f, size, sizeof(char));
     fclose(f);
     return res;
 }
