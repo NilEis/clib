@@ -1,7 +1,7 @@
 /** @file
  * @brief Functions for interacting with strings
  */
-#if !defined( CLIB_STRING_H) && defined(CLIB_INCLUDE_STRING)
+#if !defined(CLIB_STRING_H) && defined(CLIB_INCLUDE_STRING)
 #define CLIB_STRING_H
 
 #ifdef __cplusplus
@@ -69,6 +69,15 @@ extern "C"
      * @return the amount of copied characters
      */
     size_t clib_string_copy(char *restrict dest, const char *restrict src, size_t size);
+
+    /**
+     * @fn char *clib_string_duplicate(const char *src)
+     * @brief duplicates a string
+     *
+     * @param src the string to be duplicated
+     * @return char* the duplicated string (has to be freed by caller)
+     */
+    char *clib_string_duplicate(const char *src);
 
     /** @fn int clib_string_replace_char(char *src, char a, char b)
      * @brief replaces the first instance of \f$a\f$ with \f$b\f$

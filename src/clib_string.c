@@ -103,6 +103,19 @@ size_t clib_string_copy(char *restrict dest, const char *restrict src, size_t si
     return count;
 }
 
+char *clib_string_duplicate(const char *src)
+{
+    size_t len = clib_string_length(src);
+    char *ret = calloc(len + 1, sizeof(char));
+    if(ret == NULL)
+    {
+        clib_errno = CLIB_ERRNO_ALLOCATION_ZEROED_ERROR;
+        return NULL;
+    }
+    (void)clib_string_copy(ret, src, len + 1);
+    return ret;
+}
+
 int clib_string_replace_char(char *src, char a, char b)
 {
     static char *last_src = NULL;
