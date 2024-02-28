@@ -1,4 +1,5 @@
 #include "clib_error.h"
+#include <stdlib.h>
 
 const char *clib_error_module_name(void)
 {
@@ -6,6 +7,7 @@ const char *clib_error_module_name(void)
 }
 
 clib_error_code_t clib_errno = 0;
+const char *clib_errmsg = NULL;
 
 const char *clib_error_get_string(clib_error_code_t error_number)
 {
@@ -19,12 +21,12 @@ const char *clib_error_get_string(clib_error_code_t error_number)
         return "Could not allocate memory: calloc returned NULL";
     case CLIB_ERRNO_FILE_OPEN_ERROR:
         return "Could not open the file";
+    case CLIB_ERRNO_FILE_READ_ERROR:
+        return "Could not read the file";
     case CLIB_ERRNO_FILE_SELECTOR_CANCEL:
         return "User canceled file selection";
     case CLIB_ERRNO_FILE_SELECTOR_ERROR:
-        return "\"Programmatic error\"";
-    case CLIB_ERRNO_FILE_READ_ERROR:
-        return "Could not read the file";
+        return clib_errmsg;
     case CLIB_ERRNO_REALLOCATION_ERROR:
         return "Could not reallocate memory: realloc returned NULL";
 #ifdef _WIN32

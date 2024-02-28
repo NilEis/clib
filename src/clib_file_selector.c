@@ -12,6 +12,8 @@ const char *clib_file_selector_module_name(void)
 #include "clib_error.h"
 #endif /* CLIB_INCLUDE_STRING */
 
+extern const char *clib_errmsg;
+
 char *clib_file_selector_open_file(void)
 {
 #ifdef CLIB_INCLUDE_STRING
@@ -30,6 +32,7 @@ char *clib_file_selector_open_file(void)
         return NULL;
     case NFD_ERROR:
         clib_errno = CLIB_ERRNO_FILE_SELECTOR_ERROR;
+        clib_errmsg = NFD_GetError();
         return NULL;
     }
 
