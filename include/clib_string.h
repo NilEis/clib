@@ -1,7 +1,7 @@
 /** @file
  * @brief Functions for interacting with strings
  */
-#if !defined( CLIB_STRING_H) && defined(CLIB_INCLUDE_STRING)
+#if !defined(CLIB_STRING_H) && defined(CLIB_INCLUDE_STRING)
 #define CLIB_STRING_H
 
 #ifdef __cplusplus
@@ -15,10 +15,10 @@ extern "C"
 #include <stdint.h>
 
     /**
-     * @brief Type for strings
+     * @brief Type for strings builders
      *
      */
-    typedef struct __clib_string_builder clib_string_builder_t;
+    typedef struct __clib_array clib_string_builder_t;
 
     /**
      * @brief creates a string_builder
@@ -36,6 +36,15 @@ extern "C"
      * @return clib_string_builder_t*
      */
     clib_string_builder_t *clib_string_builder_append(clib_string_builder_t *builder, const char *str);
+
+    /**
+     * @brief Appends the given char to the string builder
+     *
+     * @param builder
+     * @param ch the char to append
+     * @return clib_string_builder_t*
+     */
+    clib_string_builder_t *clib_string_builder_append_char(clib_string_builder_t *builder, char ch);
 
     /**
      * @brief returns the string that was build by the builder (the string has to be freed separate of the builder)
@@ -69,6 +78,15 @@ extern "C"
      * @return the amount of copied characters
      */
     size_t clib_string_copy(char *restrict dest, const char *restrict src, size_t size);
+
+    /**
+     * @fn char *clib_string_duplicate(const char *src)
+     * @brief duplicates a string
+     *
+     * @param src the string to be duplicated
+     * @return char* the duplicated string (has to be freed by caller)
+     */
+    char *clib_string_duplicate(const char *src);
 
     /** @fn int clib_string_replace_char(char *src, char a, char b)
      * @brief replaces the first instance of \f$a\f$ with \f$b\f$
