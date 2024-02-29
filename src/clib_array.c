@@ -9,6 +9,9 @@ const char *clib_array_module_name(void)
     return "clib_array";
 }
 
+#if defined(CLIB_INCLUDE_ARRAY) && !defined(CLIB_INCLUDE_MEMORY)
+#warning "CLIB_INCLUDE_ARRAY requires CLIB_INCLUDE_MEMORY"
+#endif
 #if defined(CLIB_INCLUDE_ARRAY) && defined(CLIB_INCLUDE_MEMORY)
 
 struct __clib_array
