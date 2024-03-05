@@ -17,6 +17,7 @@ extern const char *clib_errmsg;
 char *clib_file_selector_open_file(void)
 {
 #ifdef CLIB_INCLUDE_STRING
+    NFD_Init();
     nfdchar_t *outPath = NULL;
     nfdresult_t result = NFD_OpenDialog(&outPath, NULL, 0, NULL);
     switch (result)
@@ -35,7 +36,7 @@ char *clib_file_selector_open_file(void)
         clib_errmsg = NFD_GetError();
         return NULL;
     }
-
+    NFD_Quit();
 #else
 #warning "clib_file_selector needs the string module to work"
 #endif /* CLIB_INCLUDE_STRING */
