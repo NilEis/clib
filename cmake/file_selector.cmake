@@ -13,6 +13,7 @@ if(PROJECT_IS_TOP_LEVEL)
                C_STANDARD_REQUIRED True
                C_EXTENSIONS Off)
   target_compile_options(clib_file_selector PRIVATE ${CLIB_COMPILE_OPTIONS})
-
-  target_include_directories(clib_file_selector PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 endif()
+
+target_include_directories(clib_file_selector
+                           PUBLIC ${CLIB_HEADER_DIR})
