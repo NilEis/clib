@@ -1,6 +1,6 @@
 add_library(clib_file_selector OBJECT
             ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_file_selector.c)
-list(APPEND SOURCE_FILES_LIST $<TARGET_OBJECTS:clib_file_selector>)
+list(APPEND CLIB_SOURCE_FILES_LIST $<TARGET_OBJECTS:clib_file_selector>)
 target_link_libraries(clib_file_selector PRIVATE nfd)
 target_compile_definitions(clib_file_selector
                            PRIVATE ${CLIB_COMPILE_DEFINITIONS})
