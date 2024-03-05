@@ -5,16 +5,7 @@ project(
   HOMEPAGE_URL "https://github.com/NilEis/clib"
   LANGUAGES C)
 
-set(SOURCE_FILES_LIST
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_array.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_error.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_data_structures.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_file.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_io.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_math.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_memory.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_sockets.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_string.c)
+set(CLIB_SOURCE_FILES_LIST ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_error.c)
 
 set(CLIB_LIBRARY_LIST)
 set(CLIB_COMPILE_DEFINITIONS)
@@ -58,7 +49,7 @@ if(NOT TARGET clib)
   if(CLIB_FILE_SELECTOR AND NOT EMSCRIPTEN)
     include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/file_selector.cmake)
   endif()
-  add_library(clib ${SOURCE_FILES_LIST})
+  add_library(clib ${CLIB_SOURCE_FILES_LIST})
   target_link_libraries(clib ${CLIB_LIBRARY_LIST})
   target_compile_definitions(clib PRIVATE ${CLIB_COMPILE_DEFINITIONS})
   target_compile_definitions(clib PUBLIC ${CLIB_COMPILE_DEFINITIONS_PUB})
@@ -109,7 +100,7 @@ endif()
 if(TCC)
   set(TCC_OBJECTS)
   set(TCC_OBJECTS_PATH ${CMAKE_CURRENT_BINARY_DIR}/tcc)
-  string(REPLACE ";" " " SOURCE_FILES_LIST_STR "${SOURCE_FILES_LIST}")
+  string(REPLACE ";" " " CLIB_SOURCE_FILES_LIST_STR "${CLIB_SOURCE_FILES_LIST}")
   set(TCC_SOURCES)
   set(TCC_SOURCES_PATH_ABSOLUTE ${CMAKE_CURRENT_SOURCE_DIR}/src)
   cmake_path(RELATIVE_PATH TCC_SOURCES_PATH_ABSOLUTE BASE_DIRECTORY
@@ -117,7 +108,7 @@ if(TCC)
   set(TCC_SOURCES_PATH ${SRCS_PATH_RELATIVE})
   set(TCC_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include)
   set(TCC_BUILD_RULES)
-  foreach(file ${SOURCE_FILES_LIST})
+  foreach(file ${CLIB_SOURCE_FILES_LIST})
     cmake_path(GET file STEM filename)
     set(TCC_OBJECT ./${filename}.o)
     set(TCC_SOURCE ${TCC_SOURCES_PATH}/${filename}.c)
