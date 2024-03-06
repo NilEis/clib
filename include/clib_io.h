@@ -8,8 +8,8 @@
 extern "C" {
 #endif
 
-#include <stddef.h>
 #include "clib_c90_support.h"
+#include <stddef.h>
 
 /**
  * @brief Reads a char from stdin without waiting for '\n'
