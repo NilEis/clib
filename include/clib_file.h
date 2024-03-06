@@ -9,10 +9,10 @@ extern "C"
 {
 #endif
 
+#include "clib_c90_support.h"
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
-#include "clib_c90_support.h"
 
 /**
  * @brief Returns the size of the file
