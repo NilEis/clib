@@ -96,7 +96,8 @@ uint32_t clib_math_ctz (uint32_t value)
 #if defined(__GNUC__) && USE_BUILTINS
     return (uint32_t)__builtin_ctzg (value);
 #else
-    return ctz_lut[((uint32_t)((value & -value) * CLIB_MAGIC_DEBRUIJN_NUMBER)) >> UINT32_C(27)];
+    return ctz_lut[((uint32_t)((value & -value) * CLIB_MAGIC_DEBRUIJN_NUMBER))
+                   >> UINT32_C (27)];
 #endif
 }
 

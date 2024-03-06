@@ -12,16 +12,17 @@ extern "C"
 #include "clib_error.h"
 #include <stdbool.h>
 
-    /**
-     * @brief typedef for a clib_socket
-     */
-    typedef struct clib_internal_socket clib_socket_t;
+/**
+ * @brief typedef for a clib_socket
+ */
+typedef struct clib_internal_socket clib_socket_t;
 
-    /**
-     * @brief initialises the socket systems and sets the appropriate clib_errno if an error occurs
-     * @return the clib_error_code_t that occured
-     */
-    clib_error_code_t clib_sockets_init(void);
+/**
+ * @brief initialises the socket systems and sets the appropriate clib_errno if
+ * an error occurs
+ * @return the clib_error_code_t that occured
+ */
+clib_error_code_t clib_sockets_init (void);
 
 #ifdef __cplusplus
 }

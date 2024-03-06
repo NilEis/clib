@@ -1,9 +1,6 @@
 #include "clib_sockets.h"
 
-const char *clib_sockets_module_name(void)
-{
-    return "clib_sockets";
-}
+const char *clib_sockets_module_name (void) { return "clib_sockets"; }
 
 /**
  * No modifications were made
@@ -18,9 +15,9 @@ const char *clib_sockets_module_name(void)
 #include <winsock2.h>
 #else
 /* Assume that any non-Windows platform uses POSIX-style sockets instead. */
-#include <sys/socket.h>
 #include <arpa/inet.h>
-#include <netdb.h>  /* Needed for getaddrinfo() and freeaddrinfo() */
+#include <netdb.h> /* Needed for getaddrinfo() and freeaddrinfo() */
+#include <sys/socket.h>
 #include <unistd.h> /* Needed for close() */
 #endif
 
@@ -32,11 +29,11 @@ struct clib_internal_socket
     clib_socket_t *self;
 };
 
-clib_error_code_t clib_sockets_init(void)
+clib_error_code_t clib_sockets_init (void)
 {
 #ifdef _WIN32
     WSADATA wsaData;
-    switch (WSAStartup(MAKEWORD(2, 2), &wsaData))
+    switch (WSAStartup (MAKEWORD (2, 2), &wsaData))
     {
     case WSASYSNOTREADY:
         clib_errno = CLIB_ERRNO_SOCKET_WSASYSNOTREADY;

@@ -5,8 +5,10 @@
 
 const char *clib_string_module_name (void) { return "clib_string"; }
 
-static int clib_string_dist_lev_rec (
-    const char *string_a, const char *string_b, size_t string_a_len, size_t string_b_len);
+static int clib_string_dist_lev_rec (const char *string_a,
+    const char *string_b,
+    size_t string_a_len,
+    size_t string_b_len);
 
 clib_string_builder_t *clib_string_builder_create (size_t initial_size)
 {
