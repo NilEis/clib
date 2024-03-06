@@ -14,15 +14,16 @@ const char *clib_io_module_name (void) { return "clib_io"; }
 
 int terminal_getch (void)
 {
-    struct termios oldattr, newattr;
-    int ch;
+    struct termios oldattr;
+    struct termios newattr;
+    int in_char = 0;
     tcgetattr (STDIN_FILENO, &oldattr);
     newattr = oldattr;
     newattr.c_lflag &= ~((unsigned int)ICANON | (unsigned int)ECHO);
     tcsetattr (STDIN_FILENO, TCSANOW, &newattr);
-    ch = getchar ();
+    in_char = getchar ();
     tcsetattr (STDIN_FILENO, TCSANOW, &oldattr);
-    return ch;
+    return in_char;
 }
 
 /**
@@ -31,8 +32,9 @@ int terminal_getch (void)
  */
 int terminal_kbhit (void)
 {
-    struct termios term, term_old;
-    int bytes;
+    struct termios term;
+    struct termios term_old;
+    int bytes = 0;
     tcgetattr (0, &term_old);
     tcgetattr (0, &term);
     term.c_lflag &= ~((unsigned int)ICANON);
@@ -47,8 +49,9 @@ int terminal_kbhit (void)
 size_t terminal_safe_gets (char *buffer, size_t size)
 {
     size_t count = 0;
-    int ch = '\0';
-    struct termios term, term_old;
+    int in_char = '\0';
+    struct termios term;
+    struct termios term_old;
     tcgetattr (0, &term_old);
     tcgetattr (0, &term);
     term.c_lflag &= ~((unsigned int)ICANON);
@@ -57,11 +60,9 @@ size_t terminal_safe_gets (char *buffer, size_t size)
     setbuf (stdin, NULL);
     while (size - 1)
     {
-        ch = getchar ();
-        switch (ch)
+        in_char = getchar ();
+        switch (in_char)
         {
-        case 0x1B:
-            break;
         case '\0':
         case '\n':
             size = 1;
@@ -72,7 +73,7 @@ size_t terminal_safe_gets (char *buffer, size_t size)
             count--;
             break;
         default:
-            buffer[count] = (char)ch;
+            buffer[count] = (char)in_char;
             count++;
             size--;
         }
@@ -84,9 +85,9 @@ size_t terminal_safe_gets (char *buffer, size_t size)
 
 int clib_mkdir (const char *name, int mode)
 {
-    struct stat st = { 0 };
+    struct stat stat_str = { 0 };
 
-    if (stat (name, &st) == -1)
+    if (stat (name, &stat_str) == -1)
     {
         return mkdir (name, (mode_t)mode);
     }
