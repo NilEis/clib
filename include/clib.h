@@ -4,13 +4,11 @@
 #ifndef CLIB_H
 #define CLIB_H
 
-#ifdef __cplusplus 
-extern "C" {
+#ifdef __cplusplus
+extern "C"
+{
 #endif
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdint.h>
 #include "clib_constructor.h"
 #include "clib_data_structures.h"
 #include "clib_error.h"
@@ -21,7 +19,7 @@ extern "C" {
 #include "clib_sockets.h"
 #include "clib_string.h"
 
-#ifdef __cplusplus 
+#ifdef __cplusplus
 }
 #endif
 
