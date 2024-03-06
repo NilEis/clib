@@ -2,11 +2,12 @@
  * @file clib_memory.h
  * @brief functions for working with memory
  */
-#if !defined( CLIB_MEMORY_H) && defined(CLIB_INCLUDE_MEMORY)
+#if !defined(CLIB_MEMORY_H) && defined(CLIB_INCLUDE_MEMORY)
 #define CLIB_MEMORY_H
 
-#ifdef __cplusplus 
-extern "C" {
+#ifdef __cplusplus
+extern "C"
+{
 #endif
 
 #include "clib_c90_support.h"
@@ -21,7 +22,8 @@ extern "C" {
  * @param size the size of the memory in bytes
  * @return void* the destination pointer
  */
-void *clib_memory_copy(const void *restrict src, void *restrict dest, size_t size);
+void *clib_memory_copy (
+    const void *restrict src, void *restrict dest, size_t size);
 
 /**
  * @brief Fill the given memory with the u8 value
@@ -31,7 +33,7 @@ void *clib_memory_copy(const void *restrict src, void *restrict dest, size_t siz
  * @param size the size in elements of size sizeof(uint8_t)
  * @return void* the dest pointer
  */
-void *clib_memory_set_u8(void *dest, uint8_t value, size_t size);
+void *clib_memory_set_u8 (void *dest, uint8_t value, size_t size);
 
 /**
  * @brief Fill the given memory with the u16 value
@@ -41,7 +43,7 @@ void *clib_memory_set_u8(void *dest, uint8_t value, size_t size);
  * @param size the size in elements of size sizeof(uint16_t)
  * @return void* the dest pointer
  */
-void *clib_memory_set_u16(void *dest, uint16_t value, size_t size);
+void *clib_memory_set_u16 (void *dest, uint16_t value, size_t size);
 
 /**
  * @brief Fill the given memory with the u32 value
@@ -51,7 +53,7 @@ void *clib_memory_set_u16(void *dest, uint16_t value, size_t size);
  * @param size the size in elements of size sizeof(uint32_t)
  * @return void* the dest pointer
  */
-void *clib_memory_set_u32(void *dest, uint32_t value, size_t size);
+void *clib_memory_set_u32 (void *dest, uint32_t value, size_t size);
 
 /**
  * @brief Fill the given memory with the u64 value
@@ -61,9 +63,9 @@ void *clib_memory_set_u32(void *dest, uint32_t value, size_t size);
  * @param size the size in elements of size sizeof(uint64_t)
  * @return void* the dest pointer
  */
-void *clib_memory_set_u64(void *dest, uint64_t value, size_t size);
+void *clib_memory_set_u64 (void *dest, uint64_t value, size_t size);
 
-#ifdef __cplusplus 
+#ifdef __cplusplus
 }
 #endif
 

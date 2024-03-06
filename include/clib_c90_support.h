@@ -4,8 +4,9 @@
 #ifndef CLIB_C90_SUPPORT_H
 #define CLIB_C90_SUPPORT_H
 
-#ifdef __cplusplus 
-extern "C" {
+#ifdef __cplusplus
+extern "C"
+{
 #endif
 
 #if __STDC_VERSION__ >= 199901L
@@ -22,7 +23,7 @@ extern "C" {
 #define restrict
 #endif
 
-#ifdef __cplusplus 
+#ifdef __cplusplus
 }
 #endif
 

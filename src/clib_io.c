@@ -2,71 +2,67 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-const char *clib_io_module_name(void)
-{
-    return "clib_io";
-}
-
-#ifdef CLIB_INCLUDE_IO
+const char *clib_io_module_name (void) { return "clib_io"; }
 
 #ifdef __unix__
 
 #include <sys/ioctl.h>
-#include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 #include <termios.h>
 #include <unistd.h>
 
-int terminal_getch(void)
+int terminal_getch (void)
 {
-    struct termios oldattr, newattr;
-    int ch;
-    tcgetattr(STDIN_FILENO, &oldattr);
+    struct termios oldattr;
+    struct termios newattr;
+    int in_char = 0;
+    tcgetattr (STDIN_FILENO, &oldattr);
     newattr = oldattr;
     newattr.c_lflag &= ~((unsigned int)ICANON | (unsigned int)ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &newattr);
-    ch = getchar();
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldattr);
-    return ch;
+    tcsetattr (STDIN_FILENO, TCSANOW, &newattr);
+    in_char = getchar ();
+    tcsetattr (STDIN_FILENO, TCSANOW, &oldattr);
+    return in_char;
 }
 
 /**
  Linux (POSIX) implementation of _kbhit().
  Morgan McGuire, morgan@cs.brown.edu
  */
-int terminal_kbhit(void)
+int terminal_kbhit (void)
 {
-    struct termios term, term_old;
-    int bytes;
-    tcgetattr(0, &term_old);
-    tcgetattr(0, &term);
+    struct termios term;
+    struct termios term_old;
+    int bytes = 0;
+    tcgetattr (0, &term_old);
+    tcgetattr (0, &term);
     term.c_lflag &= ~((unsigned int)ICANON);
     term.c_lflag &= ~((unsigned int)ECHO);
-    tcsetattr(0, TCSANOW, &term);
-    setbuf(stdin, NULL);
-    ioctl(0, FIONREAD, &bytes);
-    tcsetattr(0, TCSANOW, &term_old);
+    tcsetattr (0, TCSANOW, &term);
+    setbuf (stdin, NULL);
+    ioctl (0, FIONREAD, &bytes);
+    tcsetattr (0, TCSANOW, &term_old);
     return bytes > 0;
 }
 
-size_t terminal_safe_gets(char *buffer, size_t size)
+size_t terminal_safe_gets (char *buffer, size_t size)
 {
     size_t count = 0;
-    int ch = '\0';
-    struct termios term, term_old;
-    tcgetattr(0, &term_old);
-    tcgetattr(0, &term);
+    int in_char = '\0';
+    struct termios term;
+    struct termios term_old;
+    tcgetattr (0, &term_old);
+    tcgetattr (0, &term);
     term.c_lflag &= ~((unsigned int)ICANON);
     term.c_lflag &= ~((unsigned int)ECHO);
-    tcsetattr(0, TCSANOW, &term);
-    setbuf(stdin, NULL);
+    tcsetattr (0, TCSANOW, &term);
+    setbuf (stdin, NULL);
     while (size - 1)
     {
-        ch = getchar();
-        switch (ch)
+        in_char = getchar ();
+        switch (in_char)
         {
-        case 0x1B:
-            break;
         case '\0':
         case '\n':
             size = 1;
@@ -77,68 +73,60 @@ size_t terminal_safe_gets(char *buffer, size_t size)
             count--;
             break;
         default:
-            buffer[count] = (char)ch;
+            buffer[count] = (char)in_char;
             count++;
             size--;
         }
     }
     buffer[count] = '\0';
-    tcsetattr(0, TCSANOW, &term_old);
+    tcsetattr (0, TCSANOW, &term_old);
     return count;
 }
 
-int clib_mkdir(const char *name, int mode)
+int clib_mkdir (const char *name, int mode)
 {
-    struct stat st = {0};
+    struct stat stat_str = { 0 };
 
-    if (stat(name, &st) == -1)
+    if (stat (name, &stat_str) == -1)
     {
-        return mkdir(name, (mode_t)mode);
+        return mkdir (name, (mode_t)mode);
     }
     return 0;
 }
 
 #elif defined(_WIN32) || defined(_WIN64)
 
-#include <windows.h>
 #include <conio.h>
+#include <windows.h>
 
-int clib_getch(void)
-{
-    return getch();
-}
+int clib_getch (void) { return getch (); }
 
-int clib_kbhit(void)
-{
-    return kbhit();
-}
+int clib_kbhit (void) { return kbhit (); }
 
-size_t clib_safe_gets(char *buffer, size_t size)
+size_t clib_safe_gets (char *buffer, size_t size)
 {
     size_t count = 0;
-    int ch = '\0';
+    int in_char = '\0';
     while (size - 1)
     {
-        ch = clib_getch();
-        switch (ch)
+        in_char = clib_getch ();
+        switch (in_char)
         {
-        case 0xE0:
-            break;
         case '\0':
         case '\n':
-        case 13:
-            printf("\n");
+        case 'r':
+            printf ("\n");
             size = 1;
             break;
         case '\b':
-            printf("%c \b", ch);
+            printf ("%c \b", in_char);
             buffer[count] = '\0';
             size++;
             count--;
             break;
         default:
-            printf("%c", ch);
-            buffer[count] = (char)ch;
+            printf ("%c", in_char);
+            buffer[count] = (char)in_char;
             count++;
             size--;
         }
@@ -147,36 +135,37 @@ size_t clib_safe_gets(char *buffer, size_t size)
     return count;
 }
 
-int clib_mkdir(const char *name, int mode)
+int clib_mkdir (const char *name, int mode)
 {
     (void)mode;
-    return CreateDirectoryA(name, NULL);
+    return CreateDirectoryA (name, NULL);
 }
 
 #endif
 
-char *clib_read_variable_string(char **dest, size_t initial_size)
+char *clib_read_variable_string (char **dest, size_t initial_size)
 {
-    int ch = clib_getch();
+    int in_char = clib_getch ();
     size_t max = initial_size;
-    size_t i = 0;
+    size_t index = 0;
 #ifndef __GNUC__
     if (dest == NULL)
     {
         return NULL;
     }
 #endif /* !__GNUC__ */
-    *dest = (char *)calloc(initial_size, sizeof(char));
+    *dest = (char *)calloc (initial_size, sizeof (char));
     if (*dest == NULL)
     {
         return NULL;
     }
-    while (ch != 13 && ch != '\n' && ch != '\0' && ch != EOF)
+    while (in_char != '\r' && in_char != '\n' && in_char != '\0'
+           && in_char != EOF)
     {
-        *dest[i++] = (char)ch;
-        if (i >= max)
+        *dest[index++] = (char)in_char;
+        if (index >= max)
         {
-            *dest = realloc(*dest, max + initial_size);
+            *dest = realloc (*dest, max + initial_size);
             if (*dest == NULL)
             {
                 return NULL;
@@ -184,12 +173,10 @@ char *clib_read_variable_string(char **dest, size_t initial_size)
             max += initial_size;
         }
     }
-    if (i == max - 1)
+    if (index == max - 1)
     {
-        *dest = realloc(*dest, max + 1);
-        *dest[i + 1] = '\0';
+        *dest = realloc (*dest, max + 1);
+        *dest[index + 1] = '\0';
     }
     return *dest;
 }
-
-#endif /* CLIB_INCLUDE_IO */

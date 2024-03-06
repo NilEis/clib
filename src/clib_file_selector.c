@@ -1,31 +1,27 @@
 #include "clib_file.h"
 
-const char *clib_file_selector_module_name(void)
+const char *clib_file_selector_module_name (void)
 {
     return "clib_file_selector";
 }
 
-#ifdef CLIB_FILE_SELECTOR
-#include "nfd.h"
-#ifdef CLIB_INCLUDE_STRING
-#include "clib_string.h"
 #include "clib_error.h"
-#endif /* CLIB_INCLUDE_STRING */
+#include "clib_string.h"
+#include "nfd.h"
 
 extern const char *clib_errmsg;
 
-char *clib_file_selector_open_file(void)
+char *clib_file_selector_open_file (void)
 {
-#ifdef CLIB_INCLUDE_STRING
-    NFD_Init();
+    NFD_Init ();
     nfdchar_t *outPath = NULL;
-    nfdresult_t result = NFD_OpenDialog(&outPath, NULL, 0, NULL);
+    nfdresult_t result = NFD_OpenDialog (&outPath, NULL, 0, NULL);
     switch (result)
     {
     case NFD_OKAY:
     {
-        char *res = clib_string_duplicate(outPath);
-        NFD_FreePath(outPath);
+        char *res = clib_string_duplicate (outPath);
+        NFD_FreePath (outPath);
         return res;
     }
     case NFD_CANCEL:
@@ -33,14 +29,12 @@ char *clib_file_selector_open_file(void)
         return NULL;
     case NFD_ERROR:
         clib_errno = CLIB_ERRNO_FILE_SELECTOR_ERROR;
-        clib_errmsg = NFD_GetError();
+        clib_errmsg = NFD_GetError ();
         return NULL;
     }
-    NFD_Quit();
-#else
+    NFD_Quit ();
+#ifndef CLIB_INCLUDE_STRING
 #warning "clib_file_selector needs the string module to work"
 #endif /* CLIB_INCLUDE_STRING */
     return NULL;
 }
-
-#endif /* CLIB_FILE_SELECTOR */

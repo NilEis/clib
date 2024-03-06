@@ -2,58 +2,60 @@
 #include "clib_array.h"
 #include "clib_error.h"
 #include <stdlib.h>
-#include <limits.h>
 
-const char *clib_string_module_name(void)
+const char *clib_string_module_name (void) { return "clib_string"; }
+
+static int clib_string_dist_lev_rec (const char *string_a,
+    const char *string_b,
+    size_t string_a_len,
+    size_t string_b_len);
+
+clib_string_builder_t *clib_string_builder_create (size_t initial_size)
 {
-    return "clib_string";
+    return clib_array_create (sizeof (char), initial_size);
 }
 
-#ifdef CLIB_INCLUDE_STRING
-
-static int __clib_string_dist_lev_rec(const char *a, const char *b, size_t as, size_t bs);
-
-clib_string_builder_t *clib_string_builder_create(size_t initial_size)
+clib_string_builder_t *clib_string_builder_append (
+    clib_string_builder_t *builder, const char *str)
 {
-    return clib_array_create(sizeof(char), initial_size);
-}
-
-clib_string_builder_t *clib_string_builder_append(clib_string_builder_t *builder, const char *str)
-{
-    size_t i = 0;
-    for (i = 0; str[i] != '\0'; i++)
+    size_t index = 0;
+    for (index = 0; str[index] != '\0'; index++)
     {
-        (void)clib_string_builder_append_char(builder, str[i]);
+        (void)clib_string_builder_append_char (builder, str[index]);
     }
     return builder;
 }
 
-clib_string_builder_t *clib_string_builder_append_char(clib_string_builder_t *builder, char ch)
+clib_string_builder_t *clib_string_builder_append_char (
+    clib_string_builder_t *builder, char value)
 {
-    clib_array_push(builder, &ch);
+    clib_array_push (builder, &value);
     return builder;
 }
 
-char *clib_string_builder_get_string(clib_string_builder_t *builder)
+char *clib_string_builder_get_string (clib_string_builder_t *builder)
 {
-    char *res = clib_array_get_array(builder);
-    size_t len = clib_array_length(builder);
-    res = realloc(res, len + 1);
-    res[len] = '\0';
-    if (res == NULL)
+    char *res = clib_array_get_array (builder);
+    char *realloc_res = NULL;
+    size_t len = clib_array_length (builder);
+    realloc_res = realloc (res, len + 1);
+    if (realloc_res == NULL)
     {
         clib_errno = CLIB_ERRNO_REALLOCATION_ERROR;
+        free (res);
         return NULL;
     }
+    res = realloc_res;
+    res[len] = '\0';
     return res;
 }
 
-void clib_string_builder_free(clib_string_builder_t *builder)
+void clib_string_builder_free (clib_string_builder_t *builder)
 {
-    clib_array_free(builder);
+    clib_array_free (builder);
 }
 
-size_t clib_string_length(const char *str)
+size_t clib_string_length (const char *str)
 {
     const char *end = str;
     while (*end != '\0')
@@ -63,32 +65,33 @@ size_t clib_string_length(const char *str)
     return (size_t)end - (size_t)str;
 }
 
-size_t clib_string_copy(char *restrict dest, const char *restrict src, size_t size)
+size_t clib_string_copy (
+    char *restrict dest, const char *restrict src, size_t size)
 {
     size_t count = 0;
-    size_t i = 0;
-    for (i = 0; i < size && src[i] != '\0'; i++)
+    size_t index = 0;
+    for (index = 0; index < size && src[index] != '\0'; index++)
     {
         count++;
-        dest[i] = src[i];
+        dest[index] = src[index];
     }
     return count;
 }
 
-char *clib_string_duplicate(const char *src)
+char *clib_string_duplicate (const char *src)
 {
-    size_t len = clib_string_length(src);
-    char *ret = calloc(len + 1, sizeof(char));
+    size_t len = clib_string_length (src);
+    char *ret = calloc (len + 1, sizeof (char));
     if (ret == NULL)
     {
         clib_errno = CLIB_ERRNO_ALLOCATION_ZEROED_ERROR;
         return NULL;
     }
-    (void)clib_string_copy(ret, src, len + 1);
+    (void)clib_string_copy (ret, src, len + 1);
     return ret;
 }
 
-int clib_string_replace_char(char *src, char a, char b)
+int clib_string_replace_char (char *src, char char_a, char char_b)
 {
     static char *last_src = NULL;
     static char *src_p = NULL;
@@ -102,9 +105,9 @@ int clib_string_replace_char(char *src, char a, char b)
     }
     while (*src != '\0')
     {
-        if (*src == a)
+        if (*src == char_a)
         {
-            *src = b;
+            *src = char_b;
             return 1;
         }
         src++;
@@ -113,14 +116,14 @@ int clib_string_replace_char(char *src, char a, char b)
     return 0;
 }
 
-size_t clib_string_replace_char_all(char *src, char a, char b)
+size_t clib_string_replace_char_all (char *src, char char_a, char char_b)
 {
     size_t count = 0;
     while (*src != '\0')
     {
-        if (*src == a)
+        if (*src == char_a)
         {
-            *src = b;
+            *src = char_b;
             count++;
         }
         src++;
@@ -128,38 +131,50 @@ size_t clib_string_replace_char_all(char *src, char a, char b)
     return count;
 }
 
-int clib_string_dist_lev(const char *a, const char *b)
+int clib_string_dist_lev (const char *string_a, const char *string_b)
 {
-    return __clib_string_dist_lev_rec(a, b, clib_string_length(a), clib_string_length(b));
+    return clib_string_dist_lev_rec (string_a,
+        string_b,
+        clib_string_length (string_a),
+        clib_string_length (string_b));
 }
 
-static int __clib_string_dist_lev_rec(const char *a, const char *b, size_t as, size_t bs)
+static int clib_string_dist_lev_rec (const char *string_a,
+    const char *string_b,
+    size_t string_a_len,
+    size_t string_b_len)
 {
-    if (as == 0)
+    int tab = 0;
+    int atb = 0;
+    int tatb = 0;
+    if (string_a_len == 0)
     {
-        return (int)bs;
+        return (int)string_b_len;
     }
-    else if (bs == 0)
+    if (string_b_len == 0)
     {
-        return (int)as;
+        return (int)string_a_len;
     }
-    else if (a[0] == b[0])
+    if (string_a[0] == string_b[0])
     {
-        return __clib_string_dist_lev_rec(a + 1, b + 1, as - 1, bs - 1);
+        return clib_string_dist_lev_rec (
+            string_a + 1, string_b + 1, string_a_len - 1, string_b_len - 1);
     }
-    else
-    {
-        int tab = __clib_string_dist_lev_rec(a + 1, b, as - 1, bs);
-        int atb = __clib_string_dist_lev_rec(a, b + 1, as, bs - 1);
-        int tatb = __clib_string_dist_lev_rec(a + 1, b + 1, as - 1, bs - 1);
-        return 1 + (tab < atb ? (tab < tatb ? tab : tatb) : (atb < tatb ? atb : tatb));
-    }
+
+    tab = clib_string_dist_lev_rec (
+        string_a + 1, string_b, string_a_len - 1, string_b_len);
+    atb = clib_string_dist_lev_rec (
+        string_a, string_b + 1, string_a_len, string_b_len - 1);
+    tatb = clib_string_dist_lev_rec (
+        string_a + 1, string_b + 1, string_a_len - 1, string_b_len - 1);
+    return 1
+         + (tab < atb ? (tab < tatb ? tab : tatb) : (atb < tatb ? atb : tatb));
 }
 
-char *clib_string_from_int(char *dest, intmax_t i, clib_radix_t radix)
+char *clib_string_from_int (char *dest, intmax_t value, clib_radix_t radix)
 {
     static const char *const num_to_char = "0123456789ABCDEF";
-    int c = 0;
+    int dest_index = 0;
     if (radix > CLIB_RADIX_HEX)
     {
         clib_errno = CLIB_ERRNO_STRING_INVALID_BASE;
@@ -167,35 +182,36 @@ char *clib_string_from_int(char *dest, intmax_t i, clib_radix_t radix)
     }
     do
     {
-        intmax_t res = i % radix;
-        dest[c] = num_to_char[res];
-        i /= radix;
-        c++;
-        dest[c] = '\0';
-    } while (i != 0);
-    clib_string_reverse_in_place(dest, (size_t)c);
+        intmax_t res = value % radix;
+        dest[dest_index] = num_to_char[res];
+        value /= radix;
+        dest_index++;
+        dest[dest_index] = '\0';
+    }
+    while (value != 0);
+    clib_string_reverse_in_place (dest, (size_t)dest_index);
     return dest;
 }
 
-char *clib_string_reverse(const char *restrict src, char *restrict dest, size_t length)
+char *clib_string_reverse (
+    const char *restrict src, char *restrict dest, size_t length)
 {
-    size_t i = 0;
-    for (i = 0; i < length; i++)
+    size_t index = 0;
+    for (index = 0; index < length; index++)
     {
-        dest[i] = src[length - 1 - i];
+        dest[index] = src[length - 1 - index];
     }
     return dest;
 }
 
-char *clib_string_reverse_in_place(char *src, size_t length)
+char *clib_string_reverse_in_place (char *src, size_t length)
 {
-    size_t i = 0;
-    for (i = 0; i < length / 2; i++)
+    size_t index = 0;
+    for (index = 0; index < length / 2; index++)
     {
-        char t = src[i];
-        src[i] = src[length - 1 - i];
-        src[length - 1 - i] = t;
+        char tmp = src[index];
+        src[index] = src[length - 1 - index];
+        src[length - 1 - index] = tmp;
     }
     return src;
 }
-#endif /* CLIB_INCLUDE_STRING */
