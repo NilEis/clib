@@ -1,7 +1,6 @@
 #include "clib_array.h"
 #include "clib_error.h"
 #include "clib_memory.h"
-#include <stdint.h>
 #include <stdlib.h>
 
 const char *clib_array_module_name(void)
@@ -12,9 +11,8 @@ const char *clib_array_module_name(void)
 #if defined(CLIB_INCLUDE_ARRAY) && !defined(CLIB_INCLUDE_MEMORY)
 #warning "CLIB_INCLUDE_ARRAY requires CLIB_INCLUDE_MEMORY"
 #endif
-#if defined(CLIB_INCLUDE_ARRAY) && defined(CLIB_INCLUDE_MEMORY)
 
-struct __clib_array
+struct clib_internal_array
 {
     size_t length;
     size_t buf_size;
@@ -25,7 +23,6 @@ struct __clib_array
 
 clib_array_t *clib_array_create(size_t type_size, size_t initial_size)
 {
-    void *memset(void *str, int c, size_t n);
     clib_array_t *ret = NULL;
     initial_size = initial_size != 0 ? initial_size : 8;
     ret = calloc(1, sizeof(clib_array_t));
@@ -111,5 +108,3 @@ void clib_array_free(clib_array_t *array)
     free(array->buf);
     free(array);
 }
-
-#endif

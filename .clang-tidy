@@ -1,2 +1,2 @@
-Checks: '*,-altera-*,-llvmlibc-restrict-system-libc-headers,-misc-no-recursion'
+Checks: '*,-altera-*,-llvmlibc-restrict-system-libc-headers,-misc-no-recursion,-bugprone-easily-swappable-parameters'
 WarningsAsErrors: True

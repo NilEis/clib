@@ -9,7 +9,7 @@ extern "C"
 #include "clib_c90_support.h"
 #include <stddef.h>
 
-    typedef struct __clib_array clib_array_t;
+    typedef struct clib_internal_array clib_array_t;
 
     /**
      * @brief creates a new array
