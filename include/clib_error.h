@@ -4,8 +4,9 @@
 #ifndef CLIB_ERROR_H
 #define CLIB_ERROR_H
 
-#ifdef __cplusplus 
-extern "C" {
+#ifdef __cplusplus
+extern "C"
+{
 #endif
 
 #include "clib_c90_support.h"
@@ -33,7 +34,7 @@ typedef enum
 #endif
     CLIB_ERRNO_STRING_INVALID_BASE,
     CLIB_ERRNO_TREE_EMPTY,
-        __CLIB_ERRNO_MAX_VALUE
+    CLIB_INTERNAL_ERRNO_MAX_VALUE
 } clib_error_code_t;
 
 /**
@@ -47,9 +48,9 @@ extern clib_error_code_t clib_errno;
  * @param error_number the error code
  * @return const char* a pointer to the error string
  */
-const char *clib_error_get_string(clib_error_code_t error_number);
+const char *clib_error_get_string (clib_error_code_t error_number);
 
-#ifdef __cplusplus 
+#ifdef __cplusplus
 }
 #endif
 

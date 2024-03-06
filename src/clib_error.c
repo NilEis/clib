@@ -1,15 +1,12 @@
 #include "clib_error.h"
 #include <stdlib.h>
 
-const char *clib_error_module_name(void)
-{
-    return "clib_error";
-}
+const char *clib_error_module_name (void) { return "clib_error"; }
 
 clib_error_code_t clib_errno = 0;
 const char *clib_errmsg = NULL;
 
-const char *clib_error_get_string(clib_error_code_t error_number)
+const char *clib_error_get_string (clib_error_code_t error_number)
 {
     switch (error_number)
     {
@@ -33,15 +30,19 @@ const char *clib_error_get_string(clib_error_code_t error_number)
         return "Could not reallocate memory: realloc returned NULL";
 #ifdef _WIN32
     case CLIB_ERRNO_SOCKET_WSASYSNOTREADY:
-        return "The underlying network subsystem is not ready for network communication.";
+        return "The underlying network subsystem is not ready for network "
+               "communication.";
     case CLIB_ERRNO_SOCKET_WSAVERNOTSUPPORTED:
-        return "The version of Windows Sockets support requested is not provided by this particular Windows Sockets implementation.";
+        return "The version of Windows Sockets support requested is not "
+               "provided by this particular Windows Sockets implementation.";
     case CLIB_ERRNO_SOCKET_WSAEINPROGRESS:
         return "A blocking Windows Sockets 1.1 operation is in progress.";
     case CLIB_ERRNO_SOCKET_WSAEPROCLIM:
-        return "A limit on the number of tasks supported by the Windows Sockets implementation has been reached.";
+        return "A limit on the number of tasks supported by the Windows "
+               "Sockets implementation has been reached.";
     case CLIB_ERRNO_SOCKET_WSAEFAULT:
-        return "The lpWSAData parameter is not a valid pointer. (This error should not happen !PLEASE OPEN AN ISSUE!)";
+        return "The lpWSAData parameter is not a valid pointer. (This error "
+               "should not happen !PLEASE OPEN AN ISSUE!)";
 #endif
     case CLIB_ERRNO_STRING_INVALID_BASE:
         return "Invalid base for integer conversion";
