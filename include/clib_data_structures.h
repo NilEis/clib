@@ -26,13 +26,13 @@ typedef enum
  * @brief typedef for a clib_tree type
  * 
  */
-typedef struct __clib_tree clib_tree_t;
+typedef struct clib_internal_tree clib_tree_t;
 
 /**
  * @brief typedef for binary heap
  * 
  */
-typedef struct __clib_binary_heap clib_binary_heap_t;
+typedef struct clib_internal_binary_heap clib_binary_heap_t;
 
 /**
  * @brief creates a binary heap of the given type and size
