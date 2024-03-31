@@ -9,14 +9,12 @@ endif()
 option(CLIB_INCLUDE_TERMINAL "Include support for terminal functions" ON)
 if(CLIB_INCLUDE_TERMINAL)
   include(FetchContent)
-  set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
   FetchContent_Declare(
     c_terminal_repo
     GIT_TAG master
     GIT_REPOSITORY https://github.com/NilEis/C-Terminal.git)
   FetchContent_MakeAvailable(c_terminal_repo)
   string(APPEND CLIB_SELECTED_MODULES " terminal")
-  add_subdirectory(${c_terminal_repo_SOURCE_DIR})
   list(APPEND CLIB_LIBRARY_LIST c_terminal)
 endif()
 
@@ -24,8 +22,8 @@ option(CLIB_INCLUDE_DATA_STRUCTURES "Include data structures" ON)
 if(CLIB_INCLUDE_DATA_STRUCTURES)
   string(APPEND CLIB_SELECTED_MODULES " data_structures")
   list(APPEND CLIB_COMPILE_DEFINITIONS_PUB CLIB_INCLUDE_DATA_STRUCTURES)
-  list(APPEND CLIB_SOURCE_FILES_LIST
-       ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_data_structures.c)
+  file(GLOB data_structures_files ${CMAKE_CURRENT_SOURCE_DIR}/src/data_structures/*.c)
+  list(APPEND CLIB_SOURCE_FILES_LIST ${data_structures_files})
 endif()
 
 option(CLIB_INCLUDE_FILE "Include support for file functions" ON)

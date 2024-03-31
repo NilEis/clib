@@ -36,6 +36,11 @@ typedef struct clib_internal_tree clib_tree_t;
 typedef struct clib_internal_binary_heap clib_binary_heap_t;
 
 /**
+ * @brief The structure is an element of the union_find
+ */
+typedef struct clib_internal_union_find clib_union_find_t;
+
+/**
  * @brief creates a binary heap of the given type and size
  *
  * @param type CLIB_MIN_HEAP|CLIB_MAX_HEAP
@@ -120,6 +125,32 @@ char *clib_binary_heap_get_as_string (clib_binary_heap_t *heap);
  * @param heap the heap
  */
 void clib_binary_heap_free (clib_binary_heap_t *heap);
+
+/**
+ * @brief Makes a set for the given element
+ *
+ * @param elem
+ * @return clib_union_find_t*
+ */
+clib_union_find_t *clib_set_make (void *elem);
+
+/**
+ * @brief finds the root of a given element
+ *
+ * @param elem
+ * @return clib_union_find_t*
+ */
+clib_union_find_t *clib_set_find (clib_union_find_t *elem);
+
+/**
+ * @brief merges both given sets and returns the new set
+ *
+ * @param set_1
+ * @param set_2
+ * @return clib_union_find_t*
+ */
+clib_union_find_t *clib_set_merge (
+    clib_union_find_t *set_1, clib_union_find_t *set_2);
 
 #ifdef __cplusplus
 }

@@ -1,113 +1,12 @@
+#include "clib_c90_support.h"
 #include "clib_data_structures.h"
+#include "clib_data_structures_tree.h"
 #include "clib_error.h"
-#include "clib_math.h"
 #include "clib_string.h"
 #include <stdlib.h>
 #include <string.h>
 
-const char *clib_data_structures_module_name (void)
-{
-    return "clib_data_structures";
-}
-
-typedef struct
-{
-    void *data;
-    int32_t key;
-    void *self;
-} clib_tree_node_t;
-
 typedef int (*clib_compare_function_t) (int32_t node_a, int32_t node_b);
-
-struct clib_internal_tree
-{
-    /* pointer to internal array */
-    clib_tree_node_t *array;
-    /* number of elements in heap */
-    size_t size;
-    /* size of internal array */
-    size_t length;
-};
-
-#define CLIB_NUMBER_MAX_LENGTH_AS_STRING 12
-
-static char *clib_tree_get_string (clib_tree_t *tree)
-{
-#if !defined(CLIB_INCLUDE_MATH) && !defined(CLIB_INCLUDE_STRING)
-    return "[CLIB_MATH AND CLIB_STRING REQUIRED]";
-#endif
-    size_t index = 0;
-    size_t size_of_string = sizeof ("[  ]");
-    char *ret = NULL;
-    char tmp[CLIB_NUMBER_MAX_LENGTH_AS_STRING] = { 0 };
-    size_of_string += clib_math_int_width (
-        tree->array[0].key, CLIB_RADIX_DEC); /* "num" */
-    for (index = 1; index < tree->size - 1; index++)
-    {
-        size_of_string
-            += clib_math_int_width (tree->array[index].key, CLIB_RADIX_DEC)
-             + 2; /* "num, " */
-    }
-    if (tree->size >= 3)
-    {
-        size_of_string += clib_math_int_width (
-            tree->array[tree->size - 1].key, CLIB_RADIX_DEC); /* "num" */
-    }
-    ret = calloc (size_of_string, sizeof (char));
-    if (ret == NULL)
-    {
-        clib_errno = CLIB_ERRNO_ALLOCATION_ZEROED_ERROR;
-        return NULL;
-    }
-    ret[0] = '[';
-    ret[1] = ' ';
-    clib_string_from_int (tmp, tree->array[0].key, CLIB_RADIX_DEC);
-    strcat (ret, tmp);
-    strcat (ret, ", ");
-    for (index = 1; index < tree->size - 1; index++)
-    {
-        clib_string_from_int (tmp, tree->array[index].key, CLIB_RADIX_DEC);
-        strcat (ret, tmp);
-        strcat (ret, ", ");
-    }
-    clib_string_from_int (
-        tmp, tree->array[tree->size - 1].key, CLIB_RADIX_DEC);
-    strcat (ret, tmp);
-    strcat (ret, " ]");
-    return ret;
-}
-
-inline size_t internal_get_parent (size_t index) { return (index - 1) / 2; }
-
-inline size_t internal_get_left (size_t index) { return 2 * index + 1; }
-
-inline size_t internal_get_right (size_t index) { return 2 * index + 2; }
-
-inline int internal_node_is_valid (clib_tree_t *tree, size_t index)
-{
-    return (index < tree->size)
-        && (&(tree->array[index]) == tree->array[index].self);
-}
-
-inline void internal_swap (
-    clib_tree_t *tree, size_t node_a, size_t node_b, int a_valid, int b_valid)
-{
-    clib_tree_node_t tmp;
-
-    tmp.data = tree->array[node_a].data;
-    tmp.key = tree->array[node_a].key;
-    tmp.self = tree->array[node_a].self;
-
-    tree->array[node_a].data = tree->array[node_b].data;
-    tree->array[node_a].key = tree->array[node_b].key;
-    tree->array[node_a].self = a_valid ? &(tree->array[node_a]) : NULL;
-
-    tree->array[node_b].data = tmp.data;
-    tree->array[node_b].key = tmp.key;
-    tree->array[node_b].self = b_valid ? &(tree->array[node_b]) : NULL;
-}
-
-/* #pragma region binary_heap */
 
 static int internal_max_heap_cmp (int32_t node_a, int32_t node_b)
 {
@@ -278,5 +177,3 @@ void clib_binary_heap_free (clib_binary_heap_t *heap)
     free (heap->tree.array);
     free (heap);
 }
-
-/* #pragma endregion binary_heap */
