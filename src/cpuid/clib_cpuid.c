@@ -1,7 +1,7 @@
 #include "clib_cpuid.h"
 #include <stddef.h>
 
-static char internal_cpuid_name[5] = { 0 };
+static char internal_cpuid_name[13] = { 0 };
 static uint32_t internal_cpuid_max_level = 0;
 
 static void internal_cpuid (uint32_t leaf,
