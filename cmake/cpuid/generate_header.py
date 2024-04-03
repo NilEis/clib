@@ -117,6 +117,7 @@ with open(sys.argv[2], mode="w") as out_file:
 with open(sys.argv[3], mode="w") as out_src_file:
     out_src_file.write("#include \"clib_cpuid.h\"\n")
     out_src_file.write("#include \"clib_error.h\"\n")
+    out_src_file.write("#include <stddef.h>\n")
     out_src_file.write("\n")
     for leaf in structs:
         for subleaf in structs[leaf]:
