@@ -10,6 +10,7 @@ extern "C"
 #endif
 
 #include "clib_constructor.h"
+#include "clib_cpuid.h"
 #include "clib_data_structures.h"
 #include "clib_error.h"
 #include "clib_file.h"
