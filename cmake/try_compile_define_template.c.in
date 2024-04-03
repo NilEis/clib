@@ -1,0 +1,10 @@
+int main(int argc, char**argv)
+{
+    (void)argc;
+    (void)argv;
+#if @CLIB_TRY_COMPILE_DEFINE_VALUE@
+    return 1;
+#else
+    return 0;
+#endif /* @CLIB_TRY_COMPILE_DEFINE_VALUE@ */
+}

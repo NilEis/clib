@@ -18,6 +18,10 @@ const char *clib_error_get_string (clib_error_code_t error_number)
         return "Could not allocate memory: calloc returned NULL";
     case CLIB_ERRNO_ARRAY_INDEX_OUT_OF_BOUNDS:
         return "Array index out of bounds";
+    case CLIB_ERRNO_CPUID_INVALID_LEAF:
+        return "Invalid cpuid leaf";
+    case CLIB_ERRNO_CPUID_INVALID_SUBLEAF:
+        return "Invalid cpuid subleaf";
     case CLIB_ERRNO_FILE_OPEN_ERROR:
         return "Could not open the file";
     case CLIB_ERRNO_FILE_READ_ERROR:

@@ -1,3 +1,5 @@
+include(CMakeDependentOption)
+
 option(CLIB_INCLUDE_ARRAY "Include dynamic arrays" ON)
 if(CLIB_INCLUDE_ARRAY)
   string(APPEND CLIB_SELECTED_MODULES " array")
@@ -18,11 +20,31 @@ if(CLIB_INCLUDE_TERMINAL)
   list(APPEND CLIB_LIBRARY_LIST c_terminal)
 endif()
 
+if(NOT MSVC)
+  clib_test_if_any_x86(cpuid_supported)
+else()
+  set(cpuid_supported false)
+  message(WARNING "CPUID is not supported on msvc due to msvc asm")
+endif()
+
+cmake_dependent_option(CLIB_INCLUDE_CPUID "Include the cpuid module" ON
+                       "cpuid_supported" OFF)
+if(CLIB_INCLUDE_CPUID)
+  string(APPEND CLIB_SELECTED_MODULES " cpuid")
+  list(APPEND CLIB_COMPILE_DEFINITIONS_PUB CLIB_INCLUDE_CPUID)
+  list(APPEND CLIB_SOURCE_FILES_LIST
+       ${CMAKE_CURRENT_SOURCE_DIR}/src/cpuid/clib_cpuid.c)
+  list(APPEND CLIB_SOURCE_FILES_LIST
+       ${CMAKE_CURRENT_SOURCE_DIR}/src/cpuid/clib_cpuid_leafs.c)
+  include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/cpuid/generate_header.cmake)
+endif()
+
 option(CLIB_INCLUDE_DATA_STRUCTURES "Include data structures" ON)
 if(CLIB_INCLUDE_DATA_STRUCTURES)
   string(APPEND CLIB_SELECTED_MODULES " data_structures")
   list(APPEND CLIB_COMPILE_DEFINITIONS_PUB CLIB_INCLUDE_DATA_STRUCTURES)
-  file(GLOB data_structures_files ${CMAKE_CURRENT_SOURCE_DIR}/src/data_structures/*.c)
+  file(GLOB data_structures_files
+       ${CMAKE_CURRENT_SOURCE_DIR}/src/data_structures/*.c)
   list(APPEND CLIB_SOURCE_FILES_LIST ${data_structures_files})
 endif()
 
