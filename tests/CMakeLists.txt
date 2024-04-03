@@ -57,6 +57,11 @@ if(TEST_CPP)
 
 endif()
 
+if(CLIB_INCLUDE_CPUID)
+  add_c_and_cpp_test(test_clib_cpuid "cpuid-test"
+                     test_clib_cpuid)
+endif(CLIB_INCLUDE_CPUID)
+
 if(CLIB_INCLUDE_DATA_STRUCTURES)
   add_c_and_cpp_test(test_clib_data_structures "data_structures-test"
                      test_clib_data_structures)
