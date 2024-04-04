@@ -10,8 +10,9 @@ int main (int argc, char const *argv[])
     (void)argc;
     (void)argv;
     printf ("Name: %s\n", clib_cpuid_get_name ());
-    clib_cpuid_leaf_1_subleaf_0_t *res = clib_cpuid_get (1, 0);
-    printf("Supported:\n");
+    printf ("Hypervisor: %s\n", clib_cpuid_get_hypervisor ());
+    printf ("Max level: %d\n", clib_cpuid_get_max_level ());
+    printf ("Supported:\n");
     printf ("    cmov: %d\n", clib_cpuid_supports_cmov ());
     printf ("    mmx: %d\n", clib_cpuid_supports_mmx ());
     printf ("    popcnt: %d\n", clib_cpuid_supports_popcnt ());
@@ -28,7 +29,7 @@ int main (int argc, char const *argv[])
     printf ("    fma4: %d\n", clib_cpuid_supports_fma4 ());
     printf ("    xop: %d\n", clib_cpuid_supports_xop ());
     printf ("    avx512f: %d\n", clib_cpuid_supports_avx512f ());
-    printf ("    bmi: %d\n", clib_cpuid_supports_bmi ());
+    printf ("    bmi1: %d\n", clib_cpuid_supports_bmi1 ());
     printf ("    bmi2: %d\n", clib_cpuid_supports_bmi2 ());
     printf ("    aes: %d\n", clib_cpuid_supports_aes ());
     printf ("    avx512vl: %d\n", clib_cpuid_supports_avx512vl ());
