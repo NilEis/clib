@@ -248,11 +248,11 @@ test (
                                                            == (__builtin_cpu_supports ("avx512f")
                                                                != 0));)
                                 test (
-                                    clib_cpuid_test_bmi,
-                                    "Tests bmi",
+                                    clib_cpuid_test_bmi1,
+                                    "Tests bmi1",
                                     printf ("- Testing %s\n", __func__);
                                     cheat_assert (
-                                        (clib_cpuid_supports_bmi () != 0)
+                                        (clib_cpuid_supports_bmi1 () != 0)
                                         == (__builtin_cpu_supports ("bmi")
                                             != 0));) test (clib_cpuid_test_bmi2,
                                                            "Tests bmi2",

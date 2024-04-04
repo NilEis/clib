@@ -35,6 +35,8 @@ if(CLIB_INCLUDE_CPUID)
   list(APPEND CLIB_SOURCE_FILES_LIST
        ${CMAKE_CURRENT_SOURCE_DIR}/src/cpuid/clib_cpuid.c)
   list(APPEND CLIB_SOURCE_FILES_LIST
+       ${CMAKE_CURRENT_SOURCE_DIR}/src/cpuid/clib_cpuid_checks.c)
+  list(APPEND CLIB_SOURCE_FILES_LIST
        ${CMAKE_CURRENT_SOURCE_DIR}/src/cpuid/clib_cpuid_leafs.c)
   include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/cpuid/generate_header.cmake)
 endif()
