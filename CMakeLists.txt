@@ -32,7 +32,7 @@ if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
     -Werror
     -Wall
     -Wextra
-    -Werror=conversion
+    -Wconversion
     -Wpedantic
     -pedantic
     -Werror=sign-conversion)

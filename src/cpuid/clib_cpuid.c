@@ -25,7 +25,12 @@ static void internal_cpuid (uint32_t leaf,
     uint32_t local_ecx = 0;
     uint32_t local_edx = 0;
 
-#ifdef _MSC_VER
+#if __GNUC__
+    __asm__ __volatile__ (
+        "cpuid\n\t"
+        : "=a"(local_eax), "=b"(local_ebx), "=c"(local_ecx), "=d"(local_edx)
+        : "0"(leaf), "2"(subleaf));
+#elif defined(_MSC_VER)
     __asm volatile
     {
         mov eax, leaf;
@@ -37,10 +42,7 @@ static void internal_cpuid (uint32_t leaf,
         mov local_edx, edx;
     }
 #else
-    __asm__ __volatile__ (
-        "cpuid\n\t"
-        : "=a"(local_eax), "=b"(local_ebx), "=c"(local_ecx), "=d"(local_edx)
-        : "0"(leaf), "2"(subleaf));
+#warning "Unknown compiler"
 #endif
 
     if (eax != NULL)
