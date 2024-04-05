@@ -1,3 +1,9 @@
+/**
+ * @file clib_cpuid_checks.h
+ * @author Nils Eisenach
+ * @brief Functions for checking if the CPU supports certain instructions
+ * @date 2024-04-05
+ */
 #if !defined(CLIB_CPUID_CHECKS_H) && defined(CLIB_INCLUDE_CPUID)
 #define CLIB_CPUID_CHECKS_H
 
