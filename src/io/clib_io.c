@@ -12,7 +12,7 @@ const char *clib_io_module_name (void) { return "clib_io"; }
 #include <termios.h>
 #include <unistd.h>
 
-int terminal_getch (void)
+int clib_getch (void)
 {
     struct termios oldattr;
     struct termios newattr;
@@ -30,7 +30,7 @@ int terminal_getch (void)
  Linux (POSIX) implementation of _kbhit().
  Morgan McGuire, morgan@cs.brown.edu
  */
-int terminal_kbhit (void)
+int clib_kbhit (void)
 {
     struct termios term;
     struct termios term_old;
@@ -46,7 +46,7 @@ int terminal_kbhit (void)
     return bytes > 0;
 }
 
-size_t terminal_safe_gets (char *buffer, size_t size)
+size_t clib_safe_gets (char *buffer, size_t size)
 {
     size_t count = 0;
     int in_char = '\0';
