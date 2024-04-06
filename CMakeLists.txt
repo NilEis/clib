@@ -5,9 +5,10 @@ project(
   HOMEPAGE_URL "https://github.com/NilEis/clib"
   LANGUAGES C)
 
-set(CLIB_SOURCE_FILES_LIST ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_error.c)
+set(CLIB_SOURCE_FILES_LIST)
 
 set(CLIB_MODULES_LIST)
+set(CLIB_SELECTED_MODULES_NO_ANSI)
 set(CLIB_LIBRARY_LIST)
 set(CLIB_DEP_FILES)
 set(CLIB_COMPILE_DEFINITIONS)
@@ -50,45 +51,56 @@ elseif(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
 endif()
 
 if(NOT TARGET clib)
-  if(CLIB_FILE_SELECTOR AND NOT EMSCRIPTEN)
-    include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/file_selector.cmake)
-  endif()
+  set(CLIB_ALL_MODULES ${CLIB_SELECTED_MODULES_NO_ANSI} ${CLIB_MODULES_LIST})
   if(CLIB_OBJECT_LIB)
     add_library(clib OBJECT ${CLIB_SOURCE_FILES_LIST} ${CLIB_HEADERS})
   else()
     add_library(clib ${CLIB_SOURCE_FILES_LIST} ${CLIB_HEADERS})
   endif()
-  target_link_libraries(clib ${CLIB_LIBRARY_LIST})
+
+  list(APPEND CLIB_MODULES_LIST clib)
+
+  foreach(module ${CLIB_ALL_MODULES})
+    target_compile_definitions(${module} PRIVATE ${CLIB_COMPILE_DEFINITIONS})
+    target_compile_definitions(${module} PUBLIC ${CLIB_COMPILE_DEFINITIONS_PUB})
+    target_include_directories(${module} PUBLIC ${CLIB_HEADER_DIR})
+    list(APPEND CLIB_LIBRARY_LIST "$<TARGET_OBJECTS:${module}>")
+  endforeach(module ${CLIB_SELECTED_MODULES_NO_ANSI})
+
+  target_link_libraries(clib PUBLIC ${CLIB_LIBRARY_LIST})
   target_compile_definitions(clib PRIVATE ${CLIB_COMPILE_DEFINITIONS})
   target_compile_definitions(clib PUBLIC ${CLIB_COMPILE_DEFINITIONS_PUB})
+  target_include_directories(clib PUBLIC ${CLIB_HEADER_DIR})
+
+  foreach(module ${CLIB_MODULES_LIST})
+    get_target_property(clib_std ${module} C_STANDARD)
+    if(PROJECT_IS_TOP_LEVEL)
+      set_target_properties(
+        ${module}
+        PROPERTIES C_STANDARD 90
+                   C_STANDARD_REQUIRED True
+                   C_EXTENSIONS Off)
+      target_compile_definitions(${module} PRIVATE USE_BUILTINS=0 CLIB_ANSI=1)
+      if(clib_std EQUAL 90 AND CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
+        list(APPEND CLIB_COMPILE_OPTIONS -ansi)
+      endif()
+    endif()
+  endforeach(module ${CLIB_MODULES_LIST})
   message(STATUS "clib library created with:${CLIB_SELECTED_MODULES}")
 endif()
 
 if(PROJECT_IS_TOP_LEVEL)
-  set_target_properties(
-    clib
-    PROPERTIES C_STANDARD 90
-               C_STANDARD_REQUIRED True
-               C_EXTENSIONS Off)
-  target_compile_definitions(clib PRIVATE USE_BUILTINS=0 CLIB_ANSI=1)
-  get_target_property(clib_std clib C_STANDARD)
-
-  if(clib_std EQUAL 90 AND CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
-    list(APPEND CLIB_COMPILE_OPTIONS -ansi)
-  endif()
-
   if(CLIB_OBJECT_LIB)
     add_executable(test_exe src/main.c $<TARGET_OBJECTS:clib>)
   else()
     add_executable(test_exe src/main.c)
   endif()
   target_link_libraries(test_exe clib)
-  target_include_directories(test_exe PRIVATE include/)
+  target_include_directories(test_exe
+                             PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/)
 endif()
 
 target_compile_options(clib PRIVATE ${CLIB_COMPILE_OPTIONS})
-
-target_include_directories(clib PUBLIC ${CLIB_HEADER_DIR})
 
 if(BUILD_WITH_DOCS)
   find_package(Doxygen)
