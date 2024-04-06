@@ -1,3 +1,10 @@
+/**
+ * @file clib_array.h
+ * @author Nils Eisenach
+ * @brief Functions for working with dynamic arrays
+ * @version 0.1
+ * @date 2024-04-05
+ */
 #if !defined(CLIB_ARRAY_H) && defined(CLIB_INCLUDE_ARRAY)
 #define CLIB_ARRAY_H
 

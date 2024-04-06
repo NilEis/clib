@@ -10,6 +10,14 @@ link_libraries(clib)
 
 include(FetchContent)
 
+include(CheckIPOSupported)
+check_ipo_supported(RESULT supported OUTPUT error)
+if(supported)
+  message(STATUS "IPO / LTO enabled")
+else()
+  message(STATUS "IPO / LTO not supported: <${error}>")
+endif()
+
 FetchContent_Declare(cheat
                      GIT_REPOSITORY https://github.com/Tuplanolla/cheat.git)
 
@@ -20,6 +28,10 @@ macro(add_cpp_test test_name test_string_name test_file)
     add_executable(${test_name}_cpp
                    ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.cpp)
     target_compile_definitions(${test_name}_cpp PRIVATE ${ARGN})
+    if(supported)
+      set_property(TARGET ${test_name}_cpp PROPERTY INTERPROCEDURAL_OPTIMIZATION
+                                                    TRUE)
+    endif()
     add_test(NAME "${test_string_name}-cpp" COMMAND test_clib_math_cpp)
     message(STATUS "Adding CPP test ${test_name}_cpp with options: ${ARGN}")
   endif()
@@ -28,6 +40,9 @@ endmacro()
 macro(add_c_and_cpp_test test_name test_string_name test_file)
   add_executable(${test_name} ${test_file}.c)
   target_compile_definitions(${test_name} PRIVATE ${ARGN})
+  if(supported)
+    set_property(TARGET ${test_name} PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+  endif()
   add_test(NAME ${test_string_name} COMMAND ${test_name})
   message(STATUS "Adding C test ${test_name}_cpp with options: ${ARGN}")
   add_cpp_test(${test_name} ${test_string_name} ${test_file} ${ARGN})
@@ -58,8 +73,7 @@ if(TEST_CPP)
 endif()
 
 if(CLIB_INCLUDE_CPUID)
-  add_c_and_cpp_test(test_clib_cpuid "cpuid-test"
-                     test_clib_cpuid)
+  add_c_and_cpp_test(test_clib_cpuid "cpuid-test" test_clib_cpuid)
 endif(CLIB_INCLUDE_CPUID)
 
 if(CLIB_INCLUDE_DATA_STRUCTURES)

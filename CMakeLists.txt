@@ -5,8 +5,10 @@ project(
   HOMEPAGE_URL "https://github.com/NilEis/clib"
   LANGUAGES C)
 
-set(CLIB_SOURCE_FILES_LIST ${CMAKE_CURRENT_SOURCE_DIR}/src/clib_error.c)
+set(CLIB_SOURCE_FILES_LIST)
 
+set(CLIB_MODULES_LIST)
+set(CLIB_SELECTED_MODULES_NO_ANSI)
 set(CLIB_LIBRARY_LIST)
 set(CLIB_DEP_FILES)
 set(CLIB_COMPILE_DEFINITIONS)
@@ -49,41 +51,74 @@ elseif(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
 endif()
 
 if(NOT TARGET clib)
-  if(CLIB_FILE_SELECTOR AND NOT EMSCRIPTEN)
-    include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/file_selector.cmake)
+  set(CLIB_ALL_MODULES ${CLIB_SELECTED_MODULES_NO_ANSI} ${CLIB_MODULES_LIST})
+  if(CLIB_OBJECT_LIB)
+    add_library(clib OBJECT ${CLIB_SOURCE_FILES_LIST} ${CLIB_HEADERS})
+  else()
+    add_library(clib ${CLIB_SOURCE_FILES_LIST} ${CLIB_HEADERS})
   endif()
-  add_library(clib ${CLIB_SOURCE_FILES_LIST} ${CLIB_HEADERS})
-  target_link_libraries(clib ${CLIB_LIBRARY_LIST})
+
+  list(APPEND CLIB_MODULES_LIST clib)
+
+  foreach(module ${CLIB_ALL_MODULES})
+    target_compile_definitions(${module} PRIVATE ${CLIB_COMPILE_DEFINITIONS})
+    target_compile_definitions(${module} PUBLIC ${CLIB_COMPILE_DEFINITIONS_PUB})
+    target_include_directories(${module} PUBLIC ${CLIB_HEADER_DIR})
+    list(APPEND CLIB_LIBRARY_LIST "$<TARGET_OBJECTS:${module}>")
+  endforeach(module ${CLIB_SELECTED_MODULES_NO_ANSI})
+
+  target_link_libraries(clib PUBLIC ${CLIB_LIBRARY_LIST})
   target_compile_definitions(clib PRIVATE ${CLIB_COMPILE_DEFINITIONS})
   target_compile_definitions(clib PUBLIC ${CLIB_COMPILE_DEFINITIONS_PUB})
+  target_include_directories(clib PUBLIC ${CLIB_HEADER_DIR})
+
+  foreach(module ${CLIB_MODULES_LIST})
+    get_target_property(clib_std ${module} C_STANDARD)
+    if(PROJECT_IS_TOP_LEVEL)
+      set_target_properties(
+        ${module}
+        PROPERTIES C_STANDARD 90
+                   C_STANDARD_REQUIRED True
+                   C_EXTENSIONS Off)
+      target_compile_definitions(${module} PRIVATE USE_BUILTINS=0 CLIB_ANSI=1)
+      if(clib_std EQUAL 90 AND CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
+        list(APPEND CLIB_COMPILE_OPTIONS -ansi)
+      endif()
+    endif()
+  endforeach(module ${CLIB_MODULES_LIST})
   message(STATUS "clib library created with:${CLIB_SELECTED_MODULES}")
 endif()
 
 if(PROJECT_IS_TOP_LEVEL)
-  set_target_properties(
-    clib
-    PROPERTIES C_STANDARD 90
-               C_STANDARD_REQUIRED True
-               C_EXTENSIONS Off)
-  target_compile_definitions(clib PRIVATE USE_BUILTINS=0 CLIB_ANSI=1)
-  get_target_property(clib_std clib C_STANDARD)
-
-  if(clib_std EQUAL 90 AND CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
-    list(APPEND CLIB_COMPILE_OPTIONS -ansi)
+  if(CLIB_OBJECT_LIB)
+    add_executable(test_exe src/main.c $<TARGET_OBJECTS:clib>)
+  else()
+    add_executable(test_exe src/main.c)
   endif()
-
-  add_executable(test_exe src/main.c)
   target_link_libraries(test_exe clib)
-  target_include_directories(test_exe PRIVATE include/)
+  target_include_directories(test_exe
+                             PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/)
 endif()
 
 target_compile_options(clib PRIVATE ${CLIB_COMPILE_OPTIONS})
 
-target_include_directories(clib PUBLIC ${CLIB_HEADER_DIR})
-
 if(BUILD_WITH_DOCS)
   find_package(Doxygen)
   if(DOXYGEN_FOUND)
+
+    set(DOXYGEN_PREDEFINED_LIST ${CLIB_COMPILE_DEFINITIONS})
+    list(APPEND DOXYGEN_PREDEFINED_LIST ${CLIB_COMPILE_DEFINITIONS_PUB})
+    set(DOXYGEN_PREDEFINED "")
+
+    #itertate through the list of preprocessor definitions and append them to the DOXYGEN_PREDEFINED in the following format NAME=VALUE \\n
+    foreach(def ${DOXYGEN_PREDEFINED_LIST})
+      if(NOT "${def}" MATCHES "^[a-zA-Z0-9_]=[a-zA-Z0-9_]+$")
+        string(APPEND DOXYGEN_PREDEFINED "\t${def}= \\\n")
+      else()
+        string(APPEND DOXYGEN_PREDEFINED "\t${def} \\\n")
+      endif()
+    endforeach()
+
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doxygen/Doxyfile.in
                    ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
     doxygen_add_docs(
@@ -98,29 +133,4 @@ endif()
 if(BUILD_TESTS AND PROJECT_IS_TOP_LEVEL)
   include(CTest)
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests)
-endif()
-
-if(TCC)
-  set(TCC_OBJECTS)
-  set(TCC_OBJECTS_PATH ${CMAKE_CURRENT_BINARY_DIR}/tcc)
-  string(REPLACE ";" " " CLIB_SOURCE_FILES_LIST_STR "${CLIB_SOURCE_FILES_LIST}")
-  set(TCC_SOURCES)
-  set(TCC_SOURCES_PATH_ABSOLUTE ${CMAKE_CURRENT_SOURCE_DIR}/src)
-  cmake_path(RELATIVE_PATH TCC_SOURCES_PATH_ABSOLUTE BASE_DIRECTORY
-             ${TCC_OBJECTS_PATH} OUTPUT_VARIABLE SRCS_PATH_RELATIVE)
-  set(TCC_SOURCES_PATH ${SRCS_PATH_RELATIVE})
-  set(TCC_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include)
-  set(TCC_BUILD_RULES)
-  foreach(file ${CLIB_SOURCE_FILES_LIST})
-    cmake_path(GET file STEM filename)
-    set(TCC_OBJECT ./${filename}.o)
-    set(TCC_SOURCE ${TCC_SOURCES_PATH}/${filename}.c)
-    list(APPEND TCC_OBJECTS ${TCC_OBJECT})
-    list(APPEND TCC_SOURCES ${TCC_SOURCE})
-    string(APPEND TCC_BUILD_RULES "${TCC_OBJETC}:")
-  endforeach()
-  string(REPLACE ";" " " TCC_OBJECTS "${TCC_OBJECTS}")
-  string(REPLACE ";" " " TCC_SOURCES "${TCC_SOURCES}")
-  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/tcc/makefile.in
-                 ${CMAKE_CURRENT_BINARY_DIR}/tcc/Makefile)
 endif()
