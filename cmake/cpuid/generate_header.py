@@ -101,6 +101,10 @@ with open(sys.argv[2], mode="w") as out_file:
                 structs[leaf][subleaf].dict[reg] = list()
             structs[leaf][subleaf].dict[reg].append(Entry(bits, get_name(row[4]), get_comment(row[5]), bits_ret[0], int(last_bit)))
             last_bit = int(bits_ret[0])+int(bits)
+    out_file.write("/**\n")
+    out_file.write(" * @file clib_cpuid_leafs.h\n")
+    out_file.write(" * @brief typedefs for cpuid leafs\n")
+    out_file.write(" */\n")
     out_file.write("#ifndef LEAFS_H\n")
     out_file.write("#define LEAFS_H\n")
     out_file.write("\n")
@@ -108,15 +112,17 @@ with open(sys.argv[2], mode="w") as out_file:
     out_file.write("\n")
     for leaf in structs:
         for subleaf in structs[leaf]:
+            out_file.write("/** The bitfields for cpuid call cpuid(eax: "+leaf+", ecx: "+subleaf+")\n")
+            out_file.write(" */ \n")
             out_file.write("typedef struct\n{\n")
             for reg in structs[leaf][subleaf].dict:
                 unused_counter = 0
                 out_file.write(TABSIZE+"/*   "+reg+"   */\n")
                 for elem in structs[leaf][subleaf].dict[reg]:
                     if not int(elem.bit_start) == int(elem.last_bit):
-                        out_file.write(TABSIZE+"uint32_t unused_"+reg+"_"+str(unused_counter)+": "+str(int(elem.bit_start)-int(elem.last_bit))+"; /* unused */\n")    
+                        out_file.write(TABSIZE+"uint32_t unused_"+reg+"_"+str(unused_counter)+": "+str(int(elem.bit_start)-int(elem.last_bit))+"; /*!< unused */\n")    
                         unused_counter = unused_counter + 1
-                    out_file.write(TABSIZE+"uint32_t "+elem.name+": "+elem.bits+"; /* "+elem.comment+" */\n")
+                    out_file.write(TABSIZE+"uint32_t "+elem.name+": "+elem.bits+"; /*!< "+elem.comment+" */\n")
                 out_file.write(TABSIZE+"\n")
             out_file.write("} clib_cpuid_leaf_"+leaf+"_subleaf_"+subleaf+"_t;\n")
             out_file.write("\n")
@@ -171,15 +177,19 @@ with open(sys.argv[3], mode="w") as out_src_file:
             for reg in elem.dict:
                 out_src_file.write(TABSIZE+TABSIZE+TABSIZE+"/*   "+reg+"   */\n")
                 for bit in elem.dict[reg]:
-                    out_src_file.write(TABSIZE+TABSIZE+TABSIZE+name+"."+bit.name+" = "+get_cast(bit.bits)+"(")
+                    out_src_file.write(TABSIZE+TABSIZE+TABSIZE+name+"."+bit.name+" = ")
+                    if not int(bit.bits) == 32:
+                        out_src_file.write(get_cast(bit.bits)+"(")
                     if not int(bit.bit_start) == 0:
                         out_src_file.write("("+reg+" >> UINT32_C("+bit.bit_start+"))")
                     else:
                         out_src_file.write(reg)
                     if not int(bit.bits) == 32:
-                        out_src_file.write(" & UINT32_C("+get_mask(bit.bits)+"));\n")
-                    else:
+                        out_src_file.write(" & UINT32_C("+get_mask(bit.bits)+")\n")
+                    if not int(bit.bits) == 32:
                         out_src_file.write(");\n")
+                    else:
+                        out_src_file.write(";\n")
             out_src_file.write(TABSIZE+TABSIZE+TABSIZE+"return &"+name+";\n")
             out_src_file.write(TABSIZE+TABSIZE+"}\n")
         out_src_file.write(TABSIZE+TABSIZE+"else\n")

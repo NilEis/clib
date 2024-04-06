@@ -1,3 +1,9 @@
+/**
+ * @file clib_cpuid.h
+ * @author Nils Eisenach
+ * @brief Functions for working with cpuid and querying the CPU
+ * @date 2024-04-05
+ */
 #if !defined(CLIB_CPUID_H) && defined(CLIB_INCLUDE_CPUID)
 #define CLIB_CPUID_H
 

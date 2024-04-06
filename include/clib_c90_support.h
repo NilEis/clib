@@ -23,14 +23,23 @@ extern "C"
 #define restrict
 
 #ifndef false
+/**
+ * @brief define false
+ */
 #define false 0
 #endif
 
 #ifndef true
+/**
+ * @brief define true
+ */
 #define true 1
 #endif
 
 #ifndef bool
+/**
+ * @brief define bool
+ */
 #define bool int
 #endif
 

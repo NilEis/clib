@@ -105,6 +105,20 @@ target_compile_options(clib PRIVATE ${CLIB_COMPILE_OPTIONS})
 if(BUILD_WITH_DOCS)
   find_package(Doxygen)
   if(DOXYGEN_FOUND)
+
+    set(DOXYGEN_PREDEFINED_LIST ${CLIB_COMPILE_DEFINITIONS})
+    list(APPEND DOXYGEN_PREDEFINED_LIST ${CLIB_COMPILE_DEFINITIONS_PUB})
+    set(DOXYGEN_PREDEFINED "")
+
+    #itertate through the list of preprocessor definitions and append them to the DOXYGEN_PREDEFINED in the following format NAME=VALUE \\n
+    foreach(def ${DOXYGEN_PREDEFINED_LIST})
+      if(NOT "${def}" MATCHES "^[a-zA-Z0-9_]=[a-zA-Z0-9_]+$")
+        string(APPEND DOXYGEN_PREDEFINED "\t${def}= \\\n")
+      else()
+        string(APPEND DOXYGEN_PREDEFINED "\t${def} \\\n")
+      endif()
+    endforeach()
+
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doxygen/Doxyfile.in
                    ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
     doxygen_add_docs(
