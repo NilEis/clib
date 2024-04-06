@@ -6,7 +6,7 @@ option(BUILD_TESTS "Build test exe" OFF)
 
 option(CLIB_OBJECT_LIB "Makes Clib an object library" OFF)
 if(CLIB_OBJECT_LIB)
-  message("Build clib as OBJECT")
+  message(STATUS "Build clib as OBJECT")
 endif()
 
 option(SUPPORT_CLANGD "Support clangd" ON)
