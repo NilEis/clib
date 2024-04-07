@@ -18,12 +18,7 @@ if(CLIB_INCLUDE_TERMINAL)
   list(APPEND CLIB_LIBRARY_LIST c_terminal)
 endif()
 
-if(NOT MSVC)
-  clib_test_if_any_x86(cpuid_supported)
-else()
-  set(cpuid_supported false)
-  message(WARNING "CPUID is not supported on msvc due to msvc asm")
-endif()
+clib_test_if_any_x86(cpuid_supported)
 
 cmake_dependent_option(CLIB_INCLUDE_CPUID "Include the cpuid module" ON
                        "cpuid_supported" OFF)
