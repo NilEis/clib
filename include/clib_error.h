@@ -33,6 +33,9 @@ typedef enum
     CLIB_ERRNO_SOCKET_WSAEINPROGRESS,
     CLIB_ERRNO_SOCKET_WSAEPROCLIM,
     CLIB_ERRNO_SOCKET_WSAEFAULT,
+    CLIB_ERRNO_SOCKET_EXT_GETADDRINFO,
+    CLIB_ERRNO_SOCKET_EXT_SOCKET,
+    CLIB_ERRNO_SOCKET_EXT_CONNECT,
 #endif
     CLIB_ERRNO_STRING_INVALID_BASE,
     CLIB_ERRNO_TREE_EMPTY,
@@ -43,6 +46,12 @@ typedef enum
  * @brief contains the last error_value
  */
 extern clib_error_code_t clib_errno;
+
+/**
+ * @brief contains the last error_value set by the OS if clib_errno has _EXT_
+ * in name
+ */
+extern clib_error_code_t clib_extern_errno;
 
 /**
  * @brief returns the string represantation of an error code
