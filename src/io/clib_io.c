@@ -99,9 +99,9 @@ int clib_mkdir (const char *name, int mode)
 #include <conio.h>
 #include <windows.h>
 
-int clib_getch (void) { return getch (); }
+int clib_getch (void) { return _getch (); }
 
-int clib_kbhit (void) { return kbhit (); }
+int clib_kbhit (void) { return _kbhit (); }
 
 size_t clib_safe_gets (char *buffer, size_t size)
 {

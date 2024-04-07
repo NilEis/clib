@@ -27,8 +27,11 @@ set_property(
 
 execute_process(COMMAND ${Python_EXECUTABLE} ${CSV_SCRIPT} ${CSV_SRC_CLEAN}
                         ${CSV_DEST} ${CSV_SRC_DEST})
-                        
-find_program (CLANG_FORMAT_EXE clang-format HINTS "C:\\msys64\\clang64\\bin\\")
+
+find_program(CLANG_FORMAT_EXE clang-format HINTS "C:\\msys64\\clang64\\bin\\")
 if(CLANG_FORMAT_EXE)
-  execute_process(WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} COMMAND "${CLANG_FORMAT_EXE}" "-i" "${CSV_SRC_DEST}")
+  execute_process(WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                  COMMAND "${CLANG_FORMAT_EXE}" "-i" "${CSV_SRC_DEST}")
 endif()
+
+list(APPEND CLIB_CLEAN_FILES ${CSV_SRC_CLEAN})

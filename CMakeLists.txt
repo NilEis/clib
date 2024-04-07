@@ -9,6 +9,7 @@ set(CLIB_SOURCE_FILES_LIST)
 
 set(CLIB_MODULES_LIST)
 set(CLIB_SELECTED_MODULES_NO_ANSI)
+set(CLIB_CLEAN_FILES)
 set(CLIB_LIBRARY_LIST)
 set(CLIB_DEP_FILES)
 set(CLIB_COMPILE_DEFINITIONS)
@@ -47,7 +48,8 @@ if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
 elseif(CMAKE_C_COMPILER_ID STREQUAL "Intel")
   list(APPEND CLIB_COMPILE_OPTIONS -w3)
 elseif(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-  list(APPEND CLIB_COMPILE_OPTIONS /W4 /WX /permissive-)
+  list(APPEND CLIB_COMPILE_OPTIONS /W3 /WX)
+  list(APPEND CLIB_COMPILE_DEFINITIONS _CRT_SECURE_NO_WARNINGS)
 endif()
 
 if(NOT TARGET clib)
@@ -57,6 +59,11 @@ if(NOT TARGET clib)
   else()
     add_library(clib ${CLIB_SOURCE_FILES_LIST} ${CLIB_HEADERS})
   endif()
+
+  set_property(
+    TARGET clib
+    APPEND
+    PROPERTY ADDITIONAL_CLEAN_FILES ${CLIB_CLEAN_FILES})
 
   list(APPEND CLIB_MODULES_LIST clib)
 
@@ -81,8 +88,12 @@ if(NOT TARGET clib)
                    C_STANDARD_REQUIRED True
                    C_EXTENSIONS Off)
       target_compile_definitions(${module} PRIVATE USE_BUILTINS=0 CLIB_ANSI=1)
-      if(clib_std EQUAL 90 AND CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
-        list(APPEND CLIB_COMPILE_OPTIONS -ansi)
+      if(clib_std EQUAL 90)
+        if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
+          list(APPEND CLIB_COMPILE_OPTIONS -ansi)
+        elseif(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+          list(APPEND CLIB_COMPILE_OPTIONS /permissive-)
+        endif()
       endif()
     endif()
   endforeach(module ${CLIB_MODULES_LIST})
@@ -110,7 +121,8 @@ if(BUILD_WITH_DOCS)
     list(APPEND DOXYGEN_PREDEFINED_LIST ${CLIB_COMPILE_DEFINITIONS_PUB})
     set(DOXYGEN_PREDEFINED "")
 
-    #itertate through the list of preprocessor definitions and append them to the DOXYGEN_PREDEFINED in the following format NAME=VALUE \\n
+    # itertate through the list of preprocessor definitions and append them to
+    # the DOXYGEN_PREDEFINED in the following format NAME=VALUE \\n
     foreach(def ${DOXYGEN_PREDEFINED_LIST})
       if(NOT "${def}" MATCHES "^[a-zA-Z0-9_]=[a-zA-Z0-9_]+$")
         string(APPEND DOXYGEN_PREDEFINED "\t${def}= \\\n")

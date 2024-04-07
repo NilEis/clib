@@ -31,15 +31,15 @@ static void internal_cpuid (uint32_t leaf,
         : "=a"(local_eax), "=b"(local_ebx), "=c"(local_ecx), "=d"(local_edx)
         : "0"(leaf), "2"(subleaf));
 #elif defined(_MSC_VER)
-    __asm volatile
+    __asm
     {
-        mov eax, leaf;
-        mov ecx, subleaf;
-        cpuid;
-        mov local_eax, eax;
-        mov local_ebx, ebx;
-        mov local_ecx, ecx;
-        mov local_edx, edx;
+        mov eax, leaf
+        mov ecx, subleaf
+        cpuid
+        mov local_eax, eax
+        mov local_ebx, ebx
+        mov local_ecx, ecx
+        mov local_edx, edx
     }
 #else
 #warning "Unknown compiler"
