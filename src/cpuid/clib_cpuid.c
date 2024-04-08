@@ -45,6 +45,7 @@ static void internal_cpuid (uint32_t leaf,
 #else
 #warning "Unknown compiler"
 #endif
+#else
     clib_errno = CLIB_ERRNO_CPUID_NOT_SUPPORTED;
 #endif
 
