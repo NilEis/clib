@@ -1,5 +1,5 @@
 #include "clib_cpuid.h"
-#include "clib_cpuid_leafs.h"
+#include "clib_error.h"
 #include <stddef.h>
 
 static char internal_cpuid_name[13] = { 0 };
@@ -25,6 +25,7 @@ static void internal_cpuid (uint32_t leaf,
     uint32_t local_ecx = 0;
     uint32_t local_edx = 0;
 
+#ifndef CLIB_CPUID_UNSUPPORTED
 #if __GNUC__
     __asm__ __volatile__ (
         "cpuid\n\t"
@@ -32,7 +33,7 @@ static void internal_cpuid (uint32_t leaf,
         : "0"(leaf), "2"(subleaf));
 #elif defined(_MSC_VER)
     __asm
-    {
+        {
         mov eax, leaf
         mov ecx, subleaf
         cpuid
@@ -40,9 +41,11 @@ static void internal_cpuid (uint32_t leaf,
         mov local_ebx, ebx
         mov local_ecx, ecx
         mov local_edx, edx
-    }
+        }
 #else
 #warning "Unknown compiler"
+#endif
+    clib_errno = CLIB_ERRNO_CPUID_NOT_SUPPORTED;
 #endif
 
     if (eax != NULL)
@@ -61,6 +64,16 @@ static void internal_cpuid (uint32_t leaf,
     {
         *edx = local_edx;
     }
+}
+
+int clib_cpuid_is_supported (void)
+{
+    clib_error_code_t tmp_err = clib_errno;
+    int ret = 0;
+    internal_cpuid (0, 0, NULL, NULL, NULL, NULL);
+    ret = clib_errno != CLIB_ERRNO_CPUID_NOT_SUPPORTED;
+    clib_errno = tmp_err;
+    return ret;
 }
 
 const char *clib_cpuid_get_name (void)
