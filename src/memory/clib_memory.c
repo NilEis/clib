@@ -3,7 +3,7 @@
 const char *clib_memory_module_name (void) { return "clib_memory"; }
 
 void *clib_memory_copy (
-    const void *restrict src, void *restrict dest, size_t size)
+    const void *restrict src, void *restrict dest, const size_t size)
 {
     size_t index = 0;
     const uint8_t *src_b = src;
@@ -15,7 +15,7 @@ void *clib_memory_copy (
     return dest;
 }
 
-void *clib_memory_set_u8 (void *dest, uint8_t value, size_t size)
+void *clib_memory_set_u8 (void *dest, const uint8_t value, const size_t size)
 {
     size_t index = 0;
     uint8_t *dest_p = dest;
@@ -26,7 +26,7 @@ void *clib_memory_set_u8 (void *dest, uint8_t value, size_t size)
     return dest;
 }
 
-void *clib_memory_set_u16 (void *dest, uint16_t value, size_t size)
+void *clib_memory_set_u16 (void *dest, const uint16_t value, const size_t size)
 {
     size_t index = 0;
     uint16_t *dest_p = dest;
@@ -37,7 +37,7 @@ void *clib_memory_set_u16 (void *dest, uint16_t value, size_t size)
     return dest;
 }
 
-void *clib_memory_set_u32 (void *dest, uint32_t value, size_t size)
+void *clib_memory_set_u32 (void *dest, const uint32_t value, const size_t size)
 {
     size_t index = 0;
     uint32_t *dest_p = dest;
@@ -48,7 +48,7 @@ void *clib_memory_set_u32 (void *dest, uint32_t value, size_t size)
     return dest;
 }
 
-void *clib_memory_set_u64 (void *dest, uint64_t value, size_t size)
+void *clib_memory_set_u64 (void *dest, const uint64_t value, const size_t size)
 {
     size_t index = 0;
     uint64_t *dest_p = dest;
