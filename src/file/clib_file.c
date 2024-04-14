@@ -14,7 +14,7 @@ static void *clib_file_load_from_file (
 size_t clib_file_get_size (FILE *file)
 {
     size_t res = 0;
-    size_t prev = (size_t)ftell (file);
+    const size_t prev = (size_t)ftell (file);
     (void)fseek (file, 0, SEEK_END);
     res = (size_t)ftell (file);
     (void)fseek (file, (long)prev, SEEK_SET);
@@ -36,7 +36,7 @@ uint8_t *clib_file_load (const char *path)
 }
 
 static void *clib_file_load_from_file (
-    FILE *file, size_t size, size_t type_size)
+    FILE *file, const size_t size, const size_t type_size)
 {
     void *res = calloc (size + 1, type_size);
     if (res == NULL)
@@ -55,14 +55,14 @@ static void *clib_file_load_from_file (
 
 uint8_t *clib_file_get_content (FILE *file)
 {
-    size_t size = clib_file_get_size (file);
+    const size_t size = clib_file_get_size (file);
     uint8_t *res = clib_file_load_from_file (file, size, sizeof (uint8_t));
     return res;
 }
 
 char *clib_file_get_content_str (FILE *file)
 {
-    size_t size = clib_file_get_size (file);
+    const size_t size = clib_file_get_size (file);
     char *res = clib_file_load_from_file (file, size, sizeof (char));
     return res;
 }
