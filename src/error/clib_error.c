@@ -6,7 +6,7 @@ const char *clib_error_module_name (void) { return "clib_error"; }
 clib_error_code_t clib_errno = 0;
 const char *clib_errmsg = NULL;
 
-const char *clib_error_get_string (clib_error_code_t error_number)
+const char *clib_error_get_string (const clib_error_code_t error_number)
 {
     switch (error_number)
     {
