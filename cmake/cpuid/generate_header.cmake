@@ -6,13 +6,16 @@ set(CSV_DEST ${CMAKE_CURRENT_SOURCE_DIR}/include/clib_cpuid_leafs.h)
 set(CSV_SRC_DEST ${CMAKE_CURRENT_SOURCE_DIR}/src/cpuid/clib_cpuid_leafs.c)
 set(CSV_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cpuid/generate_header.py)
 
+
+set(OUT_FILE_STRING "")
 file(STRINGS ${CSV_SRC} LINES)
 file(WRITE ${CSV_SRC_CLEAN} "")
 foreach(LINE IN LISTS LINES)
-  if(NOT ("${LINE}" MATCHES "^#") AND NOT ("${LINE}" MATCHES "^$"))
-    file(APPEND ${CSV_SRC_CLEAN} "${LINE}\n")
+  if((NOT ("${LINE}" MATCHES "^#")) AND (NOT ("${LINE}" MATCHES "^$")))
+    string(APPEND OUT_FILE_STRING "${LINE}\n")
   endif()
 endforeach()
+file(WRITE ${CSV_SRC_CLEAN} "${OUT_FILE_STRING}")
 
 message(CONFIGURE_LOG "Generating header for cpuid")
 set_property(
