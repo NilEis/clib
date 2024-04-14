@@ -54,7 +54,7 @@ clib_string_builder_t *clib_string_builder_append_char (
  * @param builder
  * @return char*
  */
-char *clib_string_builder_get_string (clib_string_builder_t *builder);
+char *clib_string_builder_get_string (const clib_string_builder_t *builder);
 
 /**
  * @brief frees the string builder
