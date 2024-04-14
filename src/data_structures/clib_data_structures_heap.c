@@ -35,9 +35,10 @@ clib_binary_heap_t *clib_binary_heap_create (
         clib_errno = CLIB_ERRNO_ALLOCATION_ZEROED_ERROR;
         return NULL;
     }
-    ret->tree.array = calloc (initial_length, sizeof (clib_binary_heap_t));
+    ret->tree.array = calloc (initial_length, sizeof (clib_tree_node_t));
     if (ret->tree.array == NULL)
     {
+        free(ret);
         clib_errno = CLIB_ERRNO_ALLOCATION_ZEROED_ERROR;
         return NULL;
     }
