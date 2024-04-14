@@ -82,12 +82,13 @@ static const uint32_t clz_lut[] = { 31,
 #endif
 
 #ifndef CLIB_MATH_INLINE
-double clib_math_lerp (double percent, double start, double end)
+double clib_math_lerp (
+    const double percent, const double start, const double end)
 {
     return start + percent * (end - start);
 }
 
-int32_t clib_math_abs (int32_t value) { return value < 0 ? -value : value; }
+int32_t clib_math_abs (const int32_t value) { return value < 0 ? -value : value; }
 
 #endif
 
@@ -129,7 +130,7 @@ uint32_t clib_math_ffs (uint32_t value)
 #endif
 }
 
-int32_t clib_math_gcd (int32_t int_a, int32_t int_b)
+int32_t clib_math_gcd (const int32_t int_a, const int32_t int_b)
 {
     uint32_t ctz_res = 0;
     uint32_t a_u = 0;
@@ -161,7 +162,7 @@ int32_t clib_math_gcd (int32_t int_a, int32_t int_b)
     return (int32_t)(a_u << ctz_res);
 }
 
-unsigned int clib_math_int_width (intmax_t value, clib_radix_t radix)
+unsigned int clib_math_int_width (intmax_t value, const clib_radix_t radix)
 {
     unsigned int length = !value;
     while (value)
