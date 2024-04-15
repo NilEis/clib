@@ -28,12 +28,12 @@ extern "C"
  * @param ecx
  * @param edx
  */
-void clib_cpuid_raw (uint32_t leaf,
-    uint32_t subleaf,
-    uint32_t *eax,
-    uint32_t *ebx,
-    uint32_t *ecx,
-    uint32_t *edx);
+void clib_cpuid_raw (uint_least32_t leaf,
+    uint_least32_t subleaf,
+    uint_least32_t *eax,
+    uint_least32_t *ebx,
+    uint_least32_t *ecx,
+    uint_least32_t *edx);
 
 int clib_cpuid_is_supported (void);
 
@@ -45,7 +45,7 @@ int clib_cpuid_is_supported (void);
  * @param subleaf
  * @return void*
  */
-void *clib_cpuid_get (uint32_t leaf, uint32_t subleaf);
+void *clib_cpuid_get (uint_least32_t leaf, uint_least32_t subleaf);
 
 /**
  * @brief returns the vecndor ID string
@@ -57,9 +57,9 @@ const char *clib_cpuid_get_name (void);
 /**
  * @brief returns the maximum supported standard level
  *
- * @return uint32_t
+ * @return uint_least32_t
  */
-uint32_t clib_cpuid_get_max_level (void);
+uint_least32_t clib_cpuid_get_max_level (void);
 
 /**
  * @brief returns the hypervisor string or NULL on error (sets errno)

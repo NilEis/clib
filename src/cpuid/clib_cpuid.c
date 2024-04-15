@@ -5,26 +5,26 @@
 
 static char internal_cpuid_name[13] = { 0 };
 static char internal_cpuid_hypervisor[13] = { 0 };
-static uint32_t internal_cpuid_max_level = 0;
+static uint_least32_t internal_cpuid_max_level = 0;
 
-static void internal_cpuid (uint32_t leaf,
-    uint32_t subleaf,
-    uint32_t *eax,
-    uint32_t *ebx,
-    uint32_t *ecx,
-    uint32_t *edx);
+static void internal_cpuid (uint_least32_t leaf,
+    uint_least32_t subleaf,
+    uint_least32_t *eax,
+    uint_least32_t *ebx,
+    uint_least32_t *ecx,
+    uint_least32_t *edx);
 
-static void internal_cpuid (uint32_t leaf,
-    uint32_t subleaf,
-    uint32_t *eax,
-    uint32_t *ebx,
-    uint32_t *ecx,
-    uint32_t *edx)
+static void internal_cpuid (uint_least32_t leaf,
+    uint_least32_t subleaf,
+    uint_least32_t *eax,
+    uint_least32_t *ebx,
+    uint_least32_t *ecx,
+    uint_least32_t *edx)
 {
-    uint32_t local_eax = 0;
-    uint32_t local_ebx = 0;
-    uint32_t local_ecx = 0;
-    uint32_t local_edx = 0;
+    uint_least32_t local_eax = 0;
+    uint_least32_t local_ebx = 0;
+    uint_least32_t local_ecx = 0;
+    uint_least32_t local_edx = 0;
 
 #ifndef CLIB_CPUID_UNSUPPORTED
 #if __GNUC__
@@ -85,23 +85,23 @@ const char *clib_cpuid_get_name (void)
         internal_cpuid (0x00,
             0x00,
             &internal_cpuid_max_level,
-            (uint32_t *)(&internal_cpuid_name[0]),
-            (uint32_t *)(&internal_cpuid_name[8]),
-            (uint32_t *)(&internal_cpuid_name[4]));
+            (uint_least32_t *)(&internal_cpuid_name[0]),
+            (uint_least32_t *)(&internal_cpuid_name[8]),
+            (uint_least32_t *)(&internal_cpuid_name[4]));
     }
     return internal_cpuid_name;
 }
 
-uint32_t clib_cpuid_get_max_level (void)
+uint_least32_t clib_cpuid_get_max_level (void)
 {
     if (internal_cpuid_max_level == 0)
     {
         internal_cpuid (0x00,
             0x00,
             &internal_cpuid_max_level,
-            (uint32_t *)(&internal_cpuid_name[0]),
-            (uint32_t *)(&internal_cpuid_name[8]),
-            (uint32_t *)(&internal_cpuid_name[4]));
+            (uint_least32_t *)(&internal_cpuid_name[0]),
+            (uint_least32_t *)(&internal_cpuid_name[8]),
+            (uint_least32_t *)(&internal_cpuid_name[4]));
     }
     return internal_cpuid_max_level;
 }
@@ -113,19 +113,19 @@ const char *clib_cpuid_get_hypervisor (void)
         internal_cpuid (0x40000000,
             0,
             NULL,
-            (uint32_t *)(&internal_cpuid_hypervisor[0]),
-            (uint32_t *)(&internal_cpuid_hypervisor[4]),
-            (uint32_t *)(&internal_cpuid_hypervisor[8]));
+            (uint_least32_t *)(&internal_cpuid_hypervisor[0]),
+            (uint_least32_t *)(&internal_cpuid_hypervisor[4]),
+            (uint_least32_t *)(&internal_cpuid_hypervisor[8]));
     }
     return internal_cpuid_hypervisor;
 }
 
-void clib_cpuid_raw (uint32_t leaf,
-    uint32_t subleaf,
-    uint32_t *eax,
-    uint32_t *ebx,
-    uint32_t *ecx,
-    uint32_t *edx)
+void clib_cpuid_raw (uint_least32_t leaf,
+    uint_least32_t subleaf,
+    uint_least32_t *eax,
+    uint_least32_t *ebx,
+    uint_least32_t *ecx,
+    uint_least32_t *edx)
 {
     internal_cpuid (leaf, subleaf, eax, ebx, ecx, edx);
 }

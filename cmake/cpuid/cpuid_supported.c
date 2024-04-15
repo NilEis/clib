@@ -1,17 +1,17 @@
 #include <stdio.h>
 #include <stdint.h>
 
-static void internal_cpuid (uint32_t leaf,
-    uint32_t subleaf,
-    uint32_t *eax,
-    uint32_t *ebx,
-    uint32_t *ecx,
-    uint32_t *edx)
+static void internal_cpuid (uint_least32_t leaf,
+    uint_least32_t subleaf,
+    uint_least32_t *eax,
+    uint_least32_t *ebx,
+    uint_least32_t *ecx,
+    uint_least32_t *edx)
 {
-    uint32_t local_eax = 0;
-    uint32_t local_ebx = 0;
-    uint32_t local_ecx = 0;
-    uint32_t local_edx = 0;
+    uint_least32_t local_eax = 0;
+    uint_least32_t local_ebx = 0;
+    uint_least32_t local_ecx = 0;
+    uint_least32_t local_edx = 0;
 
 #if __GNUC__
     __asm__ __volatile__ (
@@ -57,9 +57,9 @@ int main(int argc, char**argv)
     internal_cpuid (0x00,
             0x00,
             NULL,
-            (uint32_t *)(&name[0]),
-            (uint32_t *)(&name[8]),
-            (uint32_t *)(&name[4]));
+            (uint_least32_t *)(&name[0]),
+            (uint_least32_t *)(&name[8]),
+            (uint_least32_t *)(&name[4]));
     printf("Name: %s\n", name);
     return 1;
 }

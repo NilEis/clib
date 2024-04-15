@@ -26,9 +26,9 @@ size_t clib_file_get_size (FILE *file);
  * @brief Allocates a buffer and reads the whole binary file into it
  *
  * @param path
- * @return uint8_t* (has to be freed by the caller)
+ * @return uint_least8_t* (has to be freed by the caller)
  */
-uint8_t *clib_file_load (const char *path);
+uint_least8_t *clib_file_load (const char *path);
 
 /**
  * @brief Allocates a buffer and reads the whole file into it
@@ -42,9 +42,9 @@ char *clib_file_load_till_eof_str (FILE *file);
  * @brief Allocates a buffer and reads the whole binary file into it
  *
  * @param file
- * @return uint8_t* (has to be freed by the caller)
+ * @return uint_least8_t* (has to be freed by the caller)
  */
-uint8_t *clib_file_load_till_eof (FILE *file);
+uint_least8_t *clib_file_load_till_eof (FILE *file);
 
 /**
  * @brief Allocates a buffer and reads the whole file into it
@@ -58,9 +58,9 @@ char *clib_file_load_str (const char *path);
  * @brief Allocates a buffer and reads the whole binary file into it
  *
  * @param file
- * @return uint8_t* (has to be freed by the caller)
+ * @return uint_least8_t* (has to be freed by the caller)
  */
-uint8_t *clib_file_get_content (FILE *file);
+uint_least8_t *clib_file_get_content (FILE *file);
 
 /**
  * @brief Allocates a buffer and reads the whole file into it

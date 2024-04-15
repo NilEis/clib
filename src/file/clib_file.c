@@ -21,10 +21,10 @@ size_t clib_file_get_size (FILE *file)
     return res;
 }
 
-uint8_t *clib_file_load (const char *path)
+uint_least8_t *clib_file_load (const char *path)
 {
     FILE *file = fopen (path, "rb");
-    uint8_t *res = 0;
+    uint_least8_t *res = 0;
     if (file == NULL)
     {
         clib_errno = CLIB_ERRNO_FILE_OPEN_ERROR;
@@ -53,10 +53,10 @@ static void *clib_file_load_from_file (
     return res;
 }
 
-uint8_t *clib_file_get_content (FILE *file)
+uint_least8_t *clib_file_get_content (FILE *file)
 {
     const size_t size = clib_file_get_size (file);
-    uint8_t *res = clib_file_load_from_file (file, size, sizeof (uint8_t));
+    uint_least8_t *res = clib_file_load_from_file (file, size, sizeof (uint_least8_t));
     return res;
 }
 
@@ -86,20 +86,20 @@ char *clib_file_load_till_eof_str (FILE *file)
     return res;
 }
 
-uint8_t *clib_file_load_till_eof (FILE *file)
+uint_least8_t *clib_file_load_till_eof (FILE *file)
 {
 #ifndef CLIB_INCLUDE_STRING
 #warning                                                                      \
     "clib_file_load_till_eof is not implemented because clib_array is not included"
 #endif
     int in_char = 0;
-    uint8_t c_byte = 0;
-    uint8_t *res = NULL;
+    uint_least8_t c_byte = 0;
+    uint_least8_t *res = NULL;
     clib_array_t *builder = clib_array_create (
-        sizeof (uint8_t), CLIB_STRING_BUILDER_DEFAULT_SIZE);
+        sizeof (uint_least8_t), CLIB_STRING_BUILDER_DEFAULT_SIZE);
     while ((in_char = getc (file)) != EOF)
     {
-        c_byte = (uint8_t)in_char;
+        c_byte = (uint_least8_t)in_char;
         clib_array_push (builder, &c_byte);
     }
     res = clib_array_get_array (builder);

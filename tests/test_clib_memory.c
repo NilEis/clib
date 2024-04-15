@@ -90,10 +90,10 @@ CHEAT_DECLARE(
 
 test(clib_memory_copy,
 "clib_memory_copy copies memory from src to dest",
-           const uint64_t in = 0xDEADCFFE;
-           const uint8_t in_b = 0xA;
-           uint64_t out = 0;
-           uint8_t out_b = 0;
+           const uint_least64_t in = 0xDEADCFFE;
+           const uint_least8_t in_b = 0xA;
+           uint_least64_t out = 0;
+           uint_least8_t out_b = 0;
            init_console();
            clib_memory_copy(&in, &out, sizeof(in));
            clib_memory_copy(&in_b, &out_b, sizeof(in_b));
@@ -105,9 +105,9 @@ test(
     clib_memory_set,
     "clib_memory_set sets a memory region to a value",
     int i = 0;
-    uint64_t out[16] = {0};
-    const uint64_t in = 0xDEADCFFE;
-    const uint8_t in_b = 0xF;
+    uint_least64_t out[16] = {0};
+    const uint_least64_t in = 0xDEADCFFE;
+    const uint_least8_t in_b = 0xF;
     init_console();
     clib_memory_set_u64(out, in, 16);
     printf("- Testing %s\n", __func__);
