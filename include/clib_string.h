@@ -64,6 +64,16 @@ char *clib_string_builder_get_string (const clib_string_builder_t *builder);
 void clib_string_builder_free (clib_string_builder_t *builder);
 
 /**
+ * @brief compares two strings
+ *
+ * @param str_a first string
+ * @param str_b second string
+ * @return 0 if equals greater 0 if the first difference in a is greater and
+ * less 0 if the first difference is lesser
+ */
+int clib_string_cmp (const char *str_a, const char *str_b);
+
+/**
  * @fn size_t clib_string_length(const char *str)
  * @brief computes the size of str
  *

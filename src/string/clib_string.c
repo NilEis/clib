@@ -55,6 +55,16 @@ void clib_string_builder_free (clib_string_builder_t *builder)
     clib_array_free (builder);
 }
 
+int clib_string_cmp (const char *str_a, const char *str_b)
+{
+    int i = 0;
+    while (str_a[i] == str_b[i] && str_a[i] != '\0' && str_b[i] != '\0')
+    {
+        i++;
+    }
+    return str_a[i] - str_b[i];
+}
+
 size_t clib_string_length (const char *str)
 {
     const char *end = str;
@@ -116,7 +126,8 @@ int clib_string_replace_char (char *src, const char char_a, const char char_b)
     return 0;
 }
 
-size_t clib_string_replace_char_all (char *src, const char char_a, const char char_b)
+size_t clib_string_replace_char_all (
+    char *src, const char char_a, const char char_b)
 {
     size_t count = 0;
     while (*src != '\0')
@@ -171,7 +182,8 @@ static int clib_string_dist_lev_rec (const char *string_a,
          + (tab < atb ? (tab < tatb ? tab : tatb) : (atb < tatb ? atb : tatb));
 }
 
-char *clib_string_from_int (char *dest, intmax_t value, const clib_radix_t radix)
+char *clib_string_from_int (
+    char *dest, intmax_t value, const clib_radix_t radix)
 {
     static const char *const num_to_char = "0123456789ABCDEF";
     int dest_index = 0;
