@@ -58,25 +58,25 @@ CLIB_INTERNAL_MATH_DEF_FUNCTION (int32_t clib_math_abs (int32_t value),
  * @brief returns the number of trailing zeros of an unsigned int
  *
  * @param value
- * @return uint32_t
+ * @return uint_least32_t
  */
-uint32_t clib_math_ctz (uint32_t value);
+uint_least32_t clib_math_ctz (uint_least32_t value);
 
 /**
  * @brief returns the number of leading zeros of an unsigned int
  *
  * @param value
- * @return uint32_t
+ * @return uint_least32_t
  */
-uint32_t clib_math_clz (uint32_t value);
+uint_least32_t clib_math_clz (uint_least32_t value);
 
 /**
  * @brief returns the index of the first bit set in an unsigned int
  * @param value
- * @return uint32_t the index of the first bit set
+ * @return uint_least32_t the index of the first bit set
  *
  */
-uint32_t clib_math_ffs (uint32_t value);
+uint_least32_t clib_math_ffs (uint_least32_t value);
 
 /**
  * @brief returns the greatest common divisor of a and b

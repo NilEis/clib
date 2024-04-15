@@ -14,7 +14,7 @@ const char *clib_math_module_name (void) { return "clib_math"; }
  * @see
  * https://graphics.stanford.edu/~seander/bithacks.html#ZerosOnRightMultLookup
  */
-static const uint32_t ctz_lut[] = { 0,
+static const uint_least32_t ctz_lut[] = { 0,
     1,
     28,
     2,
@@ -47,7 +47,7 @@ static const uint32_t ctz_lut[] = { 0,
     10,
     9 };
 
-static const uint32_t clz_lut[] = { 31,
+static const uint_least32_t clz_lut[] = { 31,
     22,
     30,
     21,
@@ -92,31 +92,31 @@ int32_t clib_math_abs (const int32_t value) { return value < 0 ? -value : value;
 
 #endif
 
-uint32_t clib_math_ctz (uint32_t value)
+uint_least32_t clib_math_ctz (uint_least32_t value)
 {
 #if defined(__GNUC__) && USE_BUILTINS
-    return (uint32_t)__builtin_ctzg (value);
+    return (uint_least32_t)__builtin_ctzg (value);
 #else
-    return ctz_lut[((uint32_t)((value & -value) * CLIB_MAGIC_DEBRUIJN_NUMBER))
+    return ctz_lut[((uint_least32_t)((value & -value) * CLIB_MAGIC_DEBRUIJN_NUMBER))
                    >> UINT32_C (27)];
 #endif
 }
 
-uint32_t clib_math_clz (uint32_t value)
+uint_least32_t clib_math_clz (uint_least32_t value)
 {
 #if defined(__GNUC__) && USE_BUILTINS
-    return (uint32_t)__builtin_clzg (value);
+    return (uint_least32_t)__builtin_clzg (value);
 #else
     value |= value >> UINT32_C (1);
     value |= value >> UINT32_C (2);
     value |= value >> UINT32_C (4);
     value |= value >> UINT32_C (8);
     value |= value >> UINT32_C (16);
-    return clz_lut[(uint32_t)(value * CLIB_MAGIC_CLZ_NUMBER) >> UINT32_C (27)];
+    return clz_lut[(uint_least32_t)(value * CLIB_MAGIC_CLZ_NUMBER) >> UINT32_C (27)];
 #endif
 }
 
-uint32_t clib_math_ffs (uint32_t value)
+uint_least32_t clib_math_ffs (uint_least32_t value)
 {
     if (value == 0)
     {
@@ -124,7 +124,7 @@ uint32_t clib_math_ffs (uint32_t value)
     }
 
 #if defined(__GNUC__) && USE_BUILTINS
-    return (uint32_t)__builtin_ffsg (value);
+    return (uint_least32_t)__builtin_ffsg (value);
 #else
     return clib_math_ctz (value) + 1;
 #endif
@@ -132,16 +132,16 @@ uint32_t clib_math_ffs (uint32_t value)
 
 int32_t clib_math_gcd (const int32_t int_a, const int32_t int_b)
 {
-    uint32_t ctz_res = 0;
-    uint32_t a_u = 0;
-    uint32_t b_u = 0;
+    uint_least32_t ctz_res = 0;
+    uint_least32_t a_u = 0;
+    uint_least32_t b_u = 0;
     if (int_a == 0 || int_b == 0)
     {
         return int_a == 0 ? int_b : int_a;
     }
 
-    a_u = (uint32_t)clib_math_abs (int_a);
-    b_u = (uint32_t)clib_math_abs (int_b);
+    a_u = (uint_least32_t)clib_math_abs (int_a);
+    b_u = (uint_least32_t)clib_math_abs (int_b);
 
     ctz_res = clib_math_ctz (a_u | b_u);
 
@@ -152,7 +152,7 @@ int32_t clib_math_gcd (const int32_t int_a, const int32_t int_b)
         b_u >>= clib_math_ctz (b_u);
         if (a_u > b_u)
         {
-            uint32_t tmp = a_u;
+            uint_least32_t tmp = a_u;
             a_u = b_u;
             b_u = tmp;
         }

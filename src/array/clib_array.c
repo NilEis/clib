@@ -14,7 +14,7 @@ struct clib_internal_array
     size_t length;
     size_t buf_size;
     size_t type_size;
-    uint8_t *buf;
+    uint_least8_t *buf;
     void *zero;
 };
 
