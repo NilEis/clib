@@ -42,6 +42,7 @@ int main (int argc, char const *argv[])
         printf ("    avx512ifma: %d\n", clib_cpuid_supports_avx512ifma ());
         printf ("    gfni: %d\n", clib_cpuid_supports_gfni ());
         printf ("    vpclmulqdq: %d\n", clib_cpuid_supports_vpclmulqdq ());
+        printf ("    cache line size: %d\n", clib_cpuid_get_cache_line_size ());
     }
     return 0;
 }

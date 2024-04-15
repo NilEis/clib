@@ -1,5 +1,6 @@
 #include "clib_cpuid.h"
 #include "clib_error.h"
+#include "clib_string.h"
 #include <stddef.h>
 
 static char internal_cpuid_name[13] = { 0 };
@@ -127,4 +128,19 @@ void clib_cpuid_raw (uint32_t leaf,
     uint32_t *edx)
 {
     internal_cpuid (leaf, subleaf, eax, ebx, ecx, edx);
+}
+
+int clib_cpuid_get_cache_line_size (void)
+{
+    const char *name = clib_cpuid_get_name ();
+    if ((clib_string_cmp (name, "AMDisbetter!") == 0)
+        || (clib_string_cmp (name, "AuthenticAMD") == 0))
+    {
+        const clib_cpuid_leaf_0x80000006_subleaf_0_t *res
+            = clib_cpuid_get (0x80000006, 0);
+        return res->l2_line_size;
+    }
+
+    const clib_cpuid_leaf_4_subleaf_0_t *res = clib_cpuid_get (4, 0);
+    return res->cache_linesize;
 }

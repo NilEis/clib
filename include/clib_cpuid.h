@@ -68,6 +68,13 @@ uint32_t clib_cpuid_get_max_level (void);
  */
 const char* clib_cpuid_get_hypervisor(void);
 
+ /**
+ * @brief gets the cache line size
+ *
+ * @return System coherency line size (0-based)
+ */
+ int clib_cpuid_get_cache_line_size(void);
+
 #ifdef __cplusplus
 }
 #endif
