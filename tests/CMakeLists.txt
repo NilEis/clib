@@ -44,7 +44,7 @@ macro(add_c_and_cpp_test test_name test_string_name test_file)
     set_property(TARGET ${test_name} PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
   endif()
   add_test(NAME ${test_string_name} COMMAND ${test_name})
-  message(STATUS "Adding C test ${test_name}_cpp with options: ${ARGN}")
+  message(STATUS "Adding C test ${test_name} with options: ${ARGN}")
   add_cpp_test(${test_name} ${test_string_name} ${test_file} ${ARGN})
 endmacro()
 
