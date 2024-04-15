@@ -56,7 +56,7 @@ clib_binary_heap_t *clib_binary_heap_create (
  * @param heap the heap
  * @return int zero if false, otherwise not zero
  */
-int clib_binary_heap_is_empty (clib_binary_heap_t *heap);
+int clib_binary_heap_is_empty (const clib_binary_heap_t *heap);
 
 /**
  * @brief inserts the given data into the heap, using the key for sorting
@@ -85,7 +85,8 @@ void clib_binary_heap_heapify (clib_binary_heap_t *heap, size_t index);
  * the key value
  * @return void* the pointer stored in the node
  */
-void *clib_binary_heap_get_first (clib_binary_heap_t *heap, int32_t *key);
+void *clib_binary_heap_get_first (
+    const clib_binary_heap_t *heap, int32_t *key);
 
 /**
  * @brief Returns the data in the first element and removes it from the heap
@@ -117,7 +118,7 @@ void *clib_binary_heap_drop_and_insert (
  * @param heap the heap
  * @return char* a pointer to the string (has to be free'd by the caller)
  */
-char *clib_binary_heap_get_as_string (clib_binary_heap_t *heap);
+char *clib_binary_heap_get_as_string (const clib_binary_heap_t *heap);
 
 /**
  * @brief frees the given heap

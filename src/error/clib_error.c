@@ -6,7 +6,7 @@ const char *clib_error_module_name (void) { return "clib_error"; }
 clib_error_code_t clib_errno = 0;
 const char *clib_errmsg = NULL;
 
-const char *clib_error_get_string (clib_error_code_t error_number)
+const char *clib_error_get_string (const clib_error_code_t error_number)
 {
     switch (error_number)
     {
@@ -18,6 +18,8 @@ const char *clib_error_get_string (clib_error_code_t error_number)
         return "Could not allocate memory: calloc returned NULL";
     case CLIB_ERRNO_ARRAY_INDEX_OUT_OF_BOUNDS:
         return "Array index out of bounds";
+    case CLIB_ERRNO_CPUID_NOT_SUPPORTED:
+        return "CPUID instruction not supported on this platform";
     case CLIB_ERRNO_CPUID_INVALID_LEAF:
         return "Invalid cpuid leaf";
     case CLIB_ERRNO_CPUID_INVALID_SUBLEAF:

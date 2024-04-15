@@ -8,7 +8,7 @@ typedef int (*clib_compare_function_t) (int32_t node_a, int32_t node_b);
 
 #define CLIB_NUMBER_MAX_LENGTH_AS_STRING 12
 
-char *clib_tree_get_string (clib_tree_t *tree)
+char *clib_tree_get_string (const clib_tree_t *tree)
 {
 #if !defined(CLIB_INCLUDE_MATH) && !defined(CLIB_INCLUDE_STRING)
     return "[CLIB_MATH AND CLIB_STRING REQUIRED]";
@@ -55,20 +55,23 @@ char *clib_tree_get_string (clib_tree_t *tree)
 #endif
 }
 
-size_t internal_get_parent (size_t index) { return (index - 1) / 2; }
+size_t internal_get_parent (const size_t index) { return (index - 1) / 2; }
 
-size_t internal_get_left (size_t index) { return 2 * index + 1; }
+size_t internal_get_left (const size_t index) { return 2 * index + 1; }
 
-size_t internal_get_right (size_t index) { return 2 * index + 2; }
+size_t internal_get_right (const size_t index) { return 2 * index + 2; }
 
-int internal_node_is_valid (clib_tree_t *tree, size_t index)
+int internal_node_is_valid (const clib_tree_t *tree, const size_t index)
 {
     return (index < tree->size)
         && (&(tree->array[index]) == tree->array[index].self);
 }
 
-void internal_swap (
-    clib_tree_t *tree, size_t node_a, size_t node_b, int a_valid, int b_valid)
+void internal_swap (const clib_tree_t *tree,
+    const size_t node_a,
+    const size_t node_b,
+    const int a_valid,
+    const int b_valid)
 {
     clib_tree_node_t tmp;
 

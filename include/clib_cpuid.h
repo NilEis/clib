@@ -35,6 +35,8 @@ void clib_cpuid_raw (uint32_t leaf,
     uint32_t *ecx,
     uint32_t *edx);
 
+int clib_cpuid_is_supported (void);
+
 /**
  * @brief Returns a pointer to the equivilant struct for the query
  * @see clib_cpuid_leafs.h
@@ -65,6 +67,13 @@ uint32_t clib_cpuid_get_max_level (void);
  * @return const char* 
  */
 const char* clib_cpuid_get_hypervisor(void);
+
+ /**
+ * @brief gets the cache line size
+ *
+ * @return System coherency line size
+ */
+ int clib_cpuid_get_cache_line_size(void);
 
 #ifdef __cplusplus
 }

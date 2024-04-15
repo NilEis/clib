@@ -1,5 +1,3 @@
-option(TCC "Generate tcc makefile in build" OFF)
-
 option(BUILD_WITH_DOCS "Generate Docs" OFF)
 
 option(BUILD_TESTS "Build test exe" OFF)
@@ -8,6 +6,15 @@ option(CLIB_OBJECT_LIB "Makes Clib an object library" OFF)
 if(CLIB_OBJECT_LIB)
   message(STATUS "Build clib as OBJECT")
 endif()
+
+option(CLIB_USE_OPENMP "Use openmp if supported" ON)
+if(CLIB_USE_OPENMP)
+  find_package(OpenMP)
+  if(OpenMP_C_FOUND)
+    list(APPEND CLIB_COMPILE_OPTIONS ${OpenMP_C_FLAGS})
+    list(APPEND CLIB_COMPILE_DEFINITIONS CLIB_USE_OPENMP)
+  endif(OpenMP_C_FOUND)
+endif(CLIB_USE_OPENMP)
 
 option(SUPPORT_CLANGD "Support clangd" ON)
 if(SUPPORT_CLANGD)

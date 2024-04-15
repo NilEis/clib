@@ -20,17 +20,17 @@ struct clib_internal_array
 
 #define CLIB_ARRAY_DEFAULT_SIZE 8
 
-clib_array_t *clib_array_create (size_t type_size, size_t initial_size)
+clib_array_t *clib_array_create (const size_t type_size, const size_t initial_size)
 {
     clib_array_t *ret = NULL;
-    initial_size = initial_size != 0 ? initial_size : CLIB_ARRAY_DEFAULT_SIZE;
+    const size_t final_initial_size = initial_size != 0 ? initial_size : CLIB_ARRAY_DEFAULT_SIZE;
     ret = calloc (1, sizeof (clib_array_t));
     if (ret == NULL)
     {
         clib_errno = CLIB_ERRNO_ALLOCATION_ZEROED_ERROR;
         return NULL;
     }
-    ret->buf = calloc (initial_size, type_size);
+    ret->buf = calloc (final_initial_size, type_size);
     if (ret->buf == NULL)
     {
         free (ret);
@@ -44,7 +44,7 @@ clib_array_t *clib_array_create (size_t type_size, size_t initial_size)
         clib_errno = CLIB_ERRNO_ALLOCATION_ZEROED_ERROR;
         return NULL;
     }
-    ret->buf_size = initial_size;
+    ret->buf_size = final_initial_size;
     ret->length = 0;
     ret->type_size = type_size;
     return ret;
@@ -52,10 +52,10 @@ clib_array_t *clib_array_create (size_t type_size, size_t initial_size)
 
 clib_array_t *clib_array_push (clib_array_t *array, const void *src)
 {
-    size_t array_index = array->length;
+    const size_t array_index = array->length;
     if (array->buf_size <= array_index)
     {
-        size_t new_size = array->buf_size <= 1 ? 4 : array->buf_size * 2;
+        const size_t new_size = array->buf_size <= 1 ? 4 : array->buf_size * 2;
         void *new_buf = realloc (array->buf, new_size);
         if (new_buf == NULL)
         {
@@ -71,7 +71,7 @@ clib_array_t *clib_array_push (clib_array_t *array, const void *src)
     return array;
 }
 
-clib_array_t *clib_array_get (clib_array_t *array, size_t index, void *dest)
+clib_array_t *clib_array_get (clib_array_t *array, const size_t index, const void *dest)
 {
     if (index >= array->length)
     {
@@ -83,7 +83,7 @@ clib_array_t *clib_array_get (clib_array_t *array, size_t index, void *dest)
     return array;
 }
 
-clib_array_t *clib_array_pop (clib_array_t *array, void *dest)
+clib_array_t *clib_array_pop (clib_array_t *array, const void *dest)
 {
     clib_memory_copy (dest,
         array->buf + (array->type_size * (array->length - 1)),
@@ -91,14 +91,14 @@ clib_array_t *clib_array_pop (clib_array_t *array, void *dest)
     return array;
 }
 
-void *clib_array_get_array (clib_array_t *array)
+void *clib_array_get_array (const clib_array_t *array)
 {
     void *ret = calloc (array->length, array->type_size);
     clib_memory_copy (array->buf, ret, array->length * array->type_size);
     return ret;
 }
 
-size_t clib_array_length (clib_array_t *array) { return array->length; }
+size_t clib_array_length (const clib_array_t *array) { return array->length; }
 
 void clib_array_free (clib_array_t *array)
 {

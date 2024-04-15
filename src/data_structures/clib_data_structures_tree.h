@@ -21,7 +21,7 @@ struct clib_internal_tree
     size_t length;
 };
 
-char *clib_tree_get_string (clib_tree_t *tree);
+char *clib_tree_get_string (const clib_tree_t *tree);
 
 size_t internal_get_parent (size_t index);
 
@@ -29,9 +29,8 @@ size_t internal_get_left (size_t index);
 
 size_t internal_get_right (size_t index);
 
-int internal_node_is_valid (clib_tree_t *tree, size_t index);
+int internal_node_is_valid (const clib_tree_t *tree, size_t index);
 
-void internal_swap (
-    clib_tree_t *tree, size_t node_a, size_t node_b, int a_valid, int b_valid);
+void internal_swap (const clib_tree_t *tree, size_t node_a, size_t node_b, int a_valid, int b_valid);
 
 #endif /* CLIB_DATA_STRUCTURES_TREE_H */

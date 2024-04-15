@@ -22,10 +22,13 @@ clib_test_if_any_x86(cpuid_supported)
 try_run(cpuid_run_res cpuid_compile_res SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cpuid/cpuid_supported.c")
 
-cmake_dependent_option(CLIB_INCLUDE_CPUID "Include the cpuid module" ON
-                       "cpuid_supported;cpuid_run_res;cpuid_compile_res" OFF)
+option(CLIB_INCLUDE_CPUID "Include the cpuid module" ON)
 if(CLIB_INCLUDE_CPUID)
   include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/cpuid/generate_header.cmake)
+  if(NOT cpuid_supported OR NOT cpuid_run_res OR NOT cpuid_compile_res)
+    message(WARNING "cpuid is not supported on this platform")
+    list(APPEND CLIB_COMPILE_DEFINITIONS CLIB_CPUID_UNSUPPORTED)
+  endif()
   add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/cpuid")
 endif()
 

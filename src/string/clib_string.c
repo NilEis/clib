@@ -10,7 +10,7 @@ static int clib_string_dist_lev_rec (const char *string_a,
     size_t string_a_len,
     size_t string_b_len);
 
-clib_string_builder_t *clib_string_builder_create (size_t initial_size)
+clib_string_builder_t *clib_string_builder_create (const size_t initial_size)
 {
     return clib_array_create (sizeof (char), initial_size);
 }
@@ -27,17 +27,17 @@ clib_string_builder_t *clib_string_builder_append (
 }
 
 clib_string_builder_t *clib_string_builder_append_char (
-    clib_string_builder_t *builder, char value)
+    clib_string_builder_t *builder, const char value)
 {
     clib_array_push (builder, &value);
     return builder;
 }
 
-char *clib_string_builder_get_string (clib_string_builder_t *builder)
+char *clib_string_builder_get_string (const clib_string_builder_t *builder)
 {
     char *res = clib_array_get_array (builder);
     char *realloc_res = NULL;
-    size_t len = clib_array_length (builder);
+    const size_t len = clib_array_length (builder);
     realloc_res = realloc (res, len + 1);
     if (realloc_res == NULL)
     {
@@ -55,22 +55,33 @@ void clib_string_builder_free (clib_string_builder_t *builder)
     clib_array_free (builder);
 }
 
+int clib_string_cmp (const char *str_a, const char *str_b)
+{
+    int index = 0;
+    while (str_a[index] == str_b[index] && str_a[index] != '\0'
+           && str_b[index] != '\0')
+    {
+        index++;
+    }
+    return str_a[index] - str_b[index];
+}
+
 size_t clib_string_length (const char *str)
 {
-    const char *end = str;
-    while (*end != '\0')
+    size_t index = 0;
+    while (str[index] != '\0')
     {
-        end++;
+        index++;
     }
-    return (size_t)end - (size_t)str;
+    return index;
 }
 
 size_t clib_string_copy (
-    char *restrict dest, const char *restrict src, size_t size)
+    char *restrict dest, const char *restrict src, const size_t size)
 {
     size_t count = 0;
     size_t index = 0;
-    for (index = 0; index < size && src[index] != '\0'; index++)
+    for (index = 0; index < size; index++)
     {
         count++;
         dest[index] = src[index];
@@ -80,7 +91,7 @@ size_t clib_string_copy (
 
 char *clib_string_duplicate (const char *src)
 {
-    size_t len = clib_string_length (src);
+    const size_t len = clib_string_length (src);
     char *ret = calloc (len + 1, sizeof (char));
     if (ret == NULL)
     {
@@ -91,7 +102,7 @@ char *clib_string_duplicate (const char *src)
     return ret;
 }
 
-int clib_string_replace_char (char *src, char char_a, char char_b)
+int clib_string_replace_char (char *src, const char char_a, const char char_b)
 {
     static char *last_src = NULL;
     static char *src_p = NULL;
@@ -116,7 +127,8 @@ int clib_string_replace_char (char *src, char char_a, char char_b)
     return 0;
 }
 
-size_t clib_string_replace_char_all (char *src, char char_a, char char_b)
+size_t clib_string_replace_char_all (
+    char *src, const char char_a, const char char_b)
 {
     size_t count = 0;
     while (*src != '\0')
@@ -141,8 +153,8 @@ int clib_string_dist_lev (const char *string_a, const char *string_b)
 
 static int clib_string_dist_lev_rec (const char *string_a,
     const char *string_b,
-    size_t string_a_len,
-    size_t string_b_len)
+    const size_t string_a_len,
+    const size_t string_b_len)
 {
     int tab = 0;
     int atb = 0;
@@ -171,7 +183,8 @@ static int clib_string_dist_lev_rec (const char *string_a,
          + (tab < atb ? (tab < tatb ? tab : tatb) : (atb < tatb ? atb : tatb));
 }
 
-char *clib_string_from_int (char *dest, intmax_t value, clib_radix_t radix)
+char *clib_string_from_int (
+    char *dest, intmax_t value, const clib_radix_t radix)
 {
     static const char *const num_to_char = "0123456789ABCDEF";
     int dest_index = 0;
@@ -182,7 +195,7 @@ char *clib_string_from_int (char *dest, intmax_t value, clib_radix_t radix)
     }
     do
     {
-        intmax_t res = value % radix;
+        const intmax_t res = value % radix;
         dest[dest_index] = num_to_char[res];
         value /= radix;
         dest_index++;
@@ -194,7 +207,7 @@ char *clib_string_from_int (char *dest, intmax_t value, clib_radix_t radix)
 }
 
 char *clib_string_reverse (
-    const char *restrict src, char *restrict dest, size_t length)
+    const char *restrict src, char *restrict dest, const size_t length)
 {
     size_t index = 0;
     for (index = 0; index < length; index++)
@@ -204,12 +217,12 @@ char *clib_string_reverse (
     return dest;
 }
 
-char *clib_string_reverse_in_place (char *src, size_t length)
+char *clib_string_reverse_in_place (char *src, const size_t length)
 {
     size_t index = 0;
     for (index = 0; index < length / 2; index++)
     {
-        char tmp = src[index];
+        const char tmp = src[index];
         src[index] = src[length - 1 - index];
         src[length - 1 - index] = tmp;
     }

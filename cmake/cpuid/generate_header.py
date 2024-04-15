@@ -166,8 +166,9 @@ with open(sys.argv[3], mode="w") as out_src_file:
             first = False
 
             if not elem.start == elem.stop:
-                lower = 2**(int(elem.start) + 1) - 1
-                upper = 2**(int(elem.stop) + 1) - 1
+                lower = 2**int(elem.start) - 1
+                upper = 2**int(elem.stop) - 1
+                out_src_file.write("/* "+str(elem.start)+" - "+str(elem.stop)+" */")
                 out_src_file.write("if((UINT32_C("+str(lower)+") <= subleaf) &&  (subleaf <= UINT32_C("+str(upper)+")))\n")
             else:
                 out_src_file.write("if(subleaf == "+subleaf+")\n")

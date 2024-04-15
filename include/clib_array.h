@@ -44,7 +44,7 @@ clib_array_t *clib_array_push (clib_array_t *array, const void *src);
  * @param dest
  * @return clib_array_t* the array
  */
-clib_array_t *clib_array_get (clib_array_t *array, size_t index, void *dest);
+clib_array_t *clib_array_get (clib_array_t *array, size_t index, const void *dest);
 
 /**
  * @brief pops the last element from the array and copies it to dest
@@ -53,7 +53,7 @@ clib_array_t *clib_array_get (clib_array_t *array, size_t index, void *dest);
  * @param dest
  * @return clib_array_t* the array
  */
-clib_array_t *clib_array_pop (clib_array_t *array, void *dest);
+clib_array_t *clib_array_pop (clib_array_t *array, const void *dest);
 
 /**
  * @brief returns a pointer to a copy of the array
@@ -61,7 +61,7 @@ clib_array_t *clib_array_pop (clib_array_t *array, void *dest);
  * @param array
  * @return void* a pointer to the array
  */
-void *clib_array_get_array (clib_array_t *array);
+void *clib_array_get_array (const clib_array_t *array);
 
 /**
  * @brief frees the array
@@ -76,7 +76,7 @@ void clib_array_free (clib_array_t *array);
  * @param array
  * @return size_t the length of the array
  */
-size_t clib_array_length (clib_array_t *array);
+size_t clib_array_length (const clib_array_t *array);
 
 #ifdef __cplusplus
 }
