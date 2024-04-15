@@ -57,22 +57,22 @@ void clib_string_builder_free (clib_string_builder_t *builder)
 
 int clib_string_cmp (const char *str_a, const char *str_b)
 {
-    int i = 0;
-    while (str_a[i] == str_b[i] && str_a[i] != '\0' && str_b[i] != '\0')
+    int index = 0;
+    while (str_a[index] == str_b[index] && str_a[index] != '\0' && str_b[index] != '\0')
     {
-        i++;
+        index++;
     }
-    return str_a[i] - str_b[i];
+    return str_a[index] - str_b[index];
 }
 
 size_t clib_string_length (const char *str)
 {
-    const char *end = str;
-    while (*end != '\0')
+    size_t index = 0;
+    while (str[index] != '\0')
     {
-        end++;
+        index++;
     }
-    return (size_t)end - (size_t)str;
+    return index;
 }
 
 size_t clib_string_copy (
