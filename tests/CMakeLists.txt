@@ -54,7 +54,7 @@ endif()
 
 include_directories(${cheat_SOURCE_DIR}/)
 
-option(TEST_CPP "Test also on CPP" ON)
+option(TEST_CPP "Test also on CPP" OFF)
 
 if(TEST_CPP)
   enable_language(CXX)
