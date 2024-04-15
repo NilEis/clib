@@ -35,6 +35,8 @@ void clib_cpuid_raw (uint32_t leaf,
     uint32_t *ecx,
     uint32_t *edx);
 
+int clib_cpuid_is_supported (void);
+
 /**
  * @brief Returns a pointer to the equivilant struct for the query
  * @see clib_cpuid_leafs.h
