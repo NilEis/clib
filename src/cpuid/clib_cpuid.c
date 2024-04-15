@@ -142,5 +142,5 @@ int clib_cpuid_get_cache_line_size (void)
     }
 
     const clib_cpuid_leaf_4_subleaf_0_t *res = clib_cpuid_get (4, 0);
-    return res->cache_linesize;
+    return res->cache_linesize + 1;
 }
