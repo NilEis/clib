@@ -37,6 +37,11 @@ if(CLIB_INCLUDE_DATA_STRUCTURES)
   add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/data_structures")
 endif()
 
+option(CLIB_INCLUDE_ENDIANESS "Include the endianess module" ON)
+if(CLIB_INCLUDE_ENDIANESS)
+  add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/endianess")
+endif()
+
 option(CLIB_INCLUDE_FILE "Include support for file functions" ON)
 if(CLIB_INCLUDE_FILE)
   option(CLIB_FILE_SELECTOR " file selector" OFF)
