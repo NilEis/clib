@@ -24,6 +24,18 @@ typedef enum
 } clib_binary_heap_type_t;
 
 /**
+ * @brief typedef for linked list
+ *
+ */
+typedef struct clib_internal_list clib_list_t;
+
+/**
+ * @brief typedef for list members
+ *
+ */
+typedef struct clib_internal_list_node clib_list_node_t;
+
+/**
  * @brief typedef for a clib_tree type
  *
  */
@@ -152,6 +164,104 @@ clib_union_find_t *clib_set_find (clib_union_find_t *elem);
  */
 clib_union_find_t *clib_set_merge (
     clib_union_find_t *set_1, clib_union_find_t *set_2);
+
+/**
+ * @brief creates a new list
+ *
+ * @return clib_list_t*
+ */
+clib_list_t *clib_list_create (void);
+
+/**
+ * @brief tests if a list is empty
+ *
+ * @param list
+ * @return int 0 if false, !=0 if true
+ */
+int clib_list_is_empty (clib_list_t *list);
+
+/**
+ * @brief steps to the next element
+ *
+ * @param list
+ * @return int !=0 if success, 0 if no element is found
+ */
+int clib_list_next (clib_list_t *list);
+
+/**
+ * @brief returns the size of the list
+ *
+ * @param list
+ * @return size_t
+ */
+size_t clib_list_size (clib_list_t *list);
+
+/**
+ * @brief prepend data to a given node
+ *
+ * @param list
+ * @param data
+ * @returns 0 on error != 0 on success
+ */
+int clib_list_prepend (clib_list_t *list, void *data);
+
+/**
+ * @brief inserts data to the given list
+ *
+ * @param list
+ * @param data
+ * @returns 0 on error != 0 on success
+ */
+int clib_list_insert (clib_list_t *list, void *data);
+
+/**
+ * @brief inserts data to the given list at the front
+ *
+ * @param list
+ * @param data
+ * @returns 0 on error != 0 on success
+ */
+int clib_list_insert_front (clib_list_t *list, void *data);
+
+/**
+ * @brief inserts data at the end of the given list
+ *
+ * @param list
+ * @param data
+ * @returns 0 on error != 0 on success
+ */
+int clib_list_insert_back (clib_list_t *list, void *data);
+
+/**
+ * @brief returns the data of the current list element
+ *
+ * @param list
+ * @return void*
+ */
+void *clib_list_get (clib_list_t *list);
+
+/**
+ * @brief returns the current node
+ *
+ * @param list
+ * @return clib_list_node_t*
+ */
+clib_list_node_t *clib_list_get_node (clib_list_t *list);
+
+/**
+ * @brief removes the given node
+ *
+ * @param node
+ * @return void* the data associated with the node
+ */
+void *clib_list_remove (clib_list_t *list, clib_list_node_t *node);
+
+/**
+ * @brief frees all memory associated with the list
+ *
+ * @param list
+ */
+void clib_list_free (clib_list_t *list);
 
 #ifdef __cplusplus
 }
