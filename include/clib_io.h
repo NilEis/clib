@@ -11,6 +11,7 @@ extern "C"
 
 #include "clib_c90_support.h"
 #include <stddef.h>
+#include <stdio.h>
 
 /**
  * @brief Reads a char from stdin without waiting for '\n'
@@ -51,6 +52,8 @@ char *clib_read_variable_string (char **dest, size_t initial_size)
 #else
     ;
 #endif
+
+char *clib_get_line (char *buffer, size_t size, FILE *stream);
 
 #ifdef __cplusplus
 }

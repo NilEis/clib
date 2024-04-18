@@ -42,7 +42,27 @@ int main (int argc, char const *argv[])
         printf ("    avx512ifma: %d\n", clib_cpuid_supports_avx512ifma ());
         printf ("    gfni: %d\n", clib_cpuid_supports_gfni ());
         printf ("    vpclmulqdq: %d\n", clib_cpuid_supports_vpclmulqdq ());
-        printf ("    cache line size: %d\n", clib_cpuid_get_cache_line_size ());
+        printf (
+            "    cache line size: %d\n", clib_cpuid_get_cache_line_size ());
+        printf ("endianess: ");
+        switch (clib_endianess_detect ())
+        {
+        case CLIB_ENDIAN_UNKNOWN:
+            printf ("ENDIAN_UNKNOWN\n");
+            break;
+        case CLIB_ENDIAN_BIG:
+            printf ("ENDIAN_BIG\n");
+            break;
+        case CLIB_ENDIAN_LITTLE:
+            printf ("ENDIAN_LITTLE\n");
+            break;
+        case CLIB_ENDIAN_BIG_WORD:
+            printf ("ENDIAN_BIG_WORD\n");
+            break;
+        case CLIB_ENDIAN_LITTLE_WORD:
+            printf ("ENDIAN_LITTLE_WORD\n");
+            break;
+        }
     }
     return 0;
 }
