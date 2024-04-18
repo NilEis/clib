@@ -82,8 +82,7 @@ int clib_string_cmp (const char *str_a, const char *str_b);
  */
 size_t clib_string_length (const char *str);
 
-/** @fn size_t clib_string_copy(char* restrict dest, const char* restrict src,
- * size_t size)
+/**
  * @brief copies \f$size\f$ characters of src to dest
  * @param dest The address of the destination
  * @param src The address of the src string
@@ -103,7 +102,7 @@ size_t clib_string_copy (
  */
 char *clib_string_duplicate (const char *src);
 
-/** @fn int clib_string_replace_char(char *src, char char_a, char char_b)
+/**
  * @brief replaces the first instance of \f$\text{char_a}\f$ with
  * \f$\text{char_b}\f$
  * @param src the string
@@ -113,8 +112,7 @@ char *clib_string_duplicate (const char *src);
  */
 int clib_string_replace_char (char *src, char char_a, char char_b);
 
-/** @fn size_t clib_string_replace_char_all(char *src, char char_a, char
- * char_b)
+/**
  * @brief replaces all instances of \f$\text{char_a}\f$ with
  * \f$\text{char_b}\f$
  * @param src the string
@@ -145,8 +143,6 @@ int clib_string_dist_lev (const char *string_a, const char *string_b);
 char *clib_string_from_int (char *dest, intmax_t value, clib_radix_t radix);
 
 /**
- * @fn char *clib_string_reverse(const char *restrict src, char *restrict dest,
- * size_t length)
  * @brief reverses a string
  *
  * @param src the source pointer

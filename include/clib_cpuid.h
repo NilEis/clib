@@ -35,6 +35,11 @@ void clib_cpuid_raw (uint_least32_t leaf,
     uint_least32_t *ecx,
     uint_least32_t *edx);
 
+/**
+ * @brief tests if cpuid is supported
+ * 
+ * @return int 0 if not supported, !=0 if supported
+ */
 int clib_cpuid_is_supported (void);
 
 /**

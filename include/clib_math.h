@@ -25,11 +25,20 @@ typedef enum
 } clib_radix_t;
 #ifdef CLIB_INCLUDE_MATH
 
+/**
+ * @brief CLIB_MATH_INLINED is 1 if inline is active otherwise 0
+ */
 #ifdef CLIB_MATH_INLINE
 #define CLIB_MATH_INLINED 1
+/**
+ * @brief defines the function as inline
+ */
 #define CLIB_INTERNAL_MATH_DEF_FUNCTION(dec, def) inline dec def
 #else
 #define CLIB_MATH_INLINED 0
+/**
+ * @brief only declares the function
+ */
 #define CLIB_INTERNAL_MATH_DEF_FUNCTION(dec, def) dec;
 #endif
 
@@ -48,7 +57,7 @@ CLIB_INTERNAL_MATH_DEF_FUNCTION (
 /**
  * @brief returns the absolute value of x
  *
- * @param x x
+ * @param value value
  * @return int32_t
  */
 CLIB_INTERNAL_MATH_DEF_FUNCTION (int32_t clib_math_abs (int32_t value),

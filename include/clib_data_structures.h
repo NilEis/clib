@@ -249,8 +249,9 @@ void *clib_list_get (clib_list_t *list);
 clib_list_node_t *clib_list_get_node (clib_list_t *list);
 
 /**
- * @brief removes the given node
+ * @brief removes the given node from the given list
  *
+ * @param list
  * @param node
  * @return void* the data associated with the node
  */
