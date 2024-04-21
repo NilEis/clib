@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define COMMA ,
+#define COMMA        ,
 #define INVALID_DATA NULL
 
 #if defined(_WIN32) || defined(WIN32)
