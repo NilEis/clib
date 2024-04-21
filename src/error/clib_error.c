@@ -50,6 +50,8 @@ const char *clib_error_get_string (const clib_error_code_t error_number)
         return "The lpWSAData parameter is not a valid pointer. (This error "
                "should not happen !PLEASE OPEN AN ISSUE!)";
 #endif
+    case CLIB_ERRNO_STACK_EMPTY:
+        return "Stack is empty";
     case CLIB_ERRNO_STRING_INVALID_BASE:
         return "Invalid base for integer conversion";
     case CLIB_ERRNO_TREE_EMPTY:

@@ -13,6 +13,7 @@ typedef struct
 
 struct clib_internal_tree
 {
+    clib_data_structure_header_t header;
     /* pointer to internal array */
     clib_tree_node_t *array;
     /* number of elements in heap */

@@ -13,6 +13,7 @@ extern "C"
 #include "data_structures/clib_binary_heap.h"
 #include "data_structures/clib_list.h"
 #include "data_structures/clib_set.h"
+#include "data_structures/clib_stack.h"
 #include <stddef.h>
 #include <stdint.h>
 
@@ -21,6 +22,18 @@ extern "C"
  *
  */
 typedef struct clib_internal_tree clib_tree_t;
+
+/**
+ * @brief typedef for a clib_data_structure_header type
+ */
+typedef enum
+{
+    CLIB_DATA_STRUCTURE_BINARY_HEAP = 0xDEA0,
+    CLIB_DATA_STRUCTURE_LIST,
+    CLIB_DATA_STRUCTURE_SET,
+    CLIB_DATA_STRUCTURE_STACK,
+    CLIB_DATA_STRUCTURE_TREE
+} clib_data_structure_header_t;
 
 #ifdef __cplusplus
 }

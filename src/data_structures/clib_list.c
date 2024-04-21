@@ -11,6 +11,7 @@ struct clib_internal_list_node
 
 struct clib_internal_list
 {
+    clib_data_structure_header_t header;
     size_t size;
     clib_list_node_t *first;
     clib_list_node_t *current;
@@ -48,6 +49,7 @@ clib_list_t *clib_list_create (void)
         clib_errno = CLIB_ERRNO_ALLOCATION_ZEROED_ERROR;
         return NULL;
     }
+    res->header = CLIB_DATA_STRUCTURE_LIST;
     res->current = NULL;
     res->first = NULL;
     res->last = NULL;

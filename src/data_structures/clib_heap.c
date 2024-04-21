@@ -1,8 +1,8 @@
 #include "clib_c90_support.h"
 #include "clib_data_structures.h"
-#include "clib_data_structures_tree.h"
 #include "clib_error.h"
 #include "clib_string.h"
+#include "clib_tree.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -19,6 +19,7 @@ static int internal_min_heap_cmp (const int32_t node_a, const int32_t node_b)
 
 struct clib_internal_binary_heap
 {
+    clib_data_structure_header_t header;
     clib_tree_t tree;
     /* min or max heap */
     clib_binary_heap_type_t type;
@@ -35,13 +36,15 @@ clib_binary_heap_t *clib_binary_heap_create (
         clib_errno = CLIB_ERRNO_ALLOCATION_ZEROED_ERROR;
         return NULL;
     }
+    ret->header = CLIB_DATA_STRUCTURE_BINARY_HEAP;
     ret->tree.array = calloc (initial_length, sizeof (clib_tree_node_t));
     if (ret->tree.array == NULL)
     {
-        free(ret);
+        free (ret);
         clib_errno = CLIB_ERRNO_ALLOCATION_ZEROED_ERROR;
         return NULL;
     }
+    ret->tree.header = CLIB_DATA_STRUCTURE_TREE;
     ret->tree.length = initial_length;
     ret->tree.size = 0;
     ret->type = type;

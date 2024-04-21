@@ -1,4 +1,4 @@
-#include "clib_data_structures_tree.h"
+#include "clib_tree.h"
 #include "clib_error.h"
 #include "clib_math.h"
 #include <stdlib.h>
