@@ -2,7 +2,7 @@ find_package(Python REQUIRED)
 
 set(CSV_SRC ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cpuid/table.csv)
 set(CSV_SRC_CLEAN ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cpuid/table_clean.csv)
-set(CSV_DEST ${CMAKE_CURRENT_SOURCE_DIR}/include/clib_cpuid_leafs.h)
+set(CSV_DEST ${CMAKE_CURRENT_SOURCE_DIR}/include/cpuid/clib_leafs.h)
 set(CSV_SRC_DEST ${CMAKE_CURRENT_SOURCE_DIR}/src/cpuid/clib_cpuid_leafs.c)
 set(CSV_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cpuid/generate_header.py)
 

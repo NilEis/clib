@@ -108,6 +108,12 @@ with open(sys.argv[2], mode="w") as out_file:
     out_file.write("#ifndef LEAFS_H\n")
     out_file.write("#define LEAFS_H\n")
     out_file.write("\n")
+    out_file.write("#ifdef __cplusplus\n")
+    out_file.write("extern \"C\"\n")
+    out_file.write("{\n")
+    out_file.write("#endif\n")
+    out_file.write("\n")
+    out_file.write("#include \"../clib_c90_support.h\"\n")
     out_file.write("#include <stdint.h>\n")
     out_file.write("\n")
     for leaf in structs:
@@ -126,6 +132,9 @@ with open(sys.argv[2], mode="w") as out_file:
                 out_file.write(TABSIZE+"\n")
             out_file.write("} clib_cpuid_leaf_"+leaf+"_subleaf_"+subleaf+"_t;\n")
             out_file.write("\n")
+    out_file.write("#ifdef __cplusplus\n")
+    out_file.write("}\n")
+    out_file.write("#endif\n")
     out_file.write("#endif /* LEAFS_H */\n")                
 
 with open(sys.argv[3], mode="w") as out_src_file:

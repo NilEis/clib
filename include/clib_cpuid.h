@@ -13,8 +13,8 @@ extern "C"
 #endif
 
 #include "clib_c90_support.h"
-#include "clib_cpuid_checks.h"
-#include "clib_cpuid_leafs.h"
+#include "cpuid/clib_checks.h"
+#include "cpuid/clib_leafs.h"
 #include <stdint.h>
 
 /**
@@ -37,7 +37,7 @@ void clib_cpuid_raw (uint_least32_t leaf,
 
 /**
  * @brief tests if cpuid is supported
- * 
+ *
  * @return int 0 if not supported, !=0 if supported
  */
 int clib_cpuid_is_supported (void);
@@ -68,17 +68,17 @@ uint_least32_t clib_cpuid_get_max_level (void);
 
 /**
  * @brief returns the hypervisor string or NULL on error (sets errno)
- * 
- * @return const char* 
+ *
+ * @return const char*
  */
-const char* clib_cpuid_get_hypervisor(void);
+const char *clib_cpuid_get_hypervisor (void);
 
- /**
+/**
  * @brief gets the cache line size
  *
  * @return System coherency line size
  */
- int clib_cpuid_get_cache_line_size(void);
+int clib_cpuid_get_cache_line_size (void);
 
 #ifdef __cplusplus
 }
