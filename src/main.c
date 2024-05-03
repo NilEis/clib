@@ -7,7 +7,7 @@ int main (int argc, char const *argv[])
 {
     (void)argc;
     (void)argv;
-    hello_world();
+    clib_lua_t *lua = clib_lua_new (CLIB_LUA_OPEN_LIBS);
     if (clib_cpuid_is_supported ())
     {
         printf ("Name: %s\n", clib_cpuid_get_name ());
@@ -65,5 +65,6 @@ int main (int argc, char const *argv[])
             break;
         }
     }
+    clib_lua_free(lua);
     return 0;
 }
