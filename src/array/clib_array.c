@@ -1,6 +1,7 @@
 #include "clib_array.h"
 #include "clib_error.h"
 #include "clib_memory.h"
+#include <stdint.h>
 #include <stdlib.h>
 
 const char *clib_array_module_name (void) { return "clib_array"; }
