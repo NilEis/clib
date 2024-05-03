@@ -28,7 +28,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: |
-          ${{github.workspace}}/build/_deps/luajit-src/src/**.o
+          ${{github.workspace}}/build/_deps/luajit-src/src/
         key: ${{github.workspace}}-luajit-cache
     - name: Build
       # Build your program with the given configuration
