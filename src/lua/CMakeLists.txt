@@ -10,23 +10,20 @@ project(
   HOMEPAGE_URL "https://github.com/NilEis/clib"
   LANGUAGES C)
 
-include(FetchContent)
-FetchContent_Declare(
-  nfd
-  GIT_REPOSITORY https://github.com/btzy/nativefiledialog-extended.git
-  GIT_TAG origin/master)
-FetchContent_MakeAvailable(nfd)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/luajit.cmake)
 
 file(GLOB ${PROJECT_NAME}_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/*.c)
 
 if(NOT TARGET ${PROJECT_NAME})
-  add_library(${PROJECT_NAME} OBJECT ${${PROJECT_NAME}_SRCS})
-  target_link_libraries(${PROJECT_NAME} PUBLIC nfd)
+  add_library(${PROJECT_NAME} OBJECT ${${PROJECT_NAME}_SRCS} ${luajit_headers})
+  target_link_libraries(${PROJECT_NAME} PUBLIC ${lualib})
+  target_include_directories(${PROJECT_NAME} PRIVATE ${luaInclude})
+  add_dependencies(${PROJECT_NAME} luajit)
 endif()
 
-string(APPEND CLIB_SELECTED_MODULES_NO_ANSI " ${PROJECT_NAME}")
-set(CLIB_SELECTED_MODULES_NO_ANSI
-    ${CLIB_SELECTED_MODULES_NO_ANSI}
+string(APPEND CLIB_SELECTED_MODULES " ${PROJECT_NAME}")
+set(CLIB_SELECTED_MODULES
+    ${CLIB_SELECTED_MODULES}
     PARENT_SCOPE)
 
 list(APPEND CLIB_COMPILE_DEFINITIONS_PUB CLIB_INCLUDE_${PROJ_NAME_UPPER})
@@ -39,7 +36,7 @@ set(CLIB_MODULES_LIST
     ${CLIB_MODULES_LIST}
     PARENT_SCOPE)
 
-list(APPEND CLIB_LIBRARY_LIST nfd)
+list(APPEND CLIB_LIBRARY_LIST ${lualib})
 set(CLIB_LIBRARY_LIST
     ${CLIB_LIBRARY_LIST}
     PARENT_SCOPE)

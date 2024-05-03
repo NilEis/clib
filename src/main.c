@@ -7,6 +7,7 @@ int main (int argc, char const *argv[])
 {
     (void)argc;
     (void)argv;
+    hello_world();
     if (clib_cpuid_is_supported ())
     {
         printf ("Name: %s\n", clib_cpuid_get_name ());

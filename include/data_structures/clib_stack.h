@@ -1,7 +1,6 @@
 /** @file
  * @brief provides types and functions for stacks
  */
-#include <corecrt.h>
 #if !defined(CLIB_STACK_H) && defined(CLIB_INCLUDE_DATA_STRUCTURES)
 #define CLIB_STACK_H
 

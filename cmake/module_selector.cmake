@@ -56,6 +56,11 @@ if(CLIB_INCLUDE_IO)
   add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/io")
 endif()
 
+option(CLIB_INCLUDE_LUA "Include lua" ON)
+if(CLIB_INCLUDE_LUA)
+  add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/lua")
+endif()
+
 option(CLIB_INCLUDE_SOCKETS "Include functionality for sockets" ON)
 if(CLIB_INCLUDE_SOCKETS)
   add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/sockets")

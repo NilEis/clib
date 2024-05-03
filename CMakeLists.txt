@@ -14,6 +14,7 @@ set(CLIB_LIBRARY_LIST)
 set(CLIB_DEP_FILES)
 set(CLIB_COMPILE_DEFINITIONS)
 set(CLIB_COMPILE_DEFINITIONS_PUB)
+set(CLIB_DEPS)
 
 set(CLIB_SELECTED_MODULES "")
 set(CLIB_COMPILE_OPTIONS)
@@ -77,6 +78,10 @@ if(NOT TARGET clib)
   target_compile_definitions(clib PRIVATE ${CLIB_COMPILE_DEFINITIONS})
   target_compile_definitions(clib PUBLIC ${CLIB_COMPILE_DEFINITIONS_PUB})
   target_include_directories(clib PUBLIC ${CLIB_HEADER_DIR})
+  # only add dependencies if its not empty
+  if(CLIB_DEPS)
+    add_dependencies(clib ${CLIB_DEPS})
+  endif()
 
   foreach(module ${CLIB_MODULES_LIST})
     get_target_property(clib_std ${module} C_STANDARD)
