@@ -1,4 +1,5 @@
 #include "clib.h"
+#include "clib_error.h"
 #include <stdio.h>
 
 #define DEFAULT_SIZE 8
@@ -72,6 +73,10 @@ int main (int argc, char const *argv[])
             printf ("ENDIAN_LITTLE_WORD\n");
             break;
         }
+    }
+    if (clib_lua_run (lua, "print(wird nicht klappen)") != CLIB_ERRNO_NO_ERROR)
+    {
+        printf ("Error: %s\n", clib_error_get_string (clib_errno));
     }
     clib_lua_free (lua);
     return 0;

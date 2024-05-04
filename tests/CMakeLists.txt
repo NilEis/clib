@@ -42,9 +42,13 @@ if(CLIB_INCLUDE_CPUID)
 endif(CLIB_INCLUDE_CPUID)
 
 if(CLIB_INCLUDE_DATA_STRUCTURES)
-  add_c_test(test_clib_data_structures "data_structures-test"
-             test_clib_data_structures)
+add_c_test(test_clib_data_structures "data_structures-test"
+test_clib_data_structures)
 endif(CLIB_INCLUDE_DATA_STRUCTURES)
+
+if(CLIB_INCLUDE_LUA)
+  add_c_test(test_clib_lua "lua-test" test_clib_lua)
+endif(CLIB_INCLUDE_LUA)
 
 if(CLIB_INCLUDE_MATH)
   add_c_test(test_clib_math "math-test" test_clib_math USE_BUILTINS=0)
