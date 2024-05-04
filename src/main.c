@@ -10,7 +10,7 @@ int main (int argc, char const *argv[])
     clib_lua_t *lua = clib_lua_new (CLIB_LUA_OPEN_LIBS);
     clib_lua_run (lua, "print(\"Hello World from lua\")");
     clib_lua_set_global (
-        lua, "testVar", CLIB_LUA_NUMBER, (clib_lua_number_t)42);
+        lua, "testVar", CLIB_LUA_NUMBER, (clib_lua_number_t)DEFAULT_SIZE);
     clib_lua_run (lua, "print(testVar)");
     clib_lua_run (lua, "testVar = 3.1415");
     clib_lua_number_t testVar = 0;
