@@ -1,5 +1,5 @@
 /**
- * @file clib_cpuid_checks.h
+ * @file clib_checks.h
  * @author Nils Eisenach
  * @brief Functions for checking if the CPU supports certain instructions
  * @date 2024-04-05
@@ -12,7 +12,7 @@ extern "C"
 {
 #endif
 
-#include "clib_c90_support.h"
+#include "../clib_c90_support.h"
 
 /**
  * @brief checks if cmov is supported

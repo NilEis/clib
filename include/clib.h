@@ -16,10 +16,12 @@ extern "C"
 #include "clib_error.h"
 #include "clib_file.h"
 #include "clib_io.h"
+#include "clib_lua.h"
 #include "clib_math.h"
 #include "clib_memory.h"
 #include "clib_sockets.h"
 #include "clib_string.h"
+
 
 #ifdef __cplusplus
 }

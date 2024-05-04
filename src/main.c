@@ -7,6 +7,15 @@ int main (int argc, char const *argv[])
 {
     (void)argc;
     (void)argv;
+    clib_lua_t *lua = clib_lua_new (CLIB_LUA_OPEN_LIBS);
+    clib_lua_run (lua, "print(\"Hello World from lua\")");
+    clib_lua_set_global (
+        lua, "testVar", CLIB_LUA_NUMBER, (clib_lua_number_t)DEFAULT_SIZE);
+    clib_lua_run (lua, "print(testVar)");
+    clib_lua_run (lua, "testVar = 3.1415");
+    clib_lua_number_t testVar = 0;
+    clib_lua_get_global (lua, "testVar", CLIB_LUA_NUMBER, &testVar);
+    printf ("testVar: %f\n", testVar);
     if (clib_cpuid_is_supported ())
     {
         printf ("Name: %s\n", clib_cpuid_get_name ());
@@ -42,7 +51,28 @@ int main (int argc, char const *argv[])
         printf ("    avx512ifma: %d\n", clib_cpuid_supports_avx512ifma ());
         printf ("    gfni: %d\n", clib_cpuid_supports_gfni ());
         printf ("    vpclmulqdq: %d\n", clib_cpuid_supports_vpclmulqdq ());
-        printf ("    cache line size: %d\n", clib_cpuid_get_cache_line_size ());
+        printf (
+            "    cache line size: %d\n", clib_cpuid_get_cache_line_size ());
+        printf ("endianess: ");
+        switch (clib_endianess_detect ())
+        {
+        case CLIB_ENDIAN_UNKNOWN:
+            printf ("ENDIAN_UNKNOWN\n");
+            break;
+        case CLIB_ENDIAN_BIG:
+            printf ("ENDIAN_BIG\n");
+            break;
+        case CLIB_ENDIAN_LITTLE:
+            printf ("ENDIAN_LITTLE\n");
+            break;
+        case CLIB_ENDIAN_BIG_WORD:
+            printf ("ENDIAN_BIG_WORD\n");
+            break;
+        case CLIB_ENDIAN_LITTLE_WORD:
+            printf ("ENDIAN_LITTLE_WORD\n");
+            break;
+        }
     }
+    clib_lua_free (lua);
     return 0;
 }

@@ -16,6 +16,10 @@ extern "C"
 #include "clib_c90_support.h"
 #include <stddef.h>
 
+/**
+ * @brief typedef for the array struct
+ * 
+ */
 typedef struct clib_internal_array clib_array_t;
 
 /**

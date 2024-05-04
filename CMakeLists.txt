@@ -14,6 +14,7 @@ set(CLIB_LIBRARY_LIST)
 set(CLIB_DEP_FILES)
 set(CLIB_COMPILE_DEFINITIONS)
 set(CLIB_COMPILE_DEFINITIONS_PUB)
+set(CLIB_DEPS)
 
 set(CLIB_SELECTED_MODULES "")
 set(CLIB_COMPILE_OPTIONS)
@@ -26,7 +27,6 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/utils.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/options.cmake)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/module_selector.cmake)
-
 
 if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
   list(
@@ -78,6 +78,10 @@ if(NOT TARGET clib)
   target_compile_definitions(clib PRIVATE ${CLIB_COMPILE_DEFINITIONS})
   target_compile_definitions(clib PUBLIC ${CLIB_COMPILE_DEFINITIONS_PUB})
   target_include_directories(clib PUBLIC ${CLIB_HEADER_DIR})
+  # only add dependencies if its not empty
+  if(CLIB_DEPS)
+    add_dependencies(clib ${CLIB_DEPS})
+  endif()
 
   foreach(module ${CLIB_MODULES_LIST})
     get_target_property(clib_std ${module} C_STANDARD)
@@ -105,6 +109,11 @@ if(PROJECT_IS_TOP_LEVEL)
     add_executable(test_exe src/main.c $<TARGET_OBJECTS:clib>)
   else()
     add_executable(test_exe src/main.c)
+  endif()
+  include(CheckIPOSupported)
+  check_ipo_supported(RESULT supported OUTPUT error)
+  if(supported)
+    set_property(TARGET test_exe PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
   endif()
   target_link_libraries(test_exe clib)
   target_include_directories(test_exe
