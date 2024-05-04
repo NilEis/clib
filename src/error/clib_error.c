@@ -31,9 +31,12 @@ const char *clib_error_get_string (const clib_error_code_t error_number)
     case CLIB_ERRNO_FILE_SELECTOR_CANCEL:
         return "User canceled file selection";
     case CLIB_ERRNO_FILE_SELECTOR_ERROR:
+    case CLIB_ERROR_LUA_INVALID_TYPE:
         return clib_errmsg;
     case CLIB_ERROR_LUA_NEW:
         return "Could not create new lua state";
+    case CLIB_ERROR_LUA_RUN:
+        return clib_errmsg;
     case CLIB_ERRNO_REALLOCATION_ERROR:
         return "Could not reallocate memory: realloc returned NULL";
 #ifdef _WIN32

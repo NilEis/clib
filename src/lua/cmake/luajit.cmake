@@ -44,7 +44,7 @@ if(NOT luajit_POPULATED)
       SOURCE_DIR ${luajit_SOURCE_DIR}
       CONFIGURE_COMMAND ""
       BUILD_COMMAND ${MAKE_EXECUTABLE} CC=${CMAKE_C_COMPILER} -C
-                    ${luajit_SOURCE_DIR}/src -j 4
+                    ${luajit_SOURCE_DIR}/src
       INSTALL_COMMAND ""
       BUILD_BYPRODUCTS ${luajit_SOURCE_DIR}/src/${luajit_lib_name})
   endif()
