@@ -16,22 +16,26 @@ typedef enum
 {
     CLIB_LUA_OPEN_MATH = 1U << 0U,   /*!< make the lua math lib avaiable */
     CLIB_LUA_OPEN_STRING = 1U << 1U, /*!< make the lua string lib avaiable */
-    CLIB_LUA_STRING_BUFFER = 1U
+    /*CLIB_LUA_STRING_BUFFER = 1U
                           << 2U, /*!< make the lua string_buffer lib avaiable*/
-    CLIB_LUA_BASE = 1U << 3U,    /*!< make the lua base lib avaiable*/
-    CLIB_LUA_BIT = 1U << 4U,     /*!< make the lua bit lib avaiable*/
-    CLIB_LUA_DEBUG = 1U << 5U,   /*!< make the lua debug lib avaiable*/
-    CLIB_LUA_FFI = 1U << 6U,     /*!< make the lua ffi lib avaiable*/
-    CLIB_LUA_IO = 1U << 7U,      /*!< make the lua io lib avaiable*/
-    CLIB_LUA_JIT = 1U << 8U,     /*!< make the lua jit lib avaiable*/
-    CLIB_LUA_OS = 1U << 9U,      /*!< make the lua os lib avaiable*/
+    CLIB_LUA_BASE = 1U << 3U, /*!< make the lua base lib avaiable*/
+    /*CLIB_LUA_BIT = 1U << 4U,     /*!< make the lua bit lib avaiable*/
+    CLIB_LUA_DEBUG = 1U << 5U, /*!< make the lua debug lib avaiable*/
+    /* CLIB_LUA_FFI = 1U << 6U,     /*!< make the lua ffi lib avaiable*/
+    CLIB_LUA_IO = 1U << 7U, /*!< make the lua io lib avaiable*/
+    /*CLIB_LUA_JIT = 1U << 8U,      /*!< make the lua jit lib avaiable*/
+    CLIB_LUA_OS = 1U << 9U,       /*!< make the lua os lib avaiable*/
     CLIB_LUA_PACKAGE = 1U << 10U, /*!< make the lua package lib avaiable*/
     CLIB_LUA_TABLE = 1U << 11U,   /*!< make the lua table lib avaiable*/
     CLIB_LUA_OPEN_LIBS
-    = (unsigned)CLIB_LUA_OPEN_MATH | (unsigned)CLIB_LUA_OPEN_STRING
-    | (unsigned)CLIB_LUA_STRING_BUFFER | (unsigned)CLIB_LUA_BASE
-    | (unsigned)CLIB_LUA_BIT | (unsigned)CLIB_LUA_DEBUG
-    | (unsigned)CLIB_LUA_FFI | (unsigned)CLIB_LUA_IO | (unsigned)CLIB_LUA_JIT
+    = (unsigned)CLIB_LUA_OPEN_MATH
+    | (unsigned)CLIB_LUA_OPEN_STRING
+    /*| (unsigned)CLIB_LUA_STRING_BUFFER*/
+    | (unsigned)CLIB_LUA_BASE
+    /*| (unsigned)CLIB_LUA_BIT*/
+    | (unsigned)CLIB_LUA_DEBUG
+    /*| (unsigned)CLIB_LUA_FFI*/
+    | (unsigned)CLIB_LUA_IO /*| (unsigned)CLIB_LUA_JIT*/
     | (unsigned)CLIB_LUA_OS | (unsigned)CLIB_LUA_PACKAGE
     | (unsigned)CLIB_LUA_TABLE, /*!< make the lua std libs avaiable */
 } clib_lua_options_t;
@@ -44,7 +48,8 @@ typedef enum
     CLIB_LUA_BOOLEAN,        /*!< a boolean value */
     CLIB_LUA_INTEGER,        /*!< an integer value */
     CLIB_LUA_LIGHT_USERDATA, /*!< light userdata*/
-    CLIB_LUA_LITERAL,        /*!< a literal string (const char*, clib_lua_string_len_t) */
+    CLIB_LUA_LITERAL,        /*!< a literal string (const char*,
+                                clib_lua_string_len_t) */
     CLIB_LUA_FSTRING,        /*!< a formatted string (const char*, ...) */
     CLIB_LUA_LSTRING,        /*!< a sized string */
     CLIB_LUA_NIL,            /*!< a nil value (PASS NO PARAM)*/
@@ -123,7 +128,8 @@ void clib_lua_set_global (
  * @param name the name of the variable
  * @param type the type of the variable
  * @param value a pointer that will be set to the value of the variable
- * @return clib_error_code_t CLIB_ERRNO_NO_ERROR on success, error code on error
+ * @return clib_error_code_t CLIB_ERRNO_NO_ERROR on success, error code on
+ * error
  */
 clib_error_code_t clib_lua_get_global (
     clib_lua_t *state, const char *name, clib_lua_value_t type, void *value);
@@ -140,17 +146,22 @@ void clib_lua_register_function (
 
 /**
  * @brief call a lua function
- * 
- * @param state 
+ *
+ * @param state
  * @param name the name of the function
  * @param nargs the number of arguments
  * @param res_type the type of the result
  * @param res a pointer to the result
- * @param ... the arguments in the following format: for n args -> type_0, value_0, type_1, value_1, ..., type_n, value_n
- * @return clib_error_code_t 
+ * @param ... the arguments in the following format: for n args -> type_0,
+ * value_0, type_1, value_1, ..., type_n, value_n
+ * @return clib_error_code_t
  */
-clib_error_code_t clib_lua_call_function (
-    clib_lua_t *state, const char *name, int nargs, clib_lua_value_t res_type, void*res, ...);
+clib_error_code_t clib_lua_call_function (clib_lua_t *state,
+    const char *name,
+    int nargs,
+    clib_lua_value_t res_type,
+    void *res,
+    ...);
 
 /**
  * @brief free a lua state

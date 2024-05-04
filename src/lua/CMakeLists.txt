@@ -15,10 +15,8 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/luajit.cmake)
 file(GLOB ${PROJECT_NAME}_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/*.c)
 
 if(NOT TARGET ${PROJECT_NAME})
-  add_library(${PROJECT_NAME} OBJECT ${${PROJECT_NAME}_SRCS} ${luajit_headers})
-  target_link_libraries(${PROJECT_NAME} PUBLIC ${lualib})
-  target_include_directories(${PROJECT_NAME} PRIVATE ${luaInclude})
-  add_dependencies(${PROJECT_NAME} luajit)
+  add_library(${PROJECT_NAME} OBJECT ${${PROJECT_NAME}_SRCS})
+  target_link_libraries(${PROJECT_NAME} PUBLIC lua_library_static)
 endif()
 
 string(APPEND CLIB_SELECTED_MODULES " ${PROJECT_NAME}")
@@ -36,7 +34,7 @@ set(CLIB_MODULES_LIST
     ${CLIB_MODULES_LIST}
     PARENT_SCOPE)
 
-list(APPEND CLIB_LIBRARY_LIST ${lualib})
+list(APPEND CLIB_LIBRARY_LIST lua_library_static)
 set(CLIB_LIBRARY_LIST
     ${CLIB_LIBRARY_LIST}
     PARENT_SCOPE)

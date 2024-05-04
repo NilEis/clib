@@ -91,7 +91,7 @@ clib_error_code_t clib_lua_run_file (clib_lua_t *state, const char *file)
 void clib_lua_set_global (
     clib_lua_t *state, const char *name, clib_lua_value_t type, ...)
 {
-    va_list args = NULL;
+    va_list args;
     va_start (args, type);
     switch (type)
     {
@@ -169,9 +169,6 @@ clib_error_code_t clib_lua_get_global (
     case CLIB_LUA_STRING:
         INTERNAL_LUA_GET_GLOBAL (state, name, string, const char *, value);
         break;
-    case CLIB_LUA_VALUE:
-        INTERNAL_LUA_GET_GLOBAL (state, name, value, int, value);
-        break;
     default:
         clib_errno = CLIB_ERROR_LUA_INVALID_TYPE;
         clib_errmsg = "Invalid type";
@@ -195,7 +192,7 @@ clib_error_code_t clib_lua_call_function (clib_lua_t *state,
 {
     int count = 0;
     lua_getglobal (state, name);
-    va_list args = NULL;
+    va_list args;
     va_start (args, res);
     for (count = 0; count < nargs; count++)
     {
@@ -290,34 +287,34 @@ static void internal_openlibs (lua_State *state, clib_lua_options_t options)
     {
         luaopen_string (state);
     }
-    if (options & (unsigned)CLIB_LUA_STRING_BUFFER)
+    /*if (options & (unsigned)CLIB_LUA_STRING_BUFFER)
     {
         luaopen_string_buffer (state);
-    }
+    }*/
     if (options & (unsigned)CLIB_LUA_BASE)
     {
         luaopen_base (state);
     }
-    if (options & (unsigned)CLIB_LUA_BIT)
+    /*if (options & (unsigned)CLIB_LUA_BIT)
     {
         luaopen_bit (state);
-    }
+    }*/
     if (options & (unsigned)CLIB_LUA_DEBUG)
     {
         luaopen_debug (state);
     }
-    if (options & (unsigned)CLIB_LUA_FFI)
+    /*if (options & (unsigned)CLIB_LUA_FFI)
     {
         luaopen_ffi (state);
-    }
+    }*/
     if (options & (unsigned)CLIB_LUA_IO)
     {
         luaopen_io (state);
     }
-    if (options & (unsigned)CLIB_LUA_JIT)
+    /*if (options & (unsigned)CLIB_LUA_JIT)
     {
         luaopen_jit (state);
-    }
+    }*/
     if (options & (unsigned)CLIB_LUA_OS)
     {
         luaopen_os (state);
