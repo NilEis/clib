@@ -36,7 +36,7 @@ if(NOT cheat_POPULATED)
 endif()
 
 include_directories(${cheat_SOURCE_DIR}/)
-
+message(STATUS "CLIB_INCLUDE_CPUID: ${CLIB_INCLUDE_CPUID}")
 if(CLIB_INCLUDE_CPUID)
   add_c_test(test_clib_cpuid "cpuid-test" test_clib_cpuid)
 endif(CLIB_INCLUDE_CPUID)
