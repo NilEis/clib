@@ -25,10 +25,15 @@ try_run(cpuid_run_res cpuid_compile_res SOURCES
 option(CLIB_INCLUDE_CPUID "Include the cpuid module" ON)
 if(CLIB_INCLUDE_CPUID)
   include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/cpuid/generate_header.cmake)
-  if(NOT cpuid_supported OR NOT cpuid_run_res OR NOT cpuid_compile_res)
+  if(NOT cpuid_supported
+     OR NOT cpuid_run_res
+     OR NOT cpuid_compile_res)
+     set(CLIB_CPUID_UNSUPPORTED true)
     message(WARNING "cpuid is not supported on this platform")
     list(APPEND CLIB_COMPILE_DEFINITIONS CLIB_CPUID_UNSUPPORTED)
-    set(CLIB_INCLUDE_CPUID OFF CACHE BOOL "Include the cpuid module" FORCE)
+    set(CLIB_INCLUDE_CPUID
+        OFF
+        CACHE BOOL "Include the cpuid module" FORCE)
   endif()
   add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/cpuid")
 endif()
