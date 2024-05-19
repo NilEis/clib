@@ -39,11 +39,11 @@ include_directories(${cheat_SOURCE_DIR}/)
 message(STATUS "CLIB_INCLUDE_CPUID: ${CLIB_INCLUDE_CPUID}")
 if(CLIB_INCLUDE_CPUID AND NOT CLIB_CPUID_UNSUPPORTED)
   add_c_test(test_clib_cpuid "cpuid-test" test_clib_cpuid)
-endif(CLIB_INCLUDE_CPUID)
+endif(CLIB_INCLUDE_CPUID  AND NOT CLIB_CPUID_UNSUPPORTED)
 
 if(CLIB_INCLUDE_DATA_STRUCTURES)
-add_c_test(test_clib_data_structures "data_structures-test"
-test_clib_data_structures)
+  add_c_test(test_clib_data_structures "data_structures-test"
+             test_clib_data_structures)
 endif(CLIB_INCLUDE_DATA_STRUCTURES)
 
 if(CLIB_INCLUDE_LUA)
