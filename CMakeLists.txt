@@ -90,7 +90,7 @@ if(NOT TARGET clib)
         PROPERTIES C_STANDARD 90
                    C_STANDARD_REQUIRED True
                    C_EXTENSIONS Off)
-      target_compile_definitions(${module} PRIVATE USE_BUILTINS=0 CLIB_ANSI=1)
+      target_compile_definitions(${module} PRIVATE CLIB_ANSI=1)
       if(EMSCRIPTEN)
         target_compile_definitions(${module} PRIVATE EMSCRIPTEN=1)
       endif()

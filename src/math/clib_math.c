@@ -3,12 +3,8 @@
 const char *clib_math_module_name (void) { return "clib_math"; }
 
 #define CLIB_MAGIC_DEBRUIJN_NUMBER UINT32_C (0x077CB531)
-#define CLIB_MAGIC_CLZ_NUMBER UINT32_C (0x07C4ACDD)
-#ifndef USE_BUILTINS
-#define USE_BUILTINS 1
-#endif
+#define CLIB_MAGIC_CLZ_NUMBER      UINT32_C (0x07C4ACDD)
 
-#if !(defined(__GNUC__) && USE_BUILTINS)
 /**
  * Lookup table for count trailing zeros
  * @see
@@ -79,7 +75,6 @@ static const uint_least32_t clz_lut[] = { 31,
     26,
     27,
     0 };
-#endif
 
 #ifndef CLIB_MATH_INLINE
 double clib_math_lerp (
@@ -88,32 +83,29 @@ double clib_math_lerp (
     return start + percent * (end - start);
 }
 
-int32_t clib_math_abs (const int32_t value) { return value < 0 ? -value : value; }
+int32_t clib_math_abs (const int32_t value)
+{
+    return value < 0 ? -value : value;
+}
 
 #endif
 
 uint_least32_t clib_math_ctz (uint_least32_t value)
 {
-#if defined(__GNUC__) && USE_BUILTINS
-    return (uint_least32_t)__builtin_ctzg (value);
-#else
-    return ctz_lut[((uint_least32_t)((value & -value) * CLIB_MAGIC_DEBRUIJN_NUMBER))
+    return ctz_lut[((uint_least32_t)((value & -value)
+                                     * CLIB_MAGIC_DEBRUIJN_NUMBER))
                    >> UINT32_C (27)];
-#endif
 }
 
 uint_least32_t clib_math_clz (uint_least32_t value)
 {
-#if defined(__GNUC__) && USE_BUILTINS
-    return (uint_least32_t)__builtin_clzg (value);
-#else
     value |= value >> UINT32_C (1);
     value |= value >> UINT32_C (2);
     value |= value >> UINT32_C (4);
     value |= value >> UINT32_C (8);
     value |= value >> UINT32_C (16);
-    return clz_lut[(uint_least32_t)(value * CLIB_MAGIC_CLZ_NUMBER) >> UINT32_C (27)];
-#endif
+    return clz_lut[(uint_least32_t)(value * CLIB_MAGIC_CLZ_NUMBER)
+                   >> UINT32_C (27)];
 }
 
 uint_least32_t clib_math_ffs (uint_least32_t value)
@@ -123,11 +115,7 @@ uint_least32_t clib_math_ffs (uint_least32_t value)
         return 0;
     }
 
-#if defined(__GNUC__) && USE_BUILTINS
-    return (uint_least32_t)__builtin_ffsg (value);
-#else
     return clib_math_ctz (value) + 1;
-#endif
 }
 
 int32_t clib_math_gcd (const int32_t int_a, const int32_t int_b)
