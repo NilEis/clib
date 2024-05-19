@@ -16,14 +16,14 @@ typedef enum
 {
     CLIB_LUA_OPEN_MATH = 1U << 0U,   /*!< make the lua math lib avaiable */
     CLIB_LUA_OPEN_STRING = 1U << 1U, /*!< make the lua string lib avaiable */
-    /*CLIB_LUA_STRING_BUFFER = 1U
+    CLIB_LUA_RESERVED_0 = 1U
                           << 2U, /*!< make the lua string_buffer lib avaiable*/
     CLIB_LUA_BASE = 1U << 3U, /*!< make the lua base lib avaiable*/
-    /*CLIB_LUA_BIT = 1U << 4U,     /*!< make the lua bit lib avaiable*/
+    CLIB_LUA_RESERVED_1 = 1U << 4U,     /*!< make the lua bit lib avaiable*/
     CLIB_LUA_DEBUG = 1U << 5U, /*!< make the lua debug lib avaiable*/
-    /* CLIB_LUA_FFI = 1U << 6U,     /*!< make the lua ffi lib avaiable*/
+    CLIB_LUA_RESERVED_2 = 1U << 6U,     /*!< make the lua ffi lib avaiable*/
     CLIB_LUA_IO = 1U << 7U, /*!< make the lua io lib avaiable*/
-    /*CLIB_LUA_JIT = 1U << 8U,      /*!< make the lua jit lib avaiable*/
+    CLIB_LUA_RESERVED_3 = 1U << 8U,      /*!< make the lua jit lib avaiable*/
     CLIB_LUA_OS = 1U << 9U,       /*!< make the lua os lib avaiable*/
     CLIB_LUA_PACKAGE = 1U << 10U, /*!< make the lua package lib avaiable*/
     CLIB_LUA_TABLE = 1U << 11U,   /*!< make the lua table lib avaiable*/

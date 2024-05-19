@@ -31,9 +31,6 @@ if(CLIB_INCLUDE_CPUID)
      set(CLIB_CPUID_UNSUPPORTED true)
     message(WARNING "cpuid is not supported on this platform")
     list(APPEND CLIB_COMPILE_DEFINITIONS CLIB_CPUID_UNSUPPORTED)
-    set(CLIB_INCLUDE_CPUID
-        OFF
-        CACHE BOOL "Include the cpuid module" FORCE)
   endif()
   add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/cpuid")
 endif()
