@@ -15,12 +15,12 @@ set(CLIB_DEP_FILES)
 set(CLIB_COMPILE_DEFINITIONS)
 set(CLIB_COMPILE_DEFINITIONS_PUB)
 set(CLIB_DEPS)
+set(CLIB_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 set(CLIB_SELECTED_MODULES "")
 set(CLIB_COMPILE_OPTIONS)
 
-set(CLIB_HEADER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
-file(GLOB_RECURSE CLIB_HEADERS ${CLIB_HEADER_DIR}/*.h)
+file(GLOB_RECURSE CLIB_HEADERS ${CLIB_INCLUDE_DIRS}/*.h)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/utils.cmake)
 
@@ -70,14 +70,14 @@ if(NOT TARGET clib)
   foreach(module ${CLIB_ALL_MODULES})
     target_compile_definitions(${module} PRIVATE ${CLIB_COMPILE_DEFINITIONS})
     target_compile_definitions(${module} PUBLIC ${CLIB_COMPILE_DEFINITIONS_PUB})
-    target_include_directories(${module} PUBLIC ${CLIB_HEADER_DIR})
+    target_include_directories(${module} PUBLIC ${CLIB_INCLUDE_DIRS})
     list(APPEND CLIB_LIBRARY_LIST "$<TARGET_OBJECTS:${module}>")
   endforeach(module ${CLIB_SELECTED_MODULES_NO_ANSI})
 
   target_link_libraries(clib PUBLIC ${CLIB_LIBRARY_LIST})
   target_compile_definitions(clib PRIVATE ${CLIB_COMPILE_DEFINITIONS})
   target_compile_definitions(clib PUBLIC ${CLIB_COMPILE_DEFINITIONS_PUB})
-  target_include_directories(clib PUBLIC ${CLIB_HEADER_DIR})
+  target_include_directories(clib PUBLIC ${CLIB_INCLUDE_DIRS})
   # only add dependencies if its not empty
   if(CLIB_DEPS)
     add_dependencies(clib ${CLIB_DEPS})
@@ -119,7 +119,7 @@ if(PROJECT_IS_TOP_LEVEL)
   endif()
   target_link_libraries(test_exe clib)
   target_include_directories(test_exe
-                             PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/)
+                             PRIVATE ${CLIB_INCLUDE_DIRS})
 endif()
 
 target_compile_options(clib PRIVATE ${CLIB_COMPILE_OPTIONS})

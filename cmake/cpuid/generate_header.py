@@ -113,7 +113,7 @@ with open(sys.argv[2], mode="w") as out_file:
     out_file.write("{\n")
     out_file.write("#endif\n")
     out_file.write("\n")
-    out_file.write("#include \"../clib_c90_support.h\"\n")
+    out_file.write("#include \"clib_c90_support.h\"\n")
     out_file.write("#include <stdint.h>\n")
     out_file.write("\n")
     for leaf in structs:
