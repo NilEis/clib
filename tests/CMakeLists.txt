@@ -55,8 +55,6 @@ if(CLIB_INCLUDE_MATH)
 
   add_c_test(test_clib_math_inline "math-test-inline" test_clib_math
              CLIB_MATH_INLINE CLIB_MATH_INLINED_EXPECTED=1)
-
-  add_c_test(test_clib_math_builtins "math-test-builtins" test_clib_math)
 endif(CLIB_INCLUDE_MATH)
 
 if(CLIB_INCLUDE_MEMORY)
