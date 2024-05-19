@@ -1,4 +1,12 @@
+#ifdef CLIB_MATH_INLINE
+#undef CLIB_MATH_INLINE
+#define CLIB_MATH_INLINE_UNDEF
+#endif
 #include "clib_math.h"
+#ifdef CLIB_MATH_INLINE_UNDEF
+#undef CLIB_MATH_INLINE_UNDEF
+#define CLIB_MATH_INLINE
+#endif
 
 const char *clib_math_module_name (void) { return "clib_math"; }
 
@@ -76,7 +84,6 @@ static const uint_least32_t clz_lut[] = { 31,
     27,
     0 };
 
-#ifndef CLIB_MATH_INLINE
 double clib_math_lerp (
     const double percent, const double start, const double end)
 {
@@ -87,8 +94,6 @@ int32_t clib_math_abs (const int32_t value)
 {
     return value < 0 ? -value : value;
 }
-
-#endif
 
 uint_least32_t clib_math_ctz (uint_least32_t value)
 {
