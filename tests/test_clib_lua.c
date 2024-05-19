@@ -2,7 +2,6 @@
 #include "cheats.h"
 
 #include "clib.h"
-#include <assert.h>
 #include <stdint.h>
 #include <stdio.h>
 

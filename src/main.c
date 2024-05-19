@@ -54,25 +54,25 @@ int main (int argc, char const *argv[])
         printf ("    vpclmulqdq: %d\n", clib_cpuid_supports_vpclmulqdq ());
         printf (
             "    cache line size: %d\n", clib_cpuid_get_cache_line_size ());
-        printf ("endianess: ");
-        switch (clib_endianess_detect ())
-        {
-        case CLIB_ENDIAN_UNKNOWN:
-            printf ("ENDIAN_UNKNOWN\n");
-            break;
-        case CLIB_ENDIAN_BIG:
-            printf ("ENDIAN_BIG\n");
-            break;
-        case CLIB_ENDIAN_LITTLE:
-            printf ("ENDIAN_LITTLE\n");
-            break;
-        case CLIB_ENDIAN_BIG_WORD:
-            printf ("ENDIAN_BIG_WORD\n");
-            break;
-        case CLIB_ENDIAN_LITTLE_WORD:
-            printf ("ENDIAN_LITTLE_WORD\n");
-            break;
-        }
+    }
+    printf ("endianess: ");
+    switch (clib_endianess_detect ())
+    {
+    case CLIB_ENDIAN_UNKNOWN:
+        printf ("ENDIAN_UNKNOWN\n");
+        break;
+    case CLIB_ENDIAN_BIG:
+        printf ("ENDIAN_BIG\n");
+        break;
+    case CLIB_ENDIAN_LITTLE:
+        printf ("ENDIAN_LITTLE\n");
+        break;
+    case CLIB_ENDIAN_BIG_WORD:
+        printf ("ENDIAN_BIG_WORD\n");
+        break;
+    case CLIB_ENDIAN_LITTLE_WORD:
+        printf ("ENDIAN_LITTLE_WORD\n");
+        break;
     }
     if (clib_lua_run (lua, "print(wird nicht klappen)") != CLIB_ERRNO_NO_ERROR)
     {
