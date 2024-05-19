@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #ifndef CLIB_MATH_INLINED_EXPECTED
-#define CLIB_MATH_INLINED_EXPECTED 0
+#define CLIB_MATH_INLINED_EXPECTED 1
 #endif
 
 #if defined(_WIN32) || defined(WIN32)
