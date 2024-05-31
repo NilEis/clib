@@ -83,3 +83,8 @@ option(CLIB_INCLUDE_MEMORY "Include memory functionality" ON)
 if(CLIB_INCLUDE_MEMORY)
   add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/memory")
 endif()
+
+option(CLIB_INCLUDE_VECTOR "Include vector functionality" ON)
+if(CLIB_INCLUDE_VECTOR)
+  add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/vector")
+endif()
