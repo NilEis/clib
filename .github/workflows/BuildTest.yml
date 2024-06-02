@@ -45,4 +45,4 @@ jobs:
       uses: korandoru/setup-zig@v1
       with:
         zig-version: master
-    - run: zig build
+    - run: zig build ${{github.workspace}}
