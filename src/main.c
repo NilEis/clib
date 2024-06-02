@@ -4,6 +4,8 @@
 
 #define DEFAULT_SIZE 8
 
+extern void free (void *);
+
 int main (int argc, char const *argv[])
 {
     (void)argc;
