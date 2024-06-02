@@ -6,3 +6,7 @@ build*/
 cmake-build*/
 .cache/
 .clangd
+
+# zig build output
+zig-cache/
+zig-out/
