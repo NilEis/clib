@@ -1,4 +1,4 @@
-name: CMake
+name: BuildTest
 
 on:
   push:
@@ -41,4 +41,9 @@ jobs:
       # Execute tests defined by the CMake configuration.
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ./test_exe
-
+    - name: Zig build
+      uses: korandoru/setup-zig@v1
+      with:
+        zig-version: master
+    - run: zig build --summary all
+      working-directory: ${{github.workspace}}
