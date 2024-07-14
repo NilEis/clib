@@ -11,6 +11,7 @@ extern "C"
 
 #include "clib_error.h"
 #include <stdint.h>
+#include <stddef.h>
 
 /**
  * @brief typedef for a clib_socket
