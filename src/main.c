@@ -92,13 +92,17 @@ int main (int argc, char const *argv[])
     const char data[] = "Hallo, welt!\n";
     const int sockets_client_send
         = clib_sockets_client_send (s, data, sizeof (data));
-    if (sockets_client_send)
+    if (!sockets_client_send)
     {
         printf ("error: %s\n", clib_error_get_string (clib_errno));
     }
-    char buf[8] = { 0 };
-    clib_sockets_client_recv (s, buf, sizeof (buf));
-    printf ("recv: %s\n", buf);
+    char c;
+    clib_string_builder_t *strb = clib_string_builder_create (0);
+    while (clib_sockets_client_recv (s, &c, 1) != 0)
+    {
+        clib_string_builder_append_char (strb, c);
+    }
+    printf ("recv: %s\n", clib_string_builder_get_string (strb));
     clib_sockets_free (s);
     return 0;
 }
