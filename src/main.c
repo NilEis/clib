@@ -81,5 +81,24 @@ int main (int argc, char const *argv[])
         printf ("Error: %s\n", clib_error_get_string (clib_errno));
     }
     clib_lua_free (lua);
+    clib_sockets_init ();
+    clib_socket_t *s = clib_sockets_client_create (
+        "localhost", 23, CLIB_SOCKET_TYPE_TCP, CLIB_SOCKET_FAMILY_INET);
+    if (s == NULL)
+    {
+        printf ("error: %s\n", clib_error_get_string (clib_errno));
+        return 0;
+    }
+    const char data[] = "Hallo, welt!\n";
+    const int sockets_client_send
+        = clib_sockets_client_send (s, data, sizeof (data));
+    if (sockets_client_send)
+    {
+        printf ("error: %s\n", clib_error_get_string (clib_errno));
+    }
+    char buf[8] = { 0 };
+    clib_sockets_client_recv (s, buf, sizeof (buf));
+    printf ("recv: %s\n", buf);
+    clib_sockets_free (s);
     return 0;
 }

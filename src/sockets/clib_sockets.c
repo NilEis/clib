@@ -1,4 +1,5 @@
 #include "clib_sockets.h"
+#include <stdlib.h>
 
 const char *clib_sockets_module_name (void) { return "clib_sockets"; }
 
@@ -24,6 +25,7 @@ const char *clib_sockets_module_name (void) { return "clib_sockets"; }
 
 static int internal_family_to_native_family (clib_socket_family_t family);
 static int internal_type_to_native_type (clib_socket_type_t type);
+extern const char *clib_errmsg;
 
 struct clib_internal_socket
 {
@@ -56,7 +58,6 @@ clib_error_code_t clib_sockets_init (void)
     case WSAEFAULT:
         clib_errno = CLIB_ERRNO_SOCKET_WSAEFAULT;
         return CLIB_ERRNO_SOCKET_WSAEFAULT;
-        break;
     default:
         return CLIB_ERRNO_NO_ERROR;
     }
@@ -65,23 +66,25 @@ clib_error_code_t clib_sockets_init (void)
 #endif
 }
 
-clib_socket_t *clib_sockets_create_client (const char *address,
-    int port,
-    clib_socket_type_t type,
-    clib_socket_family_t family)
+clib_socket_t *clib_sockets_client_create (const char *address,
+    const int port,
+    const clib_socket_type_t type,
+    const clib_socket_family_t family)
 {
     clib_socket_t *res = calloc (1, sizeof (clib_socket_t));
     if (res == NULL)
     {
-        clib_errno CLIB_ERRNO_ALLOCATION_ZEROED_ERROR;
+        clib_errno = CLIB_ERRNO_ALLOCATION_ZEROED_ERROR;
         return NULL;
     }
     res->self = res;
 #ifdef _WIN32
     {
         char port_str[6] = { 0 };
-        int call_res = 0;
-        struct addrinfo *result = NULL, *ptr = NULL, hints;
+        int call_res;
+        struct addrinfo *result = NULL;
+        struct addrinfo *ptr = NULL;
+        struct addrinfo hints;
 
         if (clib_string_from_int (port_str, port, CLIB_RADIX_DEC) == NULL)
         {
@@ -96,6 +99,21 @@ clib_socket_t *clib_sockets_create_client (const char *address,
         {
             clib_extern_errno = call_res;
             clib_errno = CLIB_ERRNO_SOCKET_EXT_GETADDRINFO;
+            clib_errmsg = calloc (256, sizeof (char));
+            if (clib_errmsg == NULL)
+            {
+                clib_errno = CLIB_ERRNO_ALLOCATION_ZEROED_ERROR;
+                return NULL;
+            }
+            FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM
+                               | FORMAT_MESSAGE_IGNORE_INSERTS, /* flags */
+                NULL,                                           /* lpsource */
+                call_res,                                   /* message id */
+                MAKELANGID (LANG_NEUTRAL, SUBLANG_DEFAULT), /* languageid */
+                (LPSTR)clib_errmsg,                         /* output buffer */
+                256, /* size of msgbuf, bytes */
+                NULL);
+            return NULL;
         }
         res->sock = INVALID_SOCKET;
         res->sock = socket (
@@ -126,6 +144,27 @@ clib_socket_t *clib_sockets_create_client (const char *address,
 #endif
 }
 
+int clib_sockets_client_send (
+    const clib_socket_t *socket, const char *data, const size_t data_len)
+{
+#ifdef _WIN32
+    return send (socket->sock, (const char *)data, data_len, 0);
+#else
+
+#endif
+}
+
+
+int clib_sockets_client_recv (
+    const clib_socket_t *socket, char *data, const size_t data_len)
+{
+#ifdef _WIN32
+    return recv (socket->sock, (char *)data, data_len, 0);
+#else
+
+#endif
+}
+
 void clib_sockets_free (clib_socket_t *sock)
 {
 #ifdef _WIN32
@@ -146,49 +185,42 @@ static int internal_family_to_native_family (clib_socket_family_t family)
 #else
         return 0;
 #endif
-        break;
     case CLIB_SOCKET_FAMILY_INET:
 #ifdef _WIN32
         return AF_INET;
 #else
         return 0;
 #endif
-        break;
     case CLIB_SOCKET_FAMILY_NETBIOS:
 #ifdef _WIN32
         return AF_NETBIOS;
 #else
         return 0;
 #endif
-        break;
     case CLIB_SOCKET_FAMILY_INET6:
 #ifdef _WIN32
         return AF_INET6;
 #else
         return 0;
 #endif
-        break;
     case CLIB_SOCKET_FAMILY_IRDA:
 #ifdef _WIN32
         return AF_IRDA;
 #else
         return 0;
 #endif
-        break;
     case CLIB_SOCKET_FAMILY_BTH:
 #ifdef _WIN32
         return AF_BTH;
 #else
         return 0;
 #endif
-        break;
     default:
 #ifdef _WIN32
         return AF_UNSPEC;
 #else
         return 0;
 #endif
-        break;
     }
 }
 
@@ -202,20 +234,17 @@ static int internal_type_to_native_type (clib_socket_type_t type)
 #else
         return 0;
 #endif
-        break;
     case CLIB_SOCKET_TYPE_UDP:
 #ifdef _WIN32
         return IPPROTO_UDP;
 #else
         return 0;
 #endif
-        break;
     default:
 #ifdef _WIN32
         return IPPROTO_TCP;
 #else
         return 0;
 #endif
-        break;
     }
 }

@@ -10,7 +10,7 @@ extern "C"
 #endif
 
 #include "clib_error.h"
-#include <stdbool.h>
+#include <stdint.h>
 
 /**
  * @brief typedef for a clib_socket
@@ -52,10 +52,16 @@ clib_error_code_t clib_sockets_init (void);
  * @param family
  * @return clib_socket_t*
  */
-clib_socket_t *clib_sockets_create_client (const char *address,
+clib_socket_t *clib_sockets_client_create (const char *address,
     int port,
     clib_socket_type_t type,
     clib_socket_family_t family);
+
+int clib_sockets_client_send (
+    const clib_socket_t *socket, const char *data, size_t data_len);
+
+int clib_sockets_client_recv (
+    const clib_socket_t *socket, char *data, size_t data_len);
 
 void clib_sockets_free (clib_socket_t *sock);
 
