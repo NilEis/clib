@@ -7,7 +7,7 @@ clib_error_code_t clib_errno = 0;
 clib_error_code_t clib_extern_errno = 0;
 const char *clib_errmsg = NULL;
 
-const char *clib_error_get_string (clib_error_code_t error_number)
+const char *clib_error_get_string (const clib_error_code_t error_number)
 {
     switch (error_number)
     {
@@ -19,6 +19,8 @@ const char *clib_error_get_string (clib_error_code_t error_number)
         return "Could not allocate memory: calloc returned NULL";
     case CLIB_ERRNO_ARRAY_INDEX_OUT_OF_BOUNDS:
         return "Array index out of bounds";
+    case CLIB_ERRNO_CPUID_NOT_SUPPORTED:
+        return "CPUID instruction not supported on this platform";
     case CLIB_ERRNO_CPUID_INVALID_LEAF:
         return "Invalid cpuid leaf";
     case CLIB_ERRNO_CPUID_INVALID_SUBLEAF:
@@ -30,6 +32,11 @@ const char *clib_error_get_string (clib_error_code_t error_number)
     case CLIB_ERRNO_FILE_SELECTOR_CANCEL:
         return "User canceled file selection";
     case CLIB_ERRNO_FILE_SELECTOR_ERROR:
+    case CLIB_ERROR_LUA_INVALID_TYPE:
+        return clib_errmsg;
+    case CLIB_ERROR_LUA_NEW:
+        return "Could not create new lua state";
+    case CLIB_ERROR_LUA_RUN:
         return clib_errmsg;
     case CLIB_ERRNO_REALLOCATION_ERROR:
         return "Could not reallocate memory: realloc returned NULL";
@@ -55,6 +62,8 @@ const char *clib_error_get_string (clib_error_code_t error_number)
     case CLIB_ERRNO_SOCKET_EXT_CONNECT:
         return "connect failed";
 #endif
+    case CLIB_ERRNO_STACK_EMPTY:
+        return "Stack is empty";
     case CLIB_ERRNO_STRING_INVALID_BASE:
         return "Invalid base for integer conversion";
     case CLIB_ERRNO_TREE_EMPTY:

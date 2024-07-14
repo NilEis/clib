@@ -36,11 +36,11 @@ def get_mask(len):
 def get_cast(len):
     len = int(len)
     if len <= 8:
-        return "(uint8_t)"
+        return "(uint_least8_t)"
     elif len <= 16:
-        return "(uint16_t)"
+        return "(uint_least16_t)"
     elif len <= 32:
-        return "(uint32_t)"
+        return "(uint_least32_t)"
 
 
 def get_leaf(inp):
@@ -108,6 +108,12 @@ with open(sys.argv[2], mode="w") as out_file:
     out_file.write("#ifndef LEAFS_H\n")
     out_file.write("#define LEAFS_H\n")
     out_file.write("\n")
+    out_file.write("#ifdef __cplusplus\n")
+    out_file.write("extern \"C\"\n")
+    out_file.write("{\n")
+    out_file.write("#endif\n")
+    out_file.write("\n")
+    out_file.write("#include \"clib_c90_support.h\"\n")
     out_file.write("#include <stdint.h>\n")
     out_file.write("\n")
     for leaf in structs:
@@ -120,12 +126,15 @@ with open(sys.argv[2], mode="w") as out_file:
                 out_file.write(TABSIZE+"/*   "+reg+"   */\n")
                 for elem in structs[leaf][subleaf].dict[reg]:
                     if not int(elem.bit_start) == int(elem.last_bit):
-                        out_file.write(TABSIZE+"uint32_t unused_"+reg+"_"+str(unused_counter)+": "+str(int(elem.bit_start)-int(elem.last_bit))+"; /*!< unused */\n")    
+                        out_file.write(TABSIZE+"uint_least32_t unused_"+reg+"_"+str(unused_counter)+": "+str(int(elem.bit_start)-int(elem.last_bit))+"; /*!< unused */\n")    
                         unused_counter = unused_counter + 1
-                    out_file.write(TABSIZE+"uint32_t "+elem.name+": "+elem.bits+"; /*!< "+elem.comment+" */\n")
+                    out_file.write(TABSIZE+"uint_least32_t "+elem.name+": "+elem.bits+"; /*!< "+elem.comment+" */\n")
                 out_file.write(TABSIZE+"\n")
             out_file.write("} clib_cpuid_leaf_"+leaf+"_subleaf_"+subleaf+"_t;\n")
             out_file.write("\n")
+    out_file.write("#ifdef __cplusplus\n")
+    out_file.write("}\n")
+    out_file.write("#endif\n")
     out_file.write("#endif /* LEAFS_H */\n")                
 
 with open(sys.argv[3], mode="w") as out_src_file:
@@ -144,12 +153,12 @@ with open(sys.argv[3], mode="w") as out_src_file:
             out_src_file.write("clib_cpuid_leaf_"+leaf+"_subleaf_"+subleaf+"_t leaf_"+leaf+"_subleaf_"+subleaf+" = { 0 };\n")
     out_src_file.write("\n")
 
-    out_src_file.write("void *clib_cpuid_get (uint32_t leaf, uint32_t subleaf)\n")
+    out_src_file.write("void *clib_cpuid_get (uint_least32_t leaf, uint_least32_t subleaf)\n")
     out_src_file.write("{\n")
-    out_src_file.write(TABSIZE+"uint32_t eax = 0;\n")
-    out_src_file.write(TABSIZE+"uint32_t ebx = 0;\n")
-    out_src_file.write(TABSIZE+"uint32_t ecx = 0;\n")
-    out_src_file.write(TABSIZE+"uint32_t edx = 0;\n")
+    out_src_file.write(TABSIZE+"uint_least32_t eax = 0;\n")
+    out_src_file.write(TABSIZE+"uint_least32_t ebx = 0;\n")
+    out_src_file.write(TABSIZE+"uint_least32_t ecx = 0;\n")
+    out_src_file.write(TABSIZE+"uint_least32_t edx = 0;\n")
     out_src_file.write("\n")
     out_src_file.write(TABSIZE+"clib_cpuid_raw(leaf, subleaf, &eax, &ebx, &ecx, &edx);\n")
     out_src_file.write(TABSIZE+"switch(leaf)\n")
@@ -166,8 +175,9 @@ with open(sys.argv[3], mode="w") as out_src_file:
             first = False
 
             if not elem.start == elem.stop:
-                lower = 2**(int(elem.start) + 1) - 1
-                upper = 2**(int(elem.stop) + 1) - 1
+                lower = 2**int(elem.start) - 1
+                upper = 2**int(elem.stop) - 1
+                out_src_file.write("/* "+str(elem.start)+" - "+str(elem.stop)+" */")
                 out_src_file.write("if((UINT32_C("+str(lower)+") <= subleaf) &&  (subleaf <= UINT32_C("+str(upper)+")))\n")
             else:
                 out_src_file.write("if(subleaf == "+subleaf+")\n")
@@ -197,11 +207,9 @@ with open(sys.argv[3], mode="w") as out_src_file:
         out_src_file.write(TABSIZE+TABSIZE+TABSIZE+"clib_errno = CLIB_ERRNO_CPUID_INVALID_SUBLEAF;\n")
         out_src_file.write(TABSIZE+TABSIZE+TABSIZE+"return NULL;\n")
         out_src_file.write(TABSIZE+TABSIZE+"}\n")
-        out_src_file.write(TABSIZE+TABSIZE+"break;\n")
     out_src_file.write(TABSIZE+"default:\n")
     out_src_file.write(TABSIZE+TABSIZE+"clib_errno = CLIB_ERRNO_CPUID_INVALID_SUBLEAF;\n")
     out_src_file.write(TABSIZE+TABSIZE+"return NULL;\n")
-    out_src_file.write(TABSIZE+TABSIZE+"break;\n")
     out_src_file.write(TABSIZE+"}\n")
     out_src_file.write("}\n")
     out_src_file.write("\n")

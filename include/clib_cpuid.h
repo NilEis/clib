@@ -13,8 +13,8 @@ extern "C"
 #endif
 
 #include "clib_c90_support.h"
-#include "clib_cpuid_checks.h"
-#include "clib_cpuid_leafs.h"
+#include "cpuid/clib_checks.h"
+#include "cpuid/clib_leafs.h"
 #include <stdint.h>
 
 /**
@@ -28,12 +28,19 @@ extern "C"
  * @param ecx
  * @param edx
  */
-void clib_cpuid_raw (uint32_t leaf,
-    uint32_t subleaf,
-    uint32_t *eax,
-    uint32_t *ebx,
-    uint32_t *ecx,
-    uint32_t *edx);
+void clib_cpuid_raw (uint_least32_t leaf,
+    uint_least32_t subleaf,
+    uint_least32_t *eax,
+    uint_least32_t *ebx,
+    uint_least32_t *ecx,
+    uint_least32_t *edx);
+
+/**
+ * @brief tests if cpuid is supported
+ *
+ * @return int 0 if not supported, !=0 if supported
+ */
+int clib_cpuid_is_supported (void);
 
 /**
  * @brief Returns a pointer to the equivilant struct for the query
@@ -43,7 +50,7 @@ void clib_cpuid_raw (uint32_t leaf,
  * @param subleaf
  * @return void*
  */
-void *clib_cpuid_get (uint32_t leaf, uint32_t subleaf);
+void *clib_cpuid_get (uint_least32_t leaf, uint_least32_t subleaf);
 
 /**
  * @brief returns the vecndor ID string
@@ -55,16 +62,23 @@ const char *clib_cpuid_get_name (void);
 /**
  * @brief returns the maximum supported standard level
  *
- * @return uint32_t
+ * @return uint_least32_t
  */
-uint32_t clib_cpuid_get_max_level (void);
+uint_least32_t clib_cpuid_get_max_level (void);
 
 /**
  * @brief returns the hypervisor string or NULL on error (sets errno)
- * 
- * @return const char* 
+ *
+ * @return const char*
  */
-const char* clib_cpuid_get_hypervisor(void);
+const char *clib_cpuid_get_hypervisor (void);
+
+/**
+ * @brief gets the cache line size
+ *
+ * @return System coherency line size
+ */
+int clib_cpuid_get_cache_line_size (void);
 
 #ifdef __cplusplus
 }

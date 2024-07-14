@@ -80,22 +80,13 @@ CHEAT_DECLARE (
 
 #endif
 
-CHEAT_TEST (clib_memory_copy, const uint_least64_t in = 0xDEADCFFE;
-            const uint_least8_t in_b = 0xA;
-            uint_least64_t out = 0;
-            uint_least8_t out_b = 0;
-            init_console ();
-            clib_memory_copy (&in, &out, sizeof (in));
-            clib_memory_copy (&in_b, &out_b, sizeof (in_b));
-            printf ("- Testing %s\n", __func__);
-            cheat_assert (out == in);
-            cheat_assert (out_b == in_b);)
-
-CHEAT_TEST (
-    clib_memory_set, int i = 0; uint_least64_t out[16] = { 0 };
-    const uint_least64_t in = 0xDEADCFFE;
-    const uint_least8_t in_b = 0xF;
+CHEAT_TEST (clib_lua, {
     init_console ();
-    clib_memory_set_u64 (out, in, 16);
     printf ("- Testing %s\n", __func__);
-    for (i = 0; i < 16; i++) { cheat_assert  (out[i] == in); })
+    clib_lua_t *lua = clib_lua_new (CLIB_LUA_OPEN_LIBS);
+    cheat_assert (clib_lua_run (lua, "print(\"Hello World from lua\")")
+                  == CLIB_ERRNO_NO_ERROR);
+    cheat_assert (clib_lua_run (lua, "print(Hello World from lua)")
+                  != CLIB_ERRNO_NO_ERROR);
+    clib_lua_free (lua);
+})

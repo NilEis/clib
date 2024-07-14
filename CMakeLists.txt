@@ -14,19 +14,19 @@ set(CLIB_LIBRARY_LIST)
 set(CLIB_DEP_FILES)
 set(CLIB_COMPILE_DEFINITIONS)
 set(CLIB_COMPILE_DEFINITIONS_PUB)
+set(CLIB_DEPS)
+set(CLIB_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 set(CLIB_SELECTED_MODULES "")
+set(CLIB_COMPILE_OPTIONS)
 
-set(CLIB_HEADER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
-file(GLOB_RECURSE CLIB_HEADERS ${CLIB_HEADER_DIR}/*.h)
+file(GLOB_RECURSE CLIB_HEADERS ${CLIB_INCLUDE_DIRS}/*.h)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/utils.cmake)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/options.cmake)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/module_selector.cmake)
-
-set(CLIB_COMPILE_OPTIONS)
 
 if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
   list(
@@ -70,15 +70,18 @@ if(NOT TARGET clib)
   foreach(module ${CLIB_ALL_MODULES})
     target_compile_definitions(${module} PRIVATE ${CLIB_COMPILE_DEFINITIONS})
     target_compile_definitions(${module} PUBLIC ${CLIB_COMPILE_DEFINITIONS_PUB})
-    target_include_directories(${module} PUBLIC ${CLIB_HEADER_DIR})
+    target_include_directories(${module} PUBLIC ${CLIB_INCLUDE_DIRS})
     list(APPEND CLIB_LIBRARY_LIST "$<TARGET_OBJECTS:${module}>")
   endforeach(module ${CLIB_SELECTED_MODULES_NO_ANSI})
 
   target_link_libraries(clib PUBLIC ${CLIB_LIBRARY_LIST})
   target_compile_definitions(clib PRIVATE ${CLIB_COMPILE_DEFINITIONS})
   target_compile_definitions(clib PUBLIC ${CLIB_COMPILE_DEFINITIONS_PUB})
-  target_include_directories(clib PUBLIC ${CLIB_HEADER_DIR})
-
+  target_include_directories(clib PUBLIC ${CLIB_INCLUDE_DIRS})
+  # only add dependencies if its not empty
+  if(CLIB_DEPS)
+    add_dependencies(clib ${CLIB_DEPS})
+  endif()
   foreach(module ${CLIB_MODULES_LIST})
     get_target_property(clib_std ${module} C_STANDARD)
     if(PROJECT_IS_TOP_LEVEL)
@@ -87,7 +90,10 @@ if(NOT TARGET clib)
         PROPERTIES C_STANDARD 90
                    C_STANDARD_REQUIRED True
                    C_EXTENSIONS Off)
-      target_compile_definitions(${module} PRIVATE USE_BUILTINS=0 CLIB_ANSI=1)
+      target_compile_definitions(${module} PRIVATE CLIB_ANSI=1)
+      if(EMSCRIPTEN)
+        target_compile_definitions(${module} PRIVATE EMSCRIPTEN=1)
+      endif()
       if(clib_std EQUAL 90)
         if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
           list(APPEND CLIB_COMPILE_OPTIONS -ansi)
@@ -106,9 +112,14 @@ if(PROJECT_IS_TOP_LEVEL)
   else()
     add_executable(test_exe src/main.c)
   endif()
+  include(CheckIPOSupported)
+  check_ipo_supported(RESULT supported OUTPUT error)
+  if(supported)
+    set_property(TARGET test_exe PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+  endif()
   target_link_libraries(test_exe clib)
   target_include_directories(test_exe
-                             PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/)
+                             PRIVATE ${CLIB_INCLUDE_DIRS})
 endif()
 
 target_compile_options(clib PRIVATE ${CLIB_COMPILE_OPTIONS})

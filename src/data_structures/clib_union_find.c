@@ -2,6 +2,7 @@
 #include <stdlib.h>
 struct clib_internal_union_find
 {
+    clib_data_structure_header_t header;
     struct clib_internal_union_find *parent;
     void *value;
     int height;
@@ -12,6 +13,7 @@ clib_union_find_t *clib_set_make (void *elem)
 {
     clib_union_find_t *ret
         = (clib_union_find_t *)malloc (sizeof (clib_union_find_t));
+    ret->header = CLIB_DATA_STRUCTURE_SET;
     ret->height = 1;
     ret->parent = ret;
     ret->value = elem;

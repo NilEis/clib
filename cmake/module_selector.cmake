@@ -22,16 +22,27 @@ clib_test_if_any_x86(cpuid_supported)
 try_run(cpuid_run_res cpuid_compile_res SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cpuid/cpuid_supported.c")
 
-cmake_dependent_option(CLIB_INCLUDE_CPUID "Include the cpuid module" ON
-                       "cpuid_supported;cpuid_run_res;cpuid_compile_res" OFF)
+option(CLIB_INCLUDE_CPUID "Include the cpuid module" ON)
 if(CLIB_INCLUDE_CPUID)
   include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/cpuid/generate_header.cmake)
+  if(NOT cpuid_supported
+     OR NOT cpuid_run_res
+     OR NOT cpuid_compile_res)
+     set(CLIB_CPUID_UNSUPPORTED true)
+    message(WARNING "cpuid is not supported on this platform")
+    list(APPEND CLIB_COMPILE_DEFINITIONS CLIB_CPUID_UNSUPPORTED)
+  endif()
   add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/cpuid")
 endif()
 
 option(CLIB_INCLUDE_DATA_STRUCTURES "Include data structures" ON)
 if(CLIB_INCLUDE_DATA_STRUCTURES)
   add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/data_structures")
+endif()
+
+option(CLIB_INCLUDE_ENDIANESS "Include the endianess module" ON)
+if(CLIB_INCLUDE_ENDIANESS)
+  add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/endianess")
 endif()
 
 option(CLIB_INCLUDE_FILE "Include support for file functions" ON)
@@ -46,6 +57,11 @@ endif()
 option(CLIB_INCLUDE_IO "Include io functionality" ON)
 if(CLIB_INCLUDE_IO)
   add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/io")
+endif()
+
+option(CLIB_INCLUDE_LUA "Include lua" ON)
+if(CLIB_INCLUDE_LUA)
+  add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/lua")
 endif()
 
 option(CLIB_INCLUDE_SOCKETS "Include functionality for sockets" ON)
@@ -66,4 +82,9 @@ endif()
 option(CLIB_INCLUDE_MEMORY "Include memory functionality" ON)
 if(CLIB_INCLUDE_MEMORY)
   add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/memory")
+endif()
+
+option(CLIB_INCLUDE_VECTOR "Include vector functionality" ON)
+if(CLIB_INCLUDE_VECTOR)
+  add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/vector")
 endif()

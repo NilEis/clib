@@ -1,12 +1,12 @@
 #include "clib_cpuid.h"
 #include <stddef.h>
 
-#define ADD_CHECK(leaf, subleaf, name)                                   \
+#define ADD_CHECK(leaf, subleaf, name)                                        \
     int clib_cpuid_supports_##name (void)                                     \
     {                                                                         \
-        clib_cpuid_leaf_##leaf##_subleaf_##subleaf##_t *res                   \
+        const clib_cpuid_leaf_##leaf##_subleaf_##subleaf##_t *res             \
             = clib_cpuid_get (leaf, subleaf);                                 \
-        return res->name;                                           \
+        return res->name;                                                     \
     }
 
 ADD_CHECK (1, 0, cmov)

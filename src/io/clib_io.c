@@ -135,7 +135,7 @@ size_t clib_safe_gets (char *buffer, size_t size)
     return count;
 }
 
-int clib_mkdir (const char *name, int mode)
+int clib_mkdir (const char *name, const int mode)
 {
     (void)mode;
     return CreateDirectoryA (name, NULL);
@@ -143,9 +143,9 @@ int clib_mkdir (const char *name, int mode)
 
 #endif
 
-char *clib_read_variable_string (char **dest, size_t initial_size)
+char *clib_read_variable_string (char **dest, const size_t initial_size)
 {
-    int in_char = clib_getch ();
+    const int in_char = clib_getch ();
     size_t max = initial_size;
     size_t index = 0;
 #ifndef __GNUC__
