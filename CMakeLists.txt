@@ -157,3 +157,5 @@ if(BUILD_TESTS AND PROJECT_IS_TOP_LEVEL)
   include(CTest)
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests)
 endif()
+
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/create_clangd.cmake)
