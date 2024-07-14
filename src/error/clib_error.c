@@ -4,6 +4,7 @@
 const char *clib_error_module_name (void) { return "clib_error"; }
 
 clib_error_code_t clib_errno = 0;
+clib_error_code_t clib_extern_errno = 0;
 const char *clib_errmsg = NULL;
 
 const char *clib_error_get_string (const clib_error_code_t error_number)
@@ -54,6 +55,12 @@ const char *clib_error_get_string (const clib_error_code_t error_number)
     case CLIB_ERRNO_SOCKET_WSAEFAULT:
         return "The lpWSAData parameter is not a valid pointer. (This error "
                "should not happen !PLEASE OPEN AN ISSUE!)";
+    case CLIB_ERRNO_SOCKET_EXT_GETADDRINFO:
+        return "getaddrinfo failed";
+    case CLIB_ERRNO_SOCKET_EXT_SOCKET:
+        return "socket failed";
+    case CLIB_ERRNO_SOCKET_EXT_CONNECT:
+        return "connect failed";
 #endif
     case CLIB_ERRNO_STACK_EMPTY:
         return "Stack is empty";

@@ -1,4 +1,5 @@
 #include "clib_sockets.h"
+#include <stdlib.h>
 
 const char *clib_sockets_module_name (void) { return "clib_sockets"; }
 
@@ -11,6 +12,7 @@ const char *clib_sockets_module_name (void) { return "clib_sockets"; }
 #ifndef _WIN32_WINNT
 #define _WIN32_WINNT 0x0501 /* Windows XP. */
 #endif
+#include "clib_string.h"
 #include <Ws2tcpip.h>
 #include <winsock2.h>
 #else
@@ -21,9 +23,15 @@ const char *clib_sockets_module_name (void) { return "clib_sockets"; }
 #include <unistd.h> /* Needed for close() */
 #endif
 
+static int internal_family_to_native_family (clib_socket_family_t family);
+static int internal_type_to_native_type (clib_socket_type_t type);
+extern const char *clib_errmsg;
+
 struct clib_internal_socket
 {
+    clib_socket_type_t t;
 #ifdef _WIN32
+    SOCKET sock;
 #else
 #endif
     clib_socket_t *self;
@@ -50,11 +58,193 @@ clib_error_code_t clib_sockets_init (void)
     case WSAEFAULT:
         clib_errno = CLIB_ERRNO_SOCKET_WSAEFAULT;
         return CLIB_ERRNO_SOCKET_WSAEFAULT;
-        break;
     default:
         return CLIB_ERRNO_NO_ERROR;
     }
 #else
     return CLIB_ERRNO_NO_ERROR;
 #endif
+}
+
+clib_socket_t *clib_sockets_client_create (const char *address,
+    const int port,
+    const clib_socket_type_t type,
+    const clib_socket_family_t family)
+{
+    clib_socket_t *res = calloc (1, sizeof (clib_socket_t));
+    if (res == NULL)
+    {
+        clib_errno = CLIB_ERRNO_ALLOCATION_ZEROED_ERROR;
+        return NULL;
+    }
+    res->self = res;
+#ifdef _WIN32
+    {
+        char port_str[6] = { 0 };
+        int call_res;
+        struct addrinfo *result = NULL;
+        struct addrinfo *ptr = NULL;
+        struct addrinfo hints;
+
+        if (clib_string_from_int (port_str, port, CLIB_RADIX_DEC) == NULL)
+        {
+            return NULL;
+        }
+        ZeroMemory (&hints, sizeof (hints));
+        hints.ai_family = internal_family_to_native_family (family);
+        hints.ai_socktype = SOCK_STREAM;
+        hints.ai_protocol = internal_type_to_native_type (type);
+        call_res = getaddrinfo (address, port_str, &hints, &result);
+        if (call_res != 0)
+        {
+            clib_extern_errno = call_res;
+            clib_errno = CLIB_ERRNO_SOCKET_EXT_GETADDRINFO;
+            clib_errmsg = calloc (256, sizeof (char));
+            if (clib_errmsg == NULL)
+            {
+                clib_errno = CLIB_ERRNO_ALLOCATION_ZEROED_ERROR;
+                return NULL;
+            }
+            FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM
+                               | FORMAT_MESSAGE_IGNORE_INSERTS, /* flags */
+                NULL,                                           /* lpsource */
+                call_res,                                   /* message id */
+                MAKELANGID (LANG_NEUTRAL, SUBLANG_DEFAULT), /* languageid */
+                (LPSTR)clib_errmsg,                         /* output buffer */
+                256, /* size of msgbuf, bytes */
+                NULL);
+            return NULL;
+        }
+        res->sock = INVALID_SOCKET;
+        res->sock = socket (
+            result->ai_family, result->ai_socktype, result->ai_protocol);
+        if (res->sock == INVALID_SOCKET)
+        {
+            clib_extern_errno = WSAGetLastError ();
+            clib_errno = CLIB_ERRNO_SOCKET_EXT_SOCKET;
+            freeaddrinfo (result);
+            return NULL;
+        }
+        call_res
+            = connect (res->sock, result->ai_addr, (int)result->ai_addrlen);
+        if (call_res == SOCKET_ERROR)
+        {
+            clib_extern_errno = call_res;
+            clib_errno = CLIB_ERRNO_SOCKET_EXT_CONNECT;
+            res->sock = INVALID_SOCKET;
+            closesocket (res->sock);
+            freeaddrinfo (result);
+            return NULL;
+        }
+        freeaddrinfo (result);
+        return res;
+    }
+#else
+
+#endif
+}
+
+int clib_sockets_client_send (
+    const clib_socket_t *socket, const char *data, const size_t data_len)
+{
+#ifdef _WIN32
+    return send (socket->sock, (const char *)data, data_len, 0);
+#else
+
+#endif
+}
+
+
+int clib_sockets_client_recv (
+    const clib_socket_t *socket, char *data, const size_t data_len)
+{
+#ifdef _WIN32
+    return recv (socket->sock, (char *)data, data_len, 0);
+#else
+
+#endif
+}
+
+void clib_sockets_free (clib_socket_t *sock)
+{
+#ifdef _WIN32
+    closesocket (sock->sock);
+#else
+
+#endif
+    free (sock);
+}
+
+static int internal_family_to_native_family (clib_socket_family_t family)
+{
+    switch (family)
+    {
+    case CLIB_SOCKET_FAMILY_UNSPEC:
+#ifdef _WIN32
+        return AF_UNSPEC;
+#else
+        return 0;
+#endif
+    case CLIB_SOCKET_FAMILY_INET:
+#ifdef _WIN32
+        return AF_INET;
+#else
+        return 0;
+#endif
+    case CLIB_SOCKET_FAMILY_NETBIOS:
+#ifdef _WIN32
+        return AF_NETBIOS;
+#else
+        return 0;
+#endif
+    case CLIB_SOCKET_FAMILY_INET6:
+#ifdef _WIN32
+        return AF_INET6;
+#else
+        return 0;
+#endif
+    case CLIB_SOCKET_FAMILY_IRDA:
+#ifdef _WIN32
+        return AF_IRDA;
+#else
+        return 0;
+#endif
+    case CLIB_SOCKET_FAMILY_BTH:
+#ifdef _WIN32
+        return AF_BTH;
+#else
+        return 0;
+#endif
+    default:
+#ifdef _WIN32
+        return AF_UNSPEC;
+#else
+        return 0;
+#endif
+    }
+}
+
+static int internal_type_to_native_type (clib_socket_type_t type)
+{
+    switch (type)
+    {
+    case CLIB_SOCKET_TYPE_TCP:
+#ifdef _WIN32
+        return IPPROTO_TCP;
+#else
+        return 0;
+#endif
+    case CLIB_SOCKET_TYPE_UDP:
+#ifdef _WIN32
+        return IPPROTO_UDP;
+#else
+        return 0;
+#endif
+    default:
+#ifdef _WIN32
+        return IPPROTO_TCP;
+#else
+        return 0;
+#endif
+    }
 }
